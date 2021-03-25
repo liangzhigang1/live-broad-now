@@ -26,19 +26,19 @@
         发布作业
       </div>
 
-      <div v-if="!isStudent" @click="toggleAnswer" class="btn-div">
+      <!-- <div v-if="!isStudent" @click="toggleAnswer" class="btn-div">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe603;</span>
         举手
-      </div>
+      </div> -->
 
       <div v-if="!isStudent" @click="toggleRollCall" class="btn-div">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe61e;</span>
-        评价
+        点名
       </div>
 
       <div v-if="!isStudent" @click="toggleLottery" class="btn-div">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
-        更多
+        抽奖
       </div>
 
       <!-- <div v-if="!isStudent" @click="toggleAttentionDetection">
