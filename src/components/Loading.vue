@@ -17,7 +17,14 @@ export default {
       // 占位元素
       element: $("#loading"),
       // logo URL 可自定义自己的加载 logo
-      logoUrl: "http://img.baijiayun.com/0baijiacloud/logo/ydzb/v5/www-loading.png",
+      isNewStyle: true,
+      // isBJY: true,
+      // hasBJYSupport: true,
+      backgroundUrl: {bUrl: require('../assets/img/content_img_beijing_nor.png')},
+      progressTextColor: '#28779E',
+      progressDescColor: '#28779E',
+      // logoUrl: "http://img.baijiayun.com/0baijiacloud/logo/ydzb/v5/www-loading.png",
+      logoUrl: require('../assets/img/content_img_wlkt_nor.png'),
     });
 
     // 获取事件处理对象 eventEmitter

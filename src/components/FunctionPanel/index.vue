@@ -15,15 +15,58 @@
       
 
       <!-- 屏幕分享菜单 -->
-      <div v-if="!isStudent" class="btn-wrap btn-div">
-        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe675;</span>
+      <div class="btn-wrap btn-div">
+        <!-- <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe675;</span> -->
         <ShareScreenMenu />
       </div>
 
+      <!-- 下载素材弹框 -->
+      <div @click="showHomeworkMater" v-if="isStudent" class="btn-wrap btn-div">
+        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe675;</span>
+        下载素材
+      </div>
 
-      <div v-if="!isStudent" @click="toggleQuiz" class="btn-div">
-        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe62d;</span>
-        发布作业
+      <!-- 提交作业 -->
+      <div @click="showSubmitWork" v-if="isStudent" class="btn-wrap btn-div">
+        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe675;</span>
+        提交作业
+      </div>
+
+      <!-- 举手菜单 -->
+      <div v-if="isStudent" class="btn-wrap btn-div">
+        <!-- <span style="font-size: 16px;" class="iconfont">&#xe603;</span> -->
+        <!-- <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe603;</span>
+        举手 -->
+        <SpeakApplyMenu />
+      </div>
+
+
+      <div style="position: relative" v-if="!isStudent" class="btn-div">
+        <div id="showZuoye">
+          <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe62d;</span>
+          发布作业
+        </div>
+        
+
+
+        <div v-if="showZuoye" class="more-layer active">
+          <div class="wrapper" >
+            <div @click="toggleQuiz" class="item">
+              <span  style="font-size: 16px;margin-right:4px"  class="iconfont">&#xe62d;</span>
+              发布作业
+            </div>
+            <div @click="toggleViewQuiz" class="item">
+              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              查看发布
+            </div>
+             <!-- <div class="item">
+              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              xxx
+            </div> -->
+          </div>
+        </div>
+
+
       </div>
 
       <!-- <div v-if="!isStudent" @click="toggleAnswer" class="btn-div">
@@ -41,6 +84,35 @@
         抽奖
       </div>
 
+      <div v-if="!isStudent" style="position: relative" class="btn-div">
+        <div id="show" >
+          <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe627;</span>
+        更多
+        </div>
+        
+        <div v-if="show" class="more-layer active">
+          <div class="wrapper" >
+            <div @click="toggleIncentivePayment" class="item">
+              <span  style="font-size: 16px;margin-right:4px"  class="iconfont">&#xe609;</span>
+              发放激励
+            </div>
+            <div @click="toggleEvaluate" class="item">
+              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+               评价
+            </div>
+             <div @click="toggleRandomRollCall" class="item">
+              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              随机点名
+            </div>
+             <!-- <div class="item">
+              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              xxx
+            </div> -->
+          </div>
+        </div>
+        
+      </div>
+
       <!-- <div v-if="!isStudent" @click="toggleAttentionDetection">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe675;</span>
         专注度检测
@@ -50,12 +122,7 @@
     <div class="right">
 
 
-      <!-- 举手菜单 -->
-      <div v-if="isStudent">
-        <!-- <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe603;</span>
-        举手 -->
-        <SpeakApplyMenu />
-      </div>
+      
 
       <!-- 上下课 -->
       <div v-if="!isStudent" @click="toggleClassStart" class="btn-div">
@@ -91,6 +158,12 @@
         </option>
       </select>
     </div>
+    <IncentivePayment @closeIn="closeIn" :visible="visible" />
+    <Evaluate @closeEvaluate="closeEvaluate" :visibleEvaluate="visibleEvaluate" />
+    <RandomRollCall @closeRandomRollCall="closeRandomRollCall" :visibleRandomRollCall="visibleRandomRollCall" />
+    <ViewQuiz @closeViewQuiz="closeViewQuiz" :visibleViewQuiz="visibleViewQuiz" />
+    <HomeworkMater @closeHomeworkMater="closeHomeworkMater" :visibleHomeworkMater="visibleHomeworkMater" />
+    <SubmitWork @closeSubmitWork="closeSubmitWork" :visibleSubmitWork="visibleSubmitWork" />
   </div>
 </template>
 
@@ -99,6 +172,12 @@ import language from "../../language/main";
 import SpeakApplyMenu from "./SpeakApplyMenu";
 import ShareScreenMenu from "./ShareScreenMenu";
 import Record from "./Record";
+import IncentivePayment from "../ModalPanel/IncentivePayment";
+import Evaluate from "../ModalPanel/Evaluate";
+import RandomRollCall from "../ModalPanel/RandomRollCall";
+import ViewQuiz from "../ModalPanel/ViewQuiz";
+import HomeworkMater from "../ModalPanel/HomeworkMater";
+import SubmitWork from "../ModalPanel/SubmitWork";
 
 let store = BJY.store;
 let eventEmitter = BJY.eventEmitter;
@@ -109,9 +188,23 @@ export default {
     SpeakApplyMenu,
     ShareScreenMenu,
     Record,
+    IncentivePayment,
+    Evaluate,
+    RandomRollCall,
+    ViewQuiz,
+    HomeworkMater,
+    SubmitWork
   },
   data() {
     return {
+      visibleSubmitWork: false,
+      visibleHomeworkMater: false,
+      visibleViewQuiz: false,
+      visible: false,
+      visibleRandomRollCall: false,
+      visibleEvaluate: false,
+      show: false,
+      showZuoye: false,
       statusTip: "",
       language: language,
       isStudent: auth.isStudent(),
@@ -141,6 +234,24 @@ export default {
     },
   },
   methods: {
+    closeIn (val) {
+      this.visible = val
+    },
+    closeEvaluate (val) {
+      this.visibleEvaluate = val
+    },
+    closeRandomRollCall (val) {
+      this.visibleRandomRollCall = val
+    },
+    closeViewQuiz (val) {
+      this.visibleViewQuiz = val
+    },
+    closeHomeworkMater (val) {
+      this.visibleHomeworkMater = val
+    },
+    closeSubmitWork (val) {
+      this.visibleSubmitWork = val
+    },
     toggleClassStart() {
       if (store.get("class.started")) {
         eventEmitter.trigger(eventEmitter.CLASS_END_TRIGGER);
@@ -161,11 +272,29 @@ export default {
     toggleQuiz() {
       eventEmitter.trigger("toggle_quiz_dialog");
     },
+    showHomeworkMater () {
+      this.visibleHomeworkMater = true
+    },
+    showSubmitWork () {
+      this.visibleSubmitWork = true
+    },
+    toggleViewQuiz () {
+      this.visibleViewQuiz = true
+    },
     toggleAnswer() {
       eventEmitter.trigger("toggle_answer_dialog");
     },
     toggleMediaPlayer() {
       eventEmitter.trigger("toggle_media_player");
+    },
+    toggleIncentivePayment() {
+      this.visible = true
+    },
+    toggleEvaluate () {
+      this.visibleEvaluate = true
+    },
+    toggleRandomRollCall () {
+      this.visibleRandomRollCall = true
     },
     toggleRollCall() {
       eventEmitter.trigger("toggle_roll_call");
@@ -196,6 +325,18 @@ export default {
     this.cdnList = BJY.data.server.getLiveServerList();
   },
   mounted() {
+    var _this = this
+    document.addEventListener('click', (e) => {
+      console.log('');
+      if (e.target.id == 'show') {
+        _this.show = !_this.show
+      } else if (e.target.id == 'showZuoye') {
+        _this.showZuoye = !_this.showZuoye
+      } else {
+        _this.show = false
+        _this.showZuoye = false
+      }
+    });
     // 调用 create 方法创建弹幕组件
     // 弹幕组件不需要独立的容器，只需要在create中提供挂载的容器
     this.barrage = new BJY.Barrage({
@@ -272,11 +413,46 @@ export default {
         left: -7px;
       }
     }
+    .more-layer {
+      z-index: 10000;
+      background: #2B323E;
+      color: #9fa8b5;
+      border-radius: 3px;
+      border-radius: 3px;
+      border: 1px solid rgba(159,168,181,0.1);
+      font-size: 12px;
+      position: absolute;
+      left: 0;
+      bottom: 39px;
+      font-size: 12px;
+      .wrapper {
+        min-width: 120px;
+        max-height: 200px;
+        overflow: scroll;
+        overflow-x: hidden;
+        .item {
+          cursor: pointer;
+          display: flex;
+          display: flex;
+          -webkit-box-align: center;
+          -webkit-align-items: center;
+          -moz-box-align: center;
+          -ms-flex-align: center;
+          align-items: center;
+          white-space: nowrap;
+          width: 100%;
+          padding: 5px 12px 5px 8px;
+          &:hover {
+            background: rgba(49,56,71,0.6);
+        }
+        }
+      }
+    }
   }
 
-  .bjy-spacer {
-    margin-right: 200px;
-  }
+  // .bjy-spacer {
+  //   margin-right: 200px;
+  // }
   .btn-div {
     width: 114px;
     height: 34px;

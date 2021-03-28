@@ -9,7 +9,6 @@
     <Quiz />
     <MediaPlayer />
     <Lottery />
-    <AttentionDetection />
   </div>
 </template>
 
@@ -32,7 +31,7 @@ export default {
     Quiz,
     MediaPlayer,
     Lottery,
-    AttentionDetection,
+    AttentionDetection
   },
   data() {
     return {

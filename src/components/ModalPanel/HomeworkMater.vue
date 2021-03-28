@@ -1,17 +1,12 @@
 <!-- 小测组件 -->
 <template>
-  <div
-    v-show="visible"
-    :class="isTeacher ? 'teacher' : 'student'"
-    id="quiz-xxx"
-  >
+  <div v-show="visible1" id="quiz-home-work-master">
     <div class="close-bar">
-      <span class="bar-title">发布作业</span>
+      <span class="bar-title">下载素材</span>
       <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
         ><i class="el-icon-close"></i
       ></span>
     </div>
-        <!-- :rules="rules" -->
     <div class="placeholder">
       <el-form
         :model="ruleForm"
@@ -21,44 +16,24 @@
       >
         <div class="zuoye-box">
           <el-form-item label="作业名称" prop="name">
-            <el-input
-              v-model="ruleForm.name"
-              placeholder="请输入作业名称"
-            ></el-input>
+            UI基础入门
           </el-form-item>
           <el-form-item label="作业类型" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择作业类型">
-              <el-option label="随堂作业" value="0"></el-option>
-              <el-option label="课后作业" value="1"></el-option>
-              <el-option label="结课作业" value="2"></el-option>
-            </el-select>
+            随堂作业
           </el-form-item>
           <el-form-item label="截止时间">
-            <el-date-picker
-              v-model="ruleForm.time"
-              type="datetime"
-              placeholder="选择日期时间"
-            >
-            </el-date-picker>
+            2021-03-03    17：09：00
           </el-form-item>
           <el-form-item label="作业要求" prop="desc">
-            <el-input
-              type="textarea"
-              v-model="ruleForm.desc"
-              :autosize="{ minRows: 4, maxRows: 6 }"
-              placeholder="请输入作业要求"
-            ></el-input>
+            作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求
           </el-form-item>
-          <el-form-item label="素材上传" prop="desc">
-            <p class="sucai-p"><span>图片</span>(jpg,png，gif格式)限定5MB,</p>
-            <p class="sucai-p">
-              <span>视频</span
-              >(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
-            </p>
-            <p class="sucai-p">
-              <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI
-              、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
-            </p>
+          <el-form-item label="作业素材" prop="desc">
+            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
+            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
+            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
+            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
+            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
+            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
           </el-form-item>
         </div>
         <el-form-item style="text-align: right; margin: 14px 0 2px">
@@ -77,9 +52,20 @@ const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 
 export default {
+  props: {
+    visibleHomeworkMater: {
+      type: Boolean,
+      default: false
+    },
+  },
+  watch: {
+    visibleHomeworkMater (val) {
+      this.visible1 = val
+    }
+  },
   data() {
     return {
-      visible: false,
+      visible1: this.visibleHomeworkMater,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       ruleForm: {
@@ -105,13 +91,14 @@ export default {
       this.$refs[formName].resetFields();
     },
     open(data) {
-      this.visible = true;
+      this.visible1 = true;
       this.$nextTick(() => {
         !this.isTeacher;
       });
     },
     close() {
-      this.visible = false;
+      this.visible1 = false;
+      this.$emit('closeHomeworkMater', this.visible1)
     },
     initTeacher() {},
     initStudent() {
@@ -119,43 +106,6 @@ export default {
     },
   },
   created() {
-    eventEmitter
-      // .on(
-      //   // 小测开始事件
-      //   eventEmitter.QUIZ_START,
-      //   (e, data) => {
-      //     console.log(data);
-      //     this.forceJoin = data.forceJoin;
-      //     this.open(data);
-      //   }
-      // )
-      // // 测验结束
-      // .on(eventEmitter.QUIZ_END, (e, data) => {
-      //   !this.isTeacher && this.close();
-      // })
-      // .on(eventEmitter.QUIZ_CLOSE, (e, data) => {
-      //   if (!data.force && $.isEmptyObject(data.solution)) {
-      //       alert('请至少回答一个题目之后提交');
-      //       return;
-      //   }
-      //   this.close();
-      // })
-      // .on(
-      //   // 查看小测答案
-      //   eventEmitter.QUIZ_SOLUTION,
-      //   (e, data) => {
-      //     this.forceJoin = false;
-      //     this.open(data);
-      //   }
-      // )
-      // .on(eventEmitter.QUIZ_SUBMIT, (e, data) => {
-      //   console.log(data);
-      //   this.close();
-      // })
-      .on("toggle_quiz_dialog", (e, data) => {
-        this.visible ? this.close() : this.open();
-      });
-    // eventEmitter.trigger(eventEmitter.QUIZ_REQ);
   },
   mounted() {
     this.isTeacher ? this.initTeacher() : this.initStudent();
@@ -165,35 +115,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#quiz-xxx {
-  position: absolute;
+#quiz-home-work-master {
+  position: fixed;
   z-index: 10;
   top: 50%;
   left: 50%;
+  width: 500px;
   transform: translate(-50%, -50%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   background: #fff;
   border: 1px solid #6e7583;
-  &.student {
-    width: max-content;
-    height: 80%;
-
-    .close-bar {
-      position: absolute;
-      width: 100%;
-      top: 0;
-    }
-    .placeholder {
-      top: 30px;
-      bottom: 0;
-      position: absolute;
-      width: 100%;
-    }
-  }
-  &.teacher {
-    width: max-content;
-  }
 
   .close-bar {
     background: #1c222e;
@@ -229,7 +161,7 @@ export default {
 }
 </style>
 <style lang="scss">
-#quiz-xxx {
+#quiz-home-work-master {
   .el-form-item__label {
     color: #fff;
     width: max-content !important;

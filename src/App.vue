@@ -434,6 +434,7 @@ export default {
 
 <style lang="scss">
 @import "./assets/iconfont/iconfont.css";
+@import "./assets/iconfont1/iconfont.css";
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -603,7 +604,7 @@ export default {
       align-items: center;
       font-size: 15px;
       color: #bdc6cf;
-      z-index: 0;
+      z-index: 1000;
       color: #fff;
       font-size: 14px;
     }

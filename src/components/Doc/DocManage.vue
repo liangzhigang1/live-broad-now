@@ -79,7 +79,7 @@ export default {
       })
   },
   mounted() {
-    console.log('eventEmitter', eventEmitter);
+    console.log('BJY', BJY);
     var _this = this;
     // 上传文件最大字节
     var MAXSIZE = 1000000 * 5;

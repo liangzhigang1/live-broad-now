@@ -1,73 +1,27 @@
 <!-- 小测组件 -->
 <template>
   <div
-    v-show="visible"
+    v-show="visible1"
     :class="isTeacher ? 'teacher' : 'student'"
-    id="quiz-xxx"
+    id="quiz-x"
   >
     <div class="close-bar">
-      <span class="bar-title">发布作业</span>
+      <span class="bar-title">评价</span>
       <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
         ><i class="el-icon-close"></i
       ></span>
     </div>
         <!-- :rules="rules" -->
-    <div class="placeholder">
-      <el-form
-        :model="ruleForm"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
-        <div class="zuoye-box">
-          <el-form-item label="作业名称" prop="name">
-            <el-input
-              v-model="ruleForm.name"
-              placeholder="请输入作业名称"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="作业类型" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择作业类型">
-              <el-option label="随堂作业" value="0"></el-option>
-              <el-option label="课后作业" value="1"></el-option>
-              <el-option label="结课作业" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="截止时间">
-            <el-date-picker
-              v-model="ruleForm.time"
-              type="datetime"
-              placeholder="选择日期时间"
-            >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="作业要求" prop="desc">
-            <el-input
-              type="textarea"
-              v-model="ruleForm.desc"
-              :autosize="{ minRows: 4, maxRows: 6 }"
-              placeholder="请输入作业要求"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="素材上传" prop="desc">
-            <p class="sucai-p"><span>图片</span>(jpg,png，gif格式)限定5MB,</p>
-            <p class="sucai-p">
-              <span>视频</span
-              >(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
-            </p>
-            <p class="sucai-p">
-              <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI
-              、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
-            </p>
-          </el-form-item>
-        </div>
-        <el-form-item style="text-align: right; margin: 14px 0 2px">
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >确认</el-button
-          >
-          <el-button @click="close">取消</el-button>
-        </el-form-item>
-      </el-form>
+    <div style="height: 200px;width: 200px" class="placeholder">
+      <div :style="{background: radio == '1' ? '#353B48': '',padding: '5px 5px'}">
+        <el-radio v-model="radio" label="1">课前评价</el-radio>
+      </div>
+      <div :style="{background: radio == '2' ? '#353B48': '',padding: '5px 5px'}">
+        <el-radio v-model="radio" label="2">课后评价</el-radio>
+      </div>
+      <div style="margin-top: 40px;text-align: center">
+        <el-button type="primary">确认</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -77,16 +31,34 @@ const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 
 export default {
+  props: {
+    visibleEvaluate: {
+      type: Boolean,
+      default: false
+    },
+  },
+  watch: {
+    visibleEvaluate (val) {
+      this.visible1 = val
+    }
+  },
   data() {
     return {
-      visible: false,
+      radio: false,
+      input: '',
+      pwdVisible: false,
+      visible1: this.visibleEvaluate,
+      studentVisible: false,
+      checked: false,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       ruleForm: {
-        name: "",
-        region: "",
-        time: "",
-        desc: "",
+        x: "0",
+        xx: "0",
+        xxx: "",
+        xxxx: "",
+        xxxxx: "",
+        xxxxxx: "",
       },
     };
   },
@@ -105,13 +77,26 @@ export default {
       this.$refs[formName].resetFields();
     },
     open(data) {
-      this.visible = true;
+      this.visible1 = true;
       this.$nextTick(() => {
         !this.isTeacher;
       });
     },
     close() {
-      this.visible = false;
+      this.visible1 = false;
+      this.$emit('closeEvaluate', this.visible1)
+    },
+    openStudent() {
+      this.studentVisible = true;
+    },
+    closeStudent() {
+      this.studentVisible = false;
+    },
+    openPwd() {
+      this.pwdVisible = true;
+    },
+    closePwd () {
+      this.pwdVisible = false;
     },
     initTeacher() {},
     initStudent() {
@@ -152,8 +137,9 @@ export default {
       //   console.log(data);
       //   this.close();
       // })
-      .on("toggle_quiz_dialog", (e, data) => {
-        this.visible ? this.close() : this.open();
+      .on("toggle_incentive-payment", (e, data) => {
+        console.log('1222222222222');
+        this.visible1 ? this.close() : this.open();
       });
     // eventEmitter.trigger(eventEmitter.QUIZ_REQ);
   },
@@ -165,8 +151,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#quiz-xxx {
-  position: absolute;
+#quiz-x {
+  position: fixed;
   z-index: 10;
   top: 50%;
   left: 50%;
@@ -229,7 +215,7 @@ export default {
 }
 </style>
 <style lang="scss">
-#quiz-xxx {
+#quiz-x {
   .el-form-item__label {
     color: #fff;
     width: max-content !important;
@@ -244,6 +230,15 @@ export default {
     background-color: #1f242e;
     width: 416px;
     color: #fff;
+  }
+  .pwd-model .el-input__inner {
+    width: 250px;
+    height: 30px;
+  }
+  .pwd-model .el-input__suffix {
+    position: absolute;
+    top: -4px !important;
+    left: 210px !important;
   }
   .el-button--default {
     background-color: #2b313f !important;

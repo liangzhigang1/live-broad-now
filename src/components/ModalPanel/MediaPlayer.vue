@@ -50,7 +50,8 @@ export default {
   },
   mounted() {
     eventEmitter.on('toggle_media_player', () => {
-        this.mediaPlayer ? this.close() : this.open()
+      this.open()
+      // this.mediaPlayer ? this.close() : this.open()
     })
   },
   beforeDestroy() {},
