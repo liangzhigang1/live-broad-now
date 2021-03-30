@@ -14,10 +14,10 @@
       </div>
 
         <div :style="{right: hudong ? '290px' : '0px', height: zuoye ? '194px' : '40px'}" class="zuoye">
-          <div class="title">
+          <div class="title" @click="showWork">
             作业展示：共66份
-            <span @click="showWork" style="margin-left: 5px" v-show="!zuoye" class="icon iconfont">&#xe616;</span>
-            <span @click="showWork" style="margin-left: 5px" v-show="zuoye" class="icon iconfont">&#xe67a;</span>
+            <span style="margin-left: 5px" v-show="!zuoye" class="icon iconfont">&#xe61c;</span>
+            <span style="margin-left: 5px" v-show="zuoye" class="icon iconfont">&#xe67a;</span>
           </div>
           <swiper v-show="zuoye" @swiperClick="swiperClick"></swiper>
         </div>
@@ -675,15 +675,7 @@ export default {
   .bjy-message-sender {
     z-index: 9999 !important;
   }
-  .bjy-link {
-    display: none !important;
-  }
-  .bjy-player-theme-default {
 
-  }
-  .bjy-watermark {
-    display: none;
-  }
   // .bjy-avatar-wrap {
   //   -webkit-animation: twinkling 1s infinite ease-in-out
   // }

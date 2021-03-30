@@ -43,28 +43,7 @@
               <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI
               、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
             </p>
-            <div style="margin-top: 5px">
-              <el-upload action="#" list-type="picture-card" limit="9" :auto-upload="false">
-                    <i slot="default" class="el-icon-plus"></i>
-                    <!-- <div slot="file" slot-scope="{file}">
-                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-                      <span class="el-upload-list__item-actions">
-                        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                          <i class="el-icon-zoom-in"></i>
-                        </span>
-                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
-                          <i class="el-icon-download"></i>
-                        </span>
-                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                          <i class="el-icon-delete"></i>
-                        </span>
-                      </span>
-                    </div> -->
-                </el-upload>
-                </div>
-                <el-dialog :visible.sync="dialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
+            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px;margin-top: 5px"></div>
           </el-form-item>
         </div>
         <el-form-item style="text-align: right; margin: 14px 0 2px">
@@ -96,9 +75,6 @@ export default {
   },
   data() {
     return {
-      dialogImageUrl: '',
-      dialogVisible: false,
-      disabled: false,
       visible1: false,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
@@ -111,16 +87,6 @@ export default {
     };
   },
   methods: {
-    handleRemove(file) {
-      console.log(file);
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handleDownload(file) {
-      console.log(file);
-    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -163,32 +129,30 @@ export default {
   z-index: 10;
   top: 50%;
   left: 50%;
-  height: 510px;
-  width: 600px;
   transform: translate(-50%, -50%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   background: #fff;
   border: 1px solid #6e7583;
-  // &.student {
-  //   width: max-content;
-  //   height: 80%;
+  &.student {
+    width: max-content;
+    height: 80%;
 
-  //   .close-bar {
-  //     position: absolute;
-  //     width: 100%;
-  //     top: 0;
-  //   }
-  //   .placeholder {
-  //     top: 30px;
-  //     bottom: 0;
-  //     position: absolute;
-  //     width: 100%;
-  //   }
-  // }
-  // &.teacher {
-  //   width: max-content;
-  // }
+    .close-bar {
+      position: absolute;
+      width: 100%;
+      top: 0;
+    }
+    .placeholder {
+      top: 30px;
+      bottom: 0;
+      position: absolute;
+      width: 100%;
+    }
+  }
+  &.teacher {
+    width: max-content;
+  }
 
   .close-bar {
     background: #1c222e;
@@ -298,23 +262,6 @@ export default {
 .el-button--primary {
   background: linear-gradient(#0e98d7, #027cb5) !important;
   border: 1px solid #27aeed !important;
-}
-.el-upload--picture-card {
-  width: 100px !important;
-  height: 100px !important;
-  line-height: 100px !important;
-  background-color: #1D2129 !important;
-  border: 0px !important;
-}
-.el-icon-plus {
-  font-size: 53px !important;
-  margin-top: 22px !important;
-}
-.el-upload-list__item {
-  width: 100px !important;
-  height: 100px !important;
-  border: 0px !important;
-
 }
 .sucai-p {
   color: #999;

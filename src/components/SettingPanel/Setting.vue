@@ -2,7 +2,7 @@
 <template>
   <div
     v-show="visible"
-    :class="isTeacher ? 'teacher' : 'teacher'"
+    :class="isTeacher ? 'teacher' : 'student'"
     id="quiz-placeholder"
   >
     <div class="close-bar">
