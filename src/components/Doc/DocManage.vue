@@ -94,21 +94,20 @@ export default {
       onFileOpenClick: (data) => {
         // data.index  文档在列表中的索引
         // data.doc 文档对象
-        console.log('4444444444', data);
-        console.log('444444444', store.get("class.xx"));
         if (store.get("class.xx") == true) {
           _this.pptVideoSwitch();
         }
         store.set("class.xx", false);
-        console.log('444444444', store.get("class.catalogue"));
         store.get("class.catalogue").togglePageList(true, data.id)
+      },
+      // 文件类型错误
+      onFileTypeError: function (data) {
+        alert('文件类型错误');
       },
       onDocDeleteClick:  (data) => {
           // data.index  文档在列表中的索引
           // data.doc 文档对象
-          console.log('55555555', data);
           let xx = `fid=${data.doc.id}&partner_id=83228320&room_id=21032159047031&timestamp=1615996147&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
-          console.log('12312312', _this.$md5(xx))
           let sign = _this.$md5(xx)
           let params = { partner_id: 83228320, room_id: 21032159047031, fid: data.doc.id, timestamp: 1615996147, sign: sign}
           _deleteDocApi(params).then((response) => {

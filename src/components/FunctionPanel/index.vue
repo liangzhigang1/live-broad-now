@@ -74,15 +74,30 @@
         举手
       </div> -->
 
-      <div v-if="!isStudent" @click="toggleRollCall" class="btn-div">
-        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe61e;</span>
-        点名
-      </div>
-
-      <div v-if="!isStudent" @click="toggleLottery" class="btn-div">
+      <!-- <div v-if="!isStudent" @click="toggleLottery" class="btn-div">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
         抽奖
+      </div> -->
+
+      <div v-if="isHandUp && !isStudent" @click="toggleHandUp" class="btn-div">
+        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe603;</span>
+        允许举手
       </div>
+      <div v-if="!isHandUp && !isStudent" @click="toggleHandUp" class="btn-div">
+        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe6b4;</span>
+        禁止举手
+      </div>
+
+      <!-- <div v-if="!isStudent" @click="toggleRollCall" class="btn-div">
+        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe61e;</span>
+        点名
+      </div> -->
+
+      <div v-if="!isStudent" @click="toggleEvaluate" class="btn-div">
+        <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe61e;</span>
+         评价
+      </div>
+
 
       <div v-if="!isStudent" style="position: relative" class="btn-div">
         <div id="show" >
@@ -92,18 +107,23 @@
         
         <div v-if="show" class="more-layer active">
           <div class="wrapper" >
+            <div @click="toggleRandomRollCall" class="item">
+              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              随机点名
+            </div>
             <div @click="toggleIncentivePayment" class="item">
               <span  style="font-size: 16px;margin-right:4px"  class="iconfont">&#xe609;</span>
               发放激励
             </div>
-            <div @click="toggleEvaluate" class="item">
+            <div v-if="isWatermark" @click="closeWatermark" class="item">
               <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
-               评价
+              打开水印
             </div>
-             <div @click="toggleRandomRollCall" class="item">
+            <div v-if="!isWatermark" @click="closeWatermark" class="item">
               <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
-              随机点名
+              关闭水印
             </div>
+             
              <!-- <div class="item">
               <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
               xxx
@@ -197,6 +217,8 @@ export default {
   },
   data() {
     return {
+      isWatermark: true,
+      isHandUp: true,
       visibleSubmitWork: false,
       visibleHomeworkMater: false,
       visibleViewQuiz: false,
@@ -234,6 +256,12 @@ export default {
     },
   },
   methods: {
+    closeWatermark () {
+      this.isWatermark = !this.isWatermark
+    },
+    toggleHandUp () {
+      this.isHandUp = !this.isHandUp
+    },
     closeIn (val) {
       this.visible = val
     },
