@@ -59,9 +59,31 @@
               <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI
               、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
             </p>
+            <div style="margin-top: 5px">
+              <el-upload action="#" list-type="picture-card" :limit="9" :auto-upload="false">
+                    <i slot="default" class="el-icon-plus"></i>
+                    <!-- <div slot="file" slot-scope="{file}">
+                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+                      <span class="el-upload-list__item-actions">
+                        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                          <i class="el-icon-zoom-in"></i>
+                        </span>
+                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
+                          <i class="el-icon-download"></i>
+                        </span>
+                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
+                          <i class="el-icon-delete"></i>
+                        </span>
+                      </span>
+                    </div> -->
+                </el-upload>
+              </div>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
           </el-form-item>
         </div>
-        <el-form-item style="text-align: right; margin: 14px 0 2px">
+        <el-form-item style="text-align: right; margin: 14px 0 -6px">
           <el-button type="primary" @click="submitForm('ruleForm')"
             >确认</el-button
           >
@@ -79,6 +101,9 @@ const auth = BJY.auth;
 export default {
   data() {
     return {
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false,
       visible: false,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
@@ -91,6 +116,16 @@ export default {
     };
   },
   methods: {
+    handleRemove(file) {
+      console.log(file);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleDownload(file) {
+      console.log(file);
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -218,7 +253,7 @@ export default {
   .placeholder {
     background-color: #313847;
     border-radius: 0 0 4px 4px;
-    padding: 10px;
+    padding: 20px;
     .zuoye-box {
       border: 1px solid #5f6777;
       padding: 20px;

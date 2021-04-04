@@ -38,6 +38,14 @@ export default {
                     alert('打开文件失败');
                 }
             });
+        setTimeout(() => {
+          console.log('111122222222111', this.mediaPlayer)
+          this.mediaPlayer.pushVideoStream = true
+          this.mediaPlayer.needUseVideoFrame = true
+          this.mediaPlayer.isServerMediaPlayMode = true
+
+          
+        }, 2000);
         }
     },
     close () {

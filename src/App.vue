@@ -16,8 +16,8 @@
         <div :style="{right: hudong ? '290px' : '0px', height: zuoye ? '194px' : '40px'}" class="zuoye">
           <div class="title">
             作业展示：共66份
-            <span @click="showWork" style="margin-left: 5px" v-show="!zuoye" class="icon iconfont">&#xe616;</span>
-            <span @click="showWork" style="margin-left: 5px" v-show="zuoye" class="icon iconfont">&#xe67a;</span>
+            <span @click="showWork" style="margin-left: 5px" v-show="!zuoye" class="icon iconfont">&#xe8ed;</span>
+            <span @click="showWork" style="margin-left: 5px;font-size: 17px !important" v-show="zuoye" class="icon iconfont">&#xe604;</span>
           </div>
           <swiper v-show="zuoye" @swiperClick="swiperClick"></swiper>
         </div>

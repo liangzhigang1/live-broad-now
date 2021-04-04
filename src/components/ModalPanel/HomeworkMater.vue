@@ -22,32 +22,31 @@
             随堂作业
           </el-form-item>
           <el-form-item label="截止时间">
-            2021-03-03    17：09：00
+            2021-03-03 17:09:00
           </el-form-item>
           <el-form-item label="作业要求" prop="desc">
             作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求
           </el-form-item>
           <el-form-item label="作业素材" prop="desc">
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
+            <div v-for="item in 4" :key="item" class="sucai-img">
+              <img :src="require('@/assets/img/sucai.jpg')" alt="" style="width:100%;height:100%;object-fit: cover;">
+            </div>
           </el-form-item>
         </div>
-        <el-form-item style="text-align: right; margin: 14px 0 2px">
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >确认</el-button
+        <el-form-item style="text-align: center; margin: 14px 0 -6px -74px">
+          <el-button type="primary" @click="submitForm()"
+            >下载</el-button
           >
-          <el-button @click="close">取消</el-button>
+          <!-- <el-button @click="close">取消</el-button> -->
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <script>
+// import '@/utils/jquery.wordexport.js'
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 
@@ -77,15 +76,16 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+    submitForm() {
+      for (let i = 0; i < 4; i++) {
+          const link = document.createElement('a');//我们用模拟q标签点击事件
+          const fname = 'sucai.jpg'; //下载文件的名字
+          link.href = require('../../assets/img/sucai.jpg');
+          link.setAttribute('download', fname);
+          document.body.appendChild(link);
+          link.click();
+      }
+      
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -150,18 +150,32 @@ export default {
   .placeholder {
     background-color: #313847;
     border-radius: 0 0 4px 4px;
-    padding: 10px;
+    padding: 20px;
     .zuoye-box {
       border: 1px solid #5f6777;
-      padding: 20px;
+      padding: 4px 20px 10px;
       width: 100%;
       border-radius: 4px;
+      .sucai-img {
+        float: left;
+        width: 80px;
+        height: 80px;
+        background: #1D2129;
+        margin-right: 4px;
+        margin-bottom: 4px;
+        border-radius: 4px;
+        border: 1px solid #6E7583;
+        overflow: hidden;
+      }
     }
   }
 }
 </style>
 <style lang="scss">
 #quiz-home-work-master {
+  .el-form-item {
+    margin-bottom: 0;
+  }
   .el-form-item__label {
     color: #fff;
     width: max-content !important;
@@ -183,7 +197,7 @@ export default {
     color: #fff !important;
   }
   .el-button {
-    width: 88px;
+    width: 114px;
     height: 38px;
   }
 }

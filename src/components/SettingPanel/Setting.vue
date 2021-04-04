@@ -408,6 +408,15 @@ export default {
 .el-picker-panel {
   margin-top: -2px !important;
 }
+.el-select-dropdown {
+  border: 0 !important;
+  margin-top: 0 !important;
+  .el-select-dropdown__list {
+    padding: 0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+}
 .popper__arrow,
 .popper__arrow::after {
   border-bottom-color: none !important;

@@ -28,12 +28,12 @@
               <el-option label="5人" value="5"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="摄像头要求" prop="xx">
+          <el-form-item label="摄像头要求" prop="xx" style="margin-bottom:0">
             <el-radio v-model="ruleForm.xx" label="1">是</el-radio>
             <el-radio v-model="ruleForm.xx" label="2">否</el-radio>
           </el-form-item>
         </div>
-        <el-form-item style="text-align: right; margin: 14px 0 2px">
+        <el-form-item style="text-align: right; margin: 14px 0 -6px">
           <el-button type="primary" @click="submitForm('ruleForm')"
             >确认</el-button
           >
@@ -186,7 +186,7 @@ export default {
   .placeholder {
     background-color: #313847;
     border-radius: 0 0 4px 4px;
-    padding: 10px;
+    padding: 20px;
     .zuoye-box {
       border: 1px solid #5f6777;
       padding: 20px;

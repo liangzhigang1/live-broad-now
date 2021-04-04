@@ -12,14 +12,16 @@
       ></span>
     </div>
         <!-- :rules="rules" -->
-    <div style="height: 200px;width: 200px" class="placeholder">
-      <div :style="{background: radio == '1' ? '#353B48': '',padding: '5px 5px'}">
-        <el-radio v-model="radio" label="1">课前评价</el-radio>
+    <div style="height: max-content;width: 200px" class="placeholder">
+      <div class="zuoye-box">
+        <div :style="{background: radio == '1' ? '#353B48': '',padding: '5px 5px'}">
+          <el-radio v-model="radio" label="1">课前评价</el-radio>
+        </div>
+        <div :style="{background: radio == '2' ? '#353B48': '',padding: '5px 5px'}">
+          <el-radio v-model="radio" label="2">课后评价</el-radio>
+        </div>
       </div>
-      <div :style="{background: radio == '2' ? '#353B48': '',padding: '5px 5px'}">
-        <el-radio v-model="radio" label="2">课后评价</el-radio>
-      </div>
-      <div style="margin-top: 40px;text-align: center">
+      <div style="margin-top: 14px 0 -6px;text-align: center">
         <el-button type="primary">确认</el-button>
       </div>
     </div>
@@ -204,7 +206,7 @@ export default {
   .placeholder {
     background-color: #313847;
     border-radius: 0 0 4px 4px;
-    padding: 10px;
+    padding: 20px;
     .zuoye-box {
       border: 1px solid #5f6777;
       padding: 20px;

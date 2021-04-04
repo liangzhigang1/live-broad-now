@@ -52,11 +52,11 @@
         <div v-if="showZuoye" class="more-layer active">
           <div class="wrapper" >
             <div @click="toggleQuiz" class="item">
-              <span  style="font-size: 16px;margin-right:4px"  class="iconfont">&#xe62d;</span>
+              <span  style="font-size: 16px;margin-right:6px"  class="iconfont">&#xe62d;</span>
               发布作业
             </div>
             <div @click="toggleViewQuiz" class="item">
-              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
               查看发布
             </div>
              <!-- <div class="item">
@@ -108,19 +108,19 @@
         <div v-if="show" class="more-layer active">
           <div class="wrapper" >
             <div @click="toggleRandomRollCall" class="item">
-              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
               随机点名
             </div>
             <div @click="toggleIncentivePayment" class="item">
-              <span  style="font-size: 16px;margin-right:4px"  class="iconfont">&#xe609;</span>
+              <span  style="font-size: 16px;margin-right:6px"  class="iconfont">&#xe609;</span>
               发放激励
             </div>
             <div v-if="isWatermark" @click="closeWatermark" class="item">
-              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
               打开水印
             </div>
             <div v-if="!isWatermark" @click="closeWatermark" class="item">
-              <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
+              <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
               关闭水印
             </div>
              
@@ -450,13 +450,13 @@ export default {
       border: 1px solid rgba(159,168,181,0.1);
       font-size: 12px;
       position: absolute;
-      left: 0;
-      bottom: 39px;
+      left: -2px;
+      bottom: 40px;
       font-size: 12px;
       .wrapper {
-        min-width: 120px;
+        min-width: 112px;
         max-height: 200px;
-        overflow: scroll;
+        overflow: auto;
         overflow-x: hidden;
         .item {
           cursor: pointer;
@@ -472,6 +472,7 @@ export default {
           padding: 5px 12px 5px 8px;
           &:hover {
             background: rgba(49,56,71,0.6);
+            color: #fff;
         }
         }
       }

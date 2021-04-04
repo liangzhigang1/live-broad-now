@@ -20,7 +20,7 @@ export default {
       isNewStyle: true,
       // isBJY: true,
       // hasBJYSupport: true,
-      backgroundUrl: {bUrl: require('../assets/img/content_img_beijing_nor.png')},
+      // backgroundUrl: {bUrl: require('../assets/img/content_img_beijing_nor.png') },
       progressTextColor: '#28779E',
       progressDescColor: '#28779E',
       // logoUrl: "http://img.baijiayun.com/0baijiacloud/logo/ydzb/v5/www-loading.png",
@@ -54,6 +54,42 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 //@import url(); 引入公共css类
+.bjy-loading-panel {
+  background: url("../assets/img/content_img_beijing_nor.png") no-repeat;
+  background-size: 100% 100%;
+  // 
+}
+.bjy-loading-logo {
+  width: 100%;
+  height: 50%;
+  top: 35% !important;
+  position: absolute;
+}
+// .bjy-logo{
+//   position: absolute !important;
+//   width: 700px !important;
+//   height: 200px !important;
+//   background: url("../assets/img/content_img_suipian_nor.png") no-repeat !important;
+//   background-size: 100% 100%;
+//   top: 50%;
+//   left: 50%;
+// }
+.bjy-progress{
+  // background: url("../assets/img/content_img_suipian_nor.png") no-repeat !important;
+  // background-size: 100% 100%;
+}
+.bjy-loading-panel {
+  
+}
+// .bjy-loading-content
+.bjy-loading-content{
+  // width: 600px;
+  // height: 700px;
+  // background: url("../assets/img/content_img_suipian_nor.png");
+  // background-size: 100% 100%;
+  // top:20% !important;
+  // left:50%;
+}
 </style>

@@ -44,7 +44,7 @@
               、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
             </p>
             <div style="margin-top: 5px">
-              <el-upload action="#" list-type="picture-card" limit="9" :auto-upload="false">
+              <el-upload action="#" list-type="picture-card" :limit="9" :auto-upload="false">
                     <i slot="default" class="el-icon-plus"></i>
                     <!-- <div slot="file" slot-scope="{file}">
                       <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
@@ -61,10 +61,10 @@
                       </span>
                     </div> -->
                 </el-upload>
-                </div>
-                <el-dialog :visible.sync="dialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
+              </div>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
           </el-form-item>
         </div>
         <el-form-item style="text-align: right; margin: 14px 0 2px">
@@ -163,7 +163,7 @@ export default {
   z-index: 10;
   top: 50%;
   left: 50%;
-  height: 510px;
+  height: max-content;
   width: 600px;
   transform: translate(-50%, -50%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
@@ -213,7 +213,7 @@ export default {
   .placeholder {
     background-color: #313847;
     border-radius: 0 0 4px 4px;
-    padding: 10px;
+    padding: 20px;
     .zuoye-box {
       border: 1px solid #5f6777;
       padding: 20px;

@@ -58,16 +58,16 @@
             <el-button @click="openStudent" type="primary" >添加</el-button>
             <div style="margin-top: 10px;width: 400px">
               <div style="position: relative;float: left;width: 90px;height: 36px;margin-right: 5px;background: #1F242E;border-radius: 1px;">
-                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe627;</span>
+                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe613;</span>
               </div>
               <div style="position: relative;float: left;width: 90px;height: 36px;margin-right: 5px;background: #1F242E;border-radius: 1px;">
-                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe627;</span>
+                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe613;</span>
               </div>
               <div style="position: relative;float: left;width: 90px;height: 36px;margin-right: 5px;background: #1F242E;border-radius: 1px;">
-                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe627;</span>
+                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe613;</span>
               </div>
               <div style="position: relative;float: left;width: 90px;height: 36px;margin-right: 5px;background: #1F242E;border-radius: 1px;">
-                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe627;</span>
+                <span style="font-size: 16px;margin-right:4px;position: absolute;top: -18px;right: -6px" class="iconfont">&#xe613;</span>
               </div>
             </div>
             
@@ -104,7 +104,7 @@
           </el-form-item>
 
         </div>
-        <el-form-item style="text-align: right; margin: 14px 0 2px">
+        <el-form-item style="text-align: right; margin: 14px 0 -6px">
           <el-button type="primary" @click="openPwd"
             >确认</el-button
           >
@@ -387,10 +387,11 @@ export default {
   .placeholder {
     background-color: #313847;
     border-radius: 0 0 4px 4px;
-    padding: 10px;
+    padding: 20px;
     .zuoye-box {
       border: 1px solid #5f6777;
       padding: 20px;
+      padding-bottom: 0;
       width: 100%;
       border-radius: 4px;
     }

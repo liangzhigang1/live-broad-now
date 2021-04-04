@@ -36,7 +36,7 @@
             <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
           </el-form-item>
         </div>
-        <el-form-item style="text-align: right; margin: 14px 0 2px">
+        <el-form-item style="text-align: right; margin: 14px 0 -6px">
           <el-button type="primary" @click="submitForm('ruleForm')"
             >确认</el-button
           >
@@ -150,10 +150,10 @@ export default {
   .placeholder {
     background-color: #313847;
     border-radius: 0 0 4px 4px;
-    padding: 10px;
+    padding: 20px;
     .zuoye-box {
       border: 1px solid #5f6777;
-      padding: 20px;
+      padding: 4px 20px 10px;
       width: 100%;
       border-radius: 4px;
     }
@@ -162,6 +162,9 @@ export default {
 </style>
 <style lang="scss">
 #quiz-view {
+  .el-form-item {
+    margin-bottom: 0;
+  }
   .el-form-item__label {
     color: #fff;
     width: max-content !important;
