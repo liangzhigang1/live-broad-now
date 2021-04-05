@@ -43,7 +43,6 @@ export default {
       };
       !auth.isTeacher() && (options.isWebRTCMix = isWebRTCMix);
       this.player = BJY.DefaultThemePlayer.create(options);
-      console.log('this.player1111111111', this.player)
       // setTimeout(() => {
       //   this.player.footerOptions.onToggleClick()
       // }, 100)

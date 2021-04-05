@@ -86,6 +86,7 @@ export default {
     // 这里监听一下举手被接收，切换到发言列表tab
     BJY.eventEmitter.on(BJY.eventEmitter.SPEAK_APPLY_RESULT_ACCEPT, (e, data) => {
       this.activeTab = "action";
+      console.log('BJY.eventEmitterBJY.eventEmitterBJY.eventEmitter', BJY.eventEmitter);
     });
   },
   mounted() {},

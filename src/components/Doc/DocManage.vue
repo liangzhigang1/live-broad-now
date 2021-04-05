@@ -73,8 +73,6 @@ export default {
         // BJY.Catalogue.methods.getCurrentFileIndex(data.number)
       }).
       on(eventEmitter.DOC_IMAGE_LOAD_END, (event, data) => {
-        console.log('10', data);
-        console.log('111111', this);
         // BJY.Catalogue.methods.togglePageList(true, data)
       })
   },
@@ -116,7 +114,7 @@ export default {
       },
     });
     setTimeout(() => {
-      console.log('BJY.DocumentManage', xx);
+      console.log('BJY.DocumentManage', BJY.eventEmitter);
     }, 1000);
   },
   beforeDestroy() {},

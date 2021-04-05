@@ -19,10 +19,11 @@
         <div @click="clickSetting('luzhi')" :class="active.luzhi ? 'active' : ''" style="cursor: pointer;width: 182px;height: 34;line-height: 34px;border-radius: 4px;background: #3E4653;margin-bottom:2px;text-align: center">课程录制</div>   
       </div>
       <!-- 摄像头 -->
-      <div v-if="active.shexiangtou" style="flex: 1;border: 1px solid #5f6777;margin-left: 10px" class="placeholder">
+      <div v-show="active.shexiangtou" style="flex: 1;border: 1px solid #5f6777;margin-left: 10px" class="placeholder">
         <div style="padding-left: 24px;padding-right: 60px" class="shexiangtou">
           <!--  -->
-          <div style="height: 205px;width: 100%;background: #fff">
+          <div style="height: 205px;width: 100%;">
+            <div style="width: 100%;height: 100%" id="live-shezhi-player"></div>
           </div>
           <!--  -->
           <div style="display: flex;width: 100%;margin-top: 10px">
@@ -33,7 +34,7 @@
               </el-select>
             </div>
             <div style="flex: 0 0 100px">
-              <el-select v-model="value2" style="width: 140px" placeholder="请选择">
+              <el-select v-model="value2" @change="changeValue2" style="width: 140px" placeholder="请选择">
                 <el-option
                   v-for="item in options2"
                   :key="item.value"
@@ -61,7 +62,7 @@
             <span style="margin-right: 17px">设备列表</span>
             <el-select v-model="value2" style="width: 200px" placeholder="请选择">
                 <el-option
-                  v-for="item in [{value: '1', label: 'Windows默认设备'}, {value: '2', label: 'Lenovo Easy Camera'}]"
+                  v-for="item in [{value: '0', label: 'FaceTime HD Camera'}]"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -152,22 +153,24 @@
 <script>
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
+let store = BJY.store;
+// 获取创建播放器的 Player 对象
+var Player = BJY.Player;
 
 export default {
   data() {
     return {
       value6: false,
       value4: 50,
-      value1: '1',
-      value2: '1',
+      value1: '0',
+      value2: '0',
       options1: [
-        {value: '1', label: 'Windows默认设备'}
+        {value: '0', label: 'FaceTime HD Camera'}
       ],
       options2: [
-        {value: '1', label: '流畅'},
-        {value: '2', label: '标清'},
-        {value: '3', label: '高清'},
-        {value: '4', label: '超清'},
+        {value: '0', label: '流畅'},
+        {value: '1', label: '标清'},
+        {value: '2', label: '高清'},
       ],
       active: {
         shexiangtou: true,
@@ -187,6 +190,16 @@ export default {
     };
   },
   methods: {
+    changeValue2 (e) {
+      var player = BJY.Player.instances[BJY.store.get("user.id")];
+      console.log('playerplayer1', BJY.userPublish);
+      // console.log('233333444555', this.player)
+      // this.player.
+      eventEmitter.trigger(eventEmitter.CAMERA_QUALITY_CHANGE_TRIGGER, {
+        value: Number(this.value2),
+      });
+      // this.createMyPlayer()
+    },
     clickSetting(params) {
       if (params == 'shexiangtou') {
         this.active = { shexiangtou: true, maikefeng: false, yangshiqi: false, luzhi: false }
@@ -213,6 +226,7 @@ export default {
     },
     open(data) {
       this.visible = true;
+      this.createMyPlayer();
       this.$nextTick(() => {
         !this.isTeacher;
       });
@@ -224,47 +238,40 @@ export default {
     initStudent() {
       // BJY.quizStudent.init();
     },
+    // 创建自己的播放器
+    createMyPlayer(element) {
+      if (!this.player) {
+        this.player = new Player({
+        element: $("#live-shezhi-player"),
+        replace: false,
+        user: store.get("user"),
+        extension: BJY.getExtension(),
+        canFold: true,
+        canSwitchCamera: true,
+        canSwitchMic: true,
+          onComplete: function () {
+          },
+        });
+        this.player.openCamera()
+        console.log('this.playerthis.player', this.player)
+      }
+    },
   },
   created() {
     eventEmitter
-      // .on(
-      //   // 小测开始事件
-      //   eventEmitter.QUIZ_START,
-      //   (e, data) => {
-      //     console.log(data);
-      //     this.forceJoin = data.forceJoin;
-      //     this.open(data);
-      //   }
-      // )
-      // // 测验结束
-      // .on(eventEmitter.QUIZ_END, (e, data) => {
-      //   !this.isTeacher && this.close();
-      // })
-      // .on(eventEmitter.QUIZ_CLOSE, (e, data) => {
-      //   if (!data.force && $.isEmptyObject(data.solution)) {
-      //       alert('请至少回答一个题目之后提交');
-      //       return;
-      //   }
-      //   this.close();
-      // })
-      // .on(
-      //   // 查看小测答案
-      //   eventEmitter.QUIZ_SOLUTION,
-      //   (e, data) => {
-      //     this.forceJoin = false;
-      //     this.open(data);
-      //   }
-      // )
-      // .on(eventEmitter.QUIZ_SUBMIT, (e, data) => {
-      //   console.log(data);
-      //   this.close();
-      // })
       .on("toggle_setting_dialog", (e, data) => {
         this.visible ? this.close() : this.open();
       });
-    // eventEmitter.trigger(eventEmitter.QUIZ_REQ);
   },
   mounted() {
+    // eventEmitter.on(
+    //   // 监听自己摄像头和麦克风变化
+    //   eventEmitter.MEDIA_SWITCH_TRIGGER,
+    //   function (event, data) {
+    //     var player = BJY.Player.instances[store.get("user.id")];
+    //     player && BJY.userPublish.setDevice(player, data.videoOn, data.audioOn);
+    //   }
+    // );
     this.isTeacher ? this.initTeacher() : this.initStudent();
   },
   beforeDestroy() {},
@@ -272,6 +279,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// .bjy-footer {
+//  display: none !important;
+// }
 #quiz-placeholder {
   position: fixed;
   z-index: 10;

@@ -6,7 +6,7 @@
 
 <script>
 import language from "../../language/main";
-
+import { _getClassStudentListApi } from "../../api/user/userApi"
 let auth = BJY.auth;
 let eventEmitter = BJY.eventEmitter;
 
@@ -26,9 +26,23 @@ export default {
   watch: {},
   methods: {},
   created() {
+    var _this = this
     eventEmitter.on(
       eventEmitter.ROLL_CALL, // 老师发起了点名
       (e, data) => {
+
+
+        let xx = `page=1&page_size=50&partner_id=83228320&room_id=21032159047031&timestamp=1615996148&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+        let sign = _this.$md5(xx)
+        let params = { partner_id: 83228320, room_id: 21032159047031, page: 1, page_size: 50, timestamp: 1615996148, sign: sign}
+        _getClassStudentListApi(params).then((response) => {
+            console.log('response11111111111111111' , response);
+          })
+
+
+
+
+
         this.timeLeft = data.duration;
         this.$Dialog
           .show({
@@ -40,7 +54,6 @@ export default {
             eventEmitter.trigger(eventEmitter.ROLL_CALL_RES);
           })
           .catch((e) => {
-            console.log(e);
           });
 
         this.applyTimer = setInterval(() => {
@@ -51,6 +64,8 @@ export default {
           $("#roll-call-time-left").text(this.timeLeft);
           this.timeLeft--;
         }, 1000);
+
+
       }
     );
   },

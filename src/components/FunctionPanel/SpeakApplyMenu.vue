@@ -70,7 +70,6 @@ export default {
             // replace: false,
               // 举手按钮被点击
               onApplyClick: () => {
-                console.log('11111111111111111111111111111111111111111');
                 if (!store.get("class.forbidAll")) {
                   this.$Toast('举手被禁止');
                   return;

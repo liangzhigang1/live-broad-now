@@ -12,7 +12,7 @@
       ></span>
     </div>
         <!-- :rules="rules" -->
-    <div class="placeholder">
+    <div v-show="status === statusMap.before" class="placeholder">
       <el-form :model="ruleForm"
                ref="ruleForm"
                label-width="260px"
@@ -41,12 +41,24 @@
         </el-form-item>
       </el-form>
     </div>
+    <div style="background-color: #313847" v-show="status === statusMap.ing" class="roll-call-ing">学生正在陆续答到中，{{ resultTimer }}秒后可查看点名结果，请稍后</div>
+
+    <div style="background-color: #313847;padding: 14px 12px" v-show="status === statusMap.after" class="after-roll-call">
+      <p class="result">答到情况：答到{{ ackCount }}人，未答到{{ nackCount }}人</p>
+      <div class="btn" @click="reCall">再次点名</div>
+    </div>
   </div>
 </template>
 
 <script>
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
+import language from "../../language/main";
+const ROLL_CALL_STATUS = {
+    before: 0,
+    ing: 1,
+    after: 2
+}
 
 export default {
   props: {
@@ -62,6 +74,21 @@ export default {
   },
   data() {
     return {
+      language: language,
+      status: 0,
+      isTeacher: auth.isTeacher(),
+      resultTimer: 10,
+      nextTimer: 10,
+      result: "",
+      rollCallDuration: 10,
+      visible: false,
+      status: ROLL_CALL_STATUS.before,
+      statusMap: ROLL_CALL_STATUS,
+      resultInterval: null,
+      ackCount: 0, // 答到人数
+      nackCount: 0, // 未答到人数
+
+
       radio: false,
       input: '',
       pwdVisible: false,
@@ -77,10 +104,19 @@ export default {
     };
   },
   methods: {
+    startRollCall() {
+      eventEmitter.trigger(eventEmitter.ROLL_CALL_TRIGGER, {
+        // 倒计时 秒
+        duration: this.rollCallDuration,
+      });
+    },
+    reCall() {
+        this.status = ROLL_CALL_STATUS.before
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          this.startRollCall()
         } else {
           console.log("error submit!!");
           return false;
@@ -119,11 +155,41 @@ export default {
   },
   created() {
     eventEmitter
-      .on("toggle_incentive-payment", (e, data) => {
-        console.log('1222222222222');
-        this.visible1 ? this.close() : this.open();
-      });
-    // eventEmitter.trigger(eventEmitter.QUIZ_REQ);
+      .on("toggle_roll_call", () => {
+        this.show();
+      })
+      .on(
+        // 点名结果
+        eventEmitter.ROLL_CALL_RESULT,
+        (e, data) => {
+          var result = data;
+        //  点名结果 
+          console.log(result);
+          this.status = ROLL_CALL_STATUS.after
+
+          this.ackCount = result.ackList.length
+          this.nackCount = result.nackList.length
+        }
+      )
+      .on(
+        // 点名开始
+        eventEmitter.ROLL_CALL,
+        () => {
+          console.log('11111111', 111111111111);
+            this.resultTimer = this.rollCallDuration
+            this.status = ROLL_CALL_STATUS.ing
+            this.resultInterval = null
+            this.resultInterval = setInterval(() => {
+                if (this.resultTimer > 0) {
+                    --this.resultTimer;
+                } else {
+                    // 时间到了需要老师端主动触发结束
+                    eventEmitter.trigger(eventEmitter.ROLL_CALL_FINISH);
+                    clearInterval(this.resultInterval)
+                }
+            }, 1000);
+        }
+      );
   },
   mounted() {
     this.isTeacher ? this.initTeacher() : this.initStudent();
