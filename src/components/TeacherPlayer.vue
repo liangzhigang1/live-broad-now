@@ -43,9 +43,12 @@ export default {
       };
       !auth.isTeacher() && (options.isWebRTCMix = isWebRTCMix);
       this.player = BJY.DefaultThemePlayer.create(options);
-      // setTimeout(() => {
-      //   this.player.footerOptions.onToggleClick()
-      // }, 100)
+      setTimeout(() => {
+        console.log('this.playerthis.playerthis.player', this.player.showCameraCover = true);
+        console.log('this.playerthis.playerthis.player', this.player.cameraCover = 'https://img.baijiayun.com/baijiacloud/124519933_5ysoobjh.png');
+        console.log('this.playerthis.playerthis.player', this.player.studentCameraCover = 'https://img.baijiayun.com/baijiacloud/124519933_5ysoobjh.png');
+        console.log('this.playerthis.playerthis.player', this.player);
+      }, 1000)
     },
 
     swap(presenterCameraNode, whiteboardNode) {

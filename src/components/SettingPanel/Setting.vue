@@ -45,10 +45,9 @@
             </div>
           </div>
           <!--  -->
-          <div style="margin-top: 30px">
+          <div v-if="isTeacher" style="margin-top: 30px">
             <span>摄像头背景</span>
             <div style="height: 205px;width: 100%;background: #262C38">
-
             </div>
           </div>
         </div>
@@ -60,9 +59,9 @@
           <!--  -->
           <div>
             <span style="margin-right: 17px">设备列表</span>
-            <el-select v-model="value2" style="width: 200px" placeholder="请选择">
+            <el-select v-model="value3" style="width: 200px" placeholder="请选择">
                 <el-option
-                  v-for="item in [{value: '0', label: 'FaceTime HD Camera'}]"
+                  v-for="item in [{value: '1', label: 'External Microphone (Built-in)'}]"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -73,7 +72,7 @@
           <div style="display: flex;margin-top: 20px">
             <div style="flex: 0 0 80px;line-height: 42px">输入音量</div>
             <div style="flex: 1">
-              <el-slider v-model="value4"></el-slider>
+              <el-slider @input="changeValue4" v-model="value4"></el-slider>
             </div>
           </div>
           <!--  -->
@@ -100,9 +99,9 @@
           <!--  -->
           <div>
             <span style="margin-right: 17px">设备列表</span>
-            <el-select v-model="value2" style="width: 200px" placeholder="请选择">
+            <el-select @change="changeValue5" v-model="value5" style="width: 200px" placeholder="请选择">
                 <el-option
-                  v-for="item in [{value: '1', label: 'Windows默认设备'}, {value: '2', label: 'Lenovo Easy Camera'}]"
+                  v-for="item in [{value: '0', label: 'Headphones (Built-in)'}, {value: '1', label: 'LG ULTRAWIDE (HDMI)'}]"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -113,11 +112,11 @@
           <div style="display: flex;margin-top: 20px">
             <div style="flex: 0 0 80px;line-height: 42px">输入音量</div>
             <div style="flex: 1">
-              <el-slider v-model="value4"></el-slider>
+              <el-slider @input="changeValue6" v-model="value6"></el-slider>
             </div>
           </div>
           <!--  -->
-          <div style="margin-top: 20px">
+          <!-- <div style="margin-top: 20px">
             <span>点击播放，是否能听到声音......</span>
             <div style="float: left;margin-top: 5px;">
               <el-button type="primary">扬声器测试</el-button> 
@@ -130,7 +129,7 @@
               <span style="background: #2B3240;border: 1px solid #6E7583;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
               <span style="background: #2B3240;border: 1px solid #6E7583;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -139,7 +138,7 @@
         <div style="padding-left: 24px;padding-right: 60px" class="maikefeng">
           <!--  -->
           <div>
-            <el-switch @change="changeSwitch" v-model="value6" inactive-text="上课后自动打开" >
+            <el-switch @change="changeSwitch" v-model="value7" inactive-text="上课后自动打开" >
             </el-switch>   
           </div>
         </div>
@@ -156,14 +155,18 @@ const auth = BJY.auth;
 let store = BJY.store;
 // 获取创建播放器的 Player 对象
 var Player = BJY.Player;
+var VolumeSlider = BJY.VolumeSlider;
 
 export default {
   data() {
     return {
-      value6: false,
+      value7: false,
+      value6: 20,
       value4: 50,
       value1: '0',
       value2: '0',
+      value3: '1',
+      value5: '0',
       options1: [
         {value: '0', label: 'FaceTime HD Camera'}
       ],
@@ -190,6 +193,24 @@ export default {
     };
   },
   methods: {
+    changeSwitch () {
+
+    },
+    changeValue5 () {
+      eventEmitter.trigger(eventEmitter.SPEAKER_INDEX_CHANGE_TRIGGER, {
+        index: Number(this.value5),
+      });
+    },
+    changeValue6 () {
+      eventEmitter.trigger(eventEmitter.SPEAKER_VOLUME_CHANGE_TRIGGER, {
+        value: Number(this.value6),
+      });
+    },
+    changeValue4 () {
+      eventEmitter.trigger(eventEmitter.MIC_VOLUME_CHANGE_TRIGGER, {
+        value: Number(this.value4),
+      });
+    },
     changeValue2 (e) {
       var player = BJY.Player.instances[BJY.store.get("user.id")];
       console.log('playerplayer1', BJY.userPublish);
@@ -258,12 +279,27 @@ export default {
     },
   },
   created() {
-    eventEmitter
-      .on("toggle_setting_dialog", (e, data) => {
-        this.visible ? this.close() : this.open();
-      });
+    
   },
   mounted() {
+    eventEmitter.on("toggle_setting_dialog", (e, data) => {
+        this.visible ? this.close() : this.open();
+      }).on("MIC_VOLUME_CHANGE", (e, data) => {
+        console.log('data1111', data);
+        this.value4 = data
+      }).on("SPEAKER_VOLUME_CHANGE", (e, data) => {
+        console.log('data2222', data);
+        this.value4 = data
+      }).on("SYSTEM_MIC_VOLUME_CHANGE", (e, data) => {
+        console.log('eeeeeee', data);
+        this.value4 = data
+      }).on("SYSTEM_SPEAKER_VOLUME_CHANGE", (e, data) => {
+        console.log('444444', data);
+        this.value4 = data
+      }).on("SPEAKER_VOLUME_CHANGE", (e, data) => {
+        console.log('444444', data);
+        this.value6 = data
+      })
     // eventEmitter.on(
     //   // 监听自己摄像头和麦克风变化
     //   eventEmitter.MEDIA_SWITCH_TRIGGER,

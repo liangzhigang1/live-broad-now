@@ -30,6 +30,7 @@ export default {
           this.$Toast(language.TIP_CLASS_NOT_START);
           return;
         }
+        console.log('1111111');
         if (store.get("class.speakState") == config.SPEAK_STATE_LIMIT) {
           this.$Toast(language.TIP_SPEAK_LIMIT);
           return;
@@ -37,6 +38,8 @@ export default {
         // 获取我的播放器
         var player = BJY.Player.instances[BJY.store.get("user.id")];
         // 设置麦克风设备
+        console.log('BJY.userPublish.setDevice', BJY.userPublish.setDevice);
+        console.log('BJY', BJY);
         BJY.userPublish.setDevice(player, null, !player.audioOn);
       },
     });
