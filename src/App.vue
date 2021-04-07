@@ -45,13 +45,10 @@
       <div :style="{right: hudong ? '290px' : '0px'}" class="kejian">
         <DocList v-show="isTeacher" />
       </div>
-   
-    
 
-      
-          <div v-show="!hudong" @click="showHuDong" class="wrap-hide1">
-              <span style="color: #fff;font-size: 20px;text-align: center;" class="icon iconfont">&#xeca6;</span>
-          </div>
+      <div v-show="!hudong" @click="showHuDong" class="wrap-hide1">
+          <span style="color: #fff;font-size: 20px;text-align: center;" class="icon iconfont">&#xeca6;</span>
+      </div>
       <!-- 模态框组件 -->
       <ModalPanel />
       <WorkPanel :visible.sync="visible" :work="work" />
@@ -232,13 +229,13 @@ export default {
           store.set("class.speakState", config.SPEAK_STATE_LIMIT);
         }
 
-        if (auth.isPresenter() && store.get("class.started")) {
+        // if (auth.isPresenter() && store.get("class.started")) {
+        if (auth.isTeacher() && store.get("class.started")) {
           setTimeout(() => {
             var player = BJY.Player.instances[BJY.store.get("user.id")];
             BJY.userPublish.setDevice(player, !player.videoOn, !player.audioOn);
           }, 1000);
         }
-
         if (auth.isStudent()) {
           $body.addClass("student");
         }

@@ -6,7 +6,7 @@ const ContentType = {
   FORM_UTF8: 'application/x-www-form-urlencoded;charset=utf-8',
   JSON: 'application/json',
   JSON_UTF8: 'application/json;charset=utf-8',
-  MULTIPART_FORM: 'mutipart/form-data'
+  MULTIPART_FORM: 'multipart/form-data; boundary=----WebKitFormBoundarynl6gT1BKdPWIejNq'
 }
 
 export default {

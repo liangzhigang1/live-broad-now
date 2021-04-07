@@ -64,10 +64,9 @@ export default {
         eventEmitter.ROLL_CALL_RESULT,
         (e, data) => {
           var result = data;
-        //  点名结果 
+          //  点名结果 
           console.log(result);
-          this.status = ROLL_CALL_STATUS.after
-
+          this.status = ROLL_CALL_STATUS.after    
           this.ackCount = result.ackList.length
           this.nackCount = result.nackList.length
         }

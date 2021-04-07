@@ -2,8 +2,8 @@ module.exports = {
   publicPath: './',
   devServer: {
     proxy: {
-      '/web': {
-        target: 'https://test-api.baijiayun.com',
+      '/?service=App.Common_Upload.Go': {
+        target: 'https://wkapi.shejizhizi.com/',
         changeOrigin: true,
         pathRewrite: {
           '^/web': '/web'

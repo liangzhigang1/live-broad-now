@@ -1,33 +1,28 @@
-<!-- 小测组件 -->
+<!-- 发布作业 -->
 <template>
   <div
     v-show="visible"
-    :class="isTeacher ? 'teacher' : 'student'"
+    :class="isTeacher ? 'teacher' : 'teacher'"
     id="quiz-xxx"
   >
     <div class="close-bar">
       <span class="bar-title">发布作业</span>
-      <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
-        ><i class="el-icon-close"></i
-      ></span>
+      <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"><i class="el-icon-close"></i></span>
     </div>
-        <!-- :rules="rules" -->
     <div class="placeholder">
-      <el-form
-        :model="ruleForm"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
+      <el-form :model="formItem"
+               ref="ruleForm"
+               label-width="100px"
+               class="demo-ruleForm">
         <div class="zuoye-box">
           <el-form-item label="作业名称" prop="name">
             <el-input
-              v-model="ruleForm.name"
+              v-model="formItem.name"
               placeholder="请输入作业名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="作业类型" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择作业类型">
+          <el-form-item label="作业类型" prop="type">
+            <el-select v-model="formItem.type" placeholder="请选择作业类型">
               <el-option label="随堂作业" value="0"></el-option>
               <el-option label="课后作业" value="1"></el-option>
               <el-option label="结课作业" value="2"></el-option>
@@ -35,7 +30,7 @@
           </el-form-item>
           <el-form-item label="截止时间">
             <el-date-picker
-              v-model="ruleForm.time"
+              v-model="formItem.time"
               type="datetime"
               placeholder="选择日期时间"
             >
@@ -44,39 +39,41 @@
           <el-form-item label="作业要求" prop="desc">
             <el-input
               type="textarea"
-              v-model="ruleForm.desc"
+              v-model="formItem.yaoqiu"
               :autosize="{ minRows: 4, maxRows: 6 }"
               placeholder="请输入作业要求"
             ></el-input>
           </el-form-item>
-          <el-form-item label="素材上传" prop="desc">
+          <el-form-item label="素材上传" prop="url">
             <p class="sucai-p"><span>图片</span>(jpg,png，gif格式)限定5MB,</p>
             <p class="sucai-p">
-              <span>视频</span
-              >(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
+              <span>视频</span>(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
             </p>
             <p class="sucai-p">
-              <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI
-              、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
+              <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
             </p>
+            <!-- accept="image/jpeg,image/png,image/jpg" -->
             <div style="margin-top: 5px">
-              <el-upload action="#" list-type="picture-card" :limit="9" :auto-upload="false">
-                    <i slot="default" class="el-icon-plus"></i>
-                    <!-- <div slot="file" slot-scope="{file}">
-                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-                      <span class="el-upload-list__item-actions">
-                        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                          <i class="el-icon-zoom-in"></i>
-                        </span>
-                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
-                          <i class="el-icon-download"></i>
-                        </span>
-                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                          <i class="el-icon-delete"></i>
-                        </span>
-                      </span>
-                    </div> -->
-                </el-upload>
+              <el-upload ref="upload"
+                          action=""
+                          :limit="9"
+                          list-type="picture-card"
+                          :auto-upload="false"
+                          :class="{disabled: disabled ? true : false}"
+                          :on-change="(file, fileList) => cosUploadFile(file, fileList)"
+                          :on-exceed="exceedPicture">               
+                <i slot="default" class="el-icon-plus"></i>
+                <div slot="file" slot-scope="{file}">
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+                  <span class="el-upload-list__item-delete" @click="handleDownload(file)">
+                    <i class="el-icon-download"></i>
+                  </span>
+                  <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
+                    <i class="el-icon-delete"></i>
+                  </span>
+               </div>
+    
+              </el-upload>
               </div>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="dialogImageUrl" alt="">
@@ -97,7 +94,7 @@
 <script>
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
-
+import { _uploadFileApi } from '../../api/upload/index'
 export default {
   data() {
     return {
@@ -107,24 +104,25 @@ export default {
       visible: false,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
-      ruleForm: {
+      formItem: {
         name: "",
-        region: "",
+        type: "",
         time: "",
-        desc: "",
+        yaoqiu: "",
+        url: ""
       },
     };
   },
   methods: {
+    handleDownload (file) {
+      console.log('filefilefile', file);
+    },
     handleRemove(file) {
       console.log(file);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handleDownload(file) {
-      console.log(file);
+      // this.dialogVisible = true;
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -139,67 +137,73 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    // 上传图片
+        cosUploadFile (file) {
+            const isJPG = file.raw.type === "image/jpeg" || file.raw.type === "image/png" || file.raw.type === "image/gif";
+            if (!isJPG) {
+                this.$message.error('上传图片只能是 JPG/PNG/GIF 格式!')
+            }
+            if (isJPG) {
+                let width = 1080;
+                let height = 608;
+                let _URL = window.URL || window.webkitURL;
+                let image = new Image();
+                image.onload = () => {
+                    const isSize = (image.width >= 100 && image.height >= 80) && (image.width <= 800 && image.height <= 400);
+                    const isLt2M = file.size / 1024 / 1024 < 2
+                    if (!isLt2M) {
+                        this.$message.error('上传图片大小不能超过 2MB!')
+                    }
+                    if (!isSize) {
+                        this.$message.error("上传图片尺寸不符合,请上传100*80至800*400的图片!");
+                    }
+                    if (isLt2M && isSize) {
+                      console.log('file.raw', file.raw);
+                      const formData = new FormData();
+                      formData.append("file",file.raw)
+                      _uploadFileApi(formData).then(res => {
+                        console.log('resresres', res)
+                      })
+                    } else {
+                        this.$refs.upload.clearFiles()
+                    }
+                };
+                image.src = _URL.createObjectURL(file.raw);
+            } else {
+                this.$refs.upload.clearFiles()
+            }
+
+        },
+    // 图片限制一个
+    exceedPicture (files, fileList) {
+      if (fileList && fileList.length > 9) {
+        this.disabled = true;
+        return this.$message.error('最多只能添加9个素材 !')
+      }
+    },
     open(data) {
       this.visible = true;
-      this.$nextTick(() => {
-        !this.isTeacher;
-      });
     },
     close() {
       this.visible = false;
     },
-    initTeacher() {},
-    initStudent() {
-      // BJY.quizStudent.init();
-    },
   },
   created() {
     eventEmitter
-      // .on(
-      //   // 小测开始事件
-      //   eventEmitter.QUIZ_START,
-      //   (e, data) => {
-      //     console.log(data);
-      //     this.forceJoin = data.forceJoin;
-      //     this.open(data);
-      //   }
-      // )
-      // // 测验结束
-      // .on(eventEmitter.QUIZ_END, (e, data) => {
-      //   !this.isTeacher && this.close();
-      // })
-      // .on(eventEmitter.QUIZ_CLOSE, (e, data) => {
-      //   if (!data.force && $.isEmptyObject(data.solution)) {
-      //       alert('请至少回答一个题目之后提交');
-      //       return;
-      //   }
-      //   this.close();
-      // })
-      // .on(
-      //   // 查看小测答案
-      //   eventEmitter.QUIZ_SOLUTION,
-      //   (e, data) => {
-      //     this.forceJoin = false;
-      //     this.open(data);
-      //   }
-      // )
-      // .on(eventEmitter.QUIZ_SUBMIT, (e, data) => {
-      //   console.log(data);
-      //   this.close();
-      // })
       .on("toggle_quiz_dialog", (e, data) => {
         this.visible ? this.close() : this.open();
       });
-    // eventEmitter.trigger(eventEmitter.QUIZ_REQ);
   },
   mounted() {
-    this.isTeacher ? this.initTeacher() : this.initStudent();
   },
   beforeDestroy() {},
 };
 </script>
 
 <style lang="scss" scoped>
+.disabled .el-upload--picture-card {
+    display: none !important;
+}
 #quiz-xxx {
   position: absolute;
   z-index: 10;

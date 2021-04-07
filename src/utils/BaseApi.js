@@ -21,10 +21,8 @@ const flyRequest = new FlyRequest({
 flyRequest.registerRequestInterceptor(request => {
   // 根据_mock参数，从环境变量中获取BASE_API或MOCK_BASE_API
   request.baseURL = request._mock ? process.env.MOCK_BASE_API : baseUrl
-  const token = getToken()
-  if (token) {
-    request.headers['Authorization'] = 'Bearer ' + token
-  }
+  // request.headers['token'] = 'AA61EB2D229AAA9EC08290ED772FAC13X24'
+  // const token = getToken()
   console.warn('####### API Request: ', request)
   // 可以显式返回request, 也可以不返回，没有返回值时拦截器中默认返回request
   return request

@@ -30,15 +30,25 @@ export default {
     eventEmitter.on(
       eventEmitter.ROLL_CALL, // 老师发起了点名
       (e, data) => {
+        // let xx = `page=1&page_size=50&partner_id=83228320&room_id=21032159047031&timestamp=1615996148&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+        // let sign = _this.$md5(xx)
+        // let params = { partner_id: 83228320, room_id: 21032159047031, page: 1, page_size: 50, timestamp: 1615996148, sign: sign}
+        // _getClassStudentListApi(params).then((response) => {
+        //     console.log('response11111111111111111' , response);
+        //   })
 
-
-        let xx = `page=1&page_size=50&partner_id=83228320&room_id=21032159047031&timestamp=1615996148&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
-        let sign = _this.$md5(xx)
-        let params = { partner_id: 83228320, room_id: 21032159047031, page: 1, page_size: 50, timestamp: 1615996148, sign: sign}
-        _getClassStudentListApi(params).then((response) => {
-            console.log('response11111111111111111' , response);
-          })
-
+        // 随机抽几个人的算法
+        var classStudentList = []
+        var posArray = []
+        do {
+          var n = Math.floor(Math.random() *  classStudentList.length);
+          for(var i = 0; i < posArray.length; i++) {
+            if (classStudentList[n].id == posArray[i].id) { 
+              break;
+            }
+          }
+          posArray.push(classStudentList[n]);
+        } while(posArray.length != 4);
 
 
 
