@@ -4,7 +4,7 @@
     <div v-if="loaded" ref="main" id="main">
       <HorseLamp />
       <div class="container">
-        <div :style="{backgroundImage: showStartBtn ? 'url(' + src + ')' : '', right: hudong ? '290px' : '0px', bottom: zuoye ? '254px' : '100px'}" class="class-panel">
+        <div :style="{right: hudong ? '290px' : '0px', bottom: zuoye ? '254px' : '100px'}" class="class-panel">
             <!-- 老师播放器 -->
           <TeacherPlayer v-show="!showStartBtn" />
         <div v-show="showStartBtn" class="start-btn" @click="handleClassStart">

@@ -34,14 +34,15 @@ flyRequest.registerRequestInterceptor(request => {
 flyRequest.registerResponseInterceptor(
   response => {
     const res = response.data
+    console.log('3123131322222132323', res);
     // 如果自定义代码不是0，则判断为错误。
-    if (res.code !== 0 && res.code !== 10001) {
+    if (res.code !== 0) {
       Message({
-        message: res.message || 'error',
+        message: res.msg || 'error',
         type: 'error',
         duration: 5 * 1000
       })
-      return Promise.reject(res.message || 'error')
+      return res
     } else {
       return res
     }

@@ -9,7 +9,7 @@ const baseUrl = 'https://wkapi.shejizhizi.com/'
 const service = axios.create({  
   baseURL: baseUrl, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 60000 // 请求超时时间
+  timeout: 160000 // 请求超时时间
 })
 
 // request(请求)拦截器

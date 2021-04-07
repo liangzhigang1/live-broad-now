@@ -1,4 +1,4 @@
-<!-- 提交作业 -->
+<!-- 发布作业 -->
 <template>
   <div
     v-show="visible1"
@@ -6,71 +6,88 @@
     id="quiz-submit-work"
   >
     <div class="close-bar">
-      <span class="bar-title">提交作业</span>
-      <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
-        ><i class="el-icon-close"></i
-      ></span>
+      <span class="bar-title">发布作业</span>
+      <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"><i class="el-icon-close"></i></span>
     </div>
-        <!-- :rules="rules" -->
     <div class="placeholder">
-      <el-form
-        :model="ruleForm"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
+      <el-form :model="formItem"
+               ref="ruleForm"
+               label-width="100px"
+               class="demo-ruleForm">
         <div class="zuoye-box">
-          <el-form-item label="作业标题" prop="name">
+          <el-form-item label="作业名称" prop="name">
             <el-input
-              v-model="ruleForm.name"
-              placeholder="请输入作业标题"
+              v-model="formItem.name"
+              placeholder="请输入作业名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="作业类型" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择作业类型">
-              <el-option label="照片" value="0"></el-option>
-              <el-option label="视频" value="1"></el-option>
-              <el-option label="音频" value="2"></el-option>
+          <el-form-item label="作业类型" prop="type">
+            <el-select v-model="formItem.type" placeholder="请选择作业类型">
+              <el-option label="随堂作业" value="0"></el-option>
+              <el-option label="课后作业" value="1"></el-option>
+              <el-option label="结课作业" value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="文件要求" prop="desc">
+          <el-form-item label="素材上传" prop="url">
             <p class="sucai-p"><span>图片</span>(jpg,png，gif格式)限定5MB,</p>
             <p class="sucai-p">
-              <span>视频</span
-              >(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
+              <span>视频</span>(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
             </p>
             <p class="sucai-p">
-              <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI
-              、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
+              <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
             </p>
             <div style="margin-top: 5px">
-              <el-upload action="#" list-type="picture-card" :limit="9" :auto-upload="false">
-                    <i slot="default" class="el-icon-plus"></i>
-                    <!-- <div slot="file" slot-scope="{file}">
-                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-                      <span class="el-upload-list__item-actions">
-                        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                          <i class="el-icon-zoom-in"></i>
-                        </span>
-                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
-                          <i class="el-icon-download"></i>
-                        </span>
-                        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                          <i class="el-icon-delete"></i>
-                        </span>
-                      </span>
-                    </div> -->
-                </el-upload>
+              <el-upload ref="upload"
+                          action=""
+                          :limit="1"
+                          accept="image/jpeg,image/png,image/gif,image/jpg,audio/mpeg,audio/mp3,video/mp4"
+                          list-type="picture-card"
+                          :auto-upload="false"
+                          :class="{disabled: disabled ? true : false}"
+                          :on-change="(file, fileList) => cosUploadFile(file, fileList)"
+
+                          :on-exceed="exceedPicture">               
+                <i slot="default" class="el-icon-plus"></i>
+                <div slot="file" slot-scope="{file}">
+                  <img
+                    class="el-upload-list__item-thumbnail"
+                    :src="file.url" alt=""
+                  >
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-delete"
+                      @click="handleDownload(file)"
+                    >
+                      <i class="el-icon-download"></i>
+                    </span>
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file)"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                </div>
+    
+              </el-upload>
+              
               </div>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="dialogImageUrl" alt="">
               </el-dialog>
           </el-form-item>
         </div>
-        <el-form-item style="text-align: right; margin: 14px 0 2px">
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >确认</el-button
-          >
+        <el-form-item style="text-align: right; margin: 14px 0 -6px">
+          <el-button v-if="!uploading" type="primary" @click="submitForm('ruleForm')">确认</el-button>
+          <el-button v-if="uploading" type="primary">上传中</el-button>
           <el-button @click="close">取消</el-button>
         </el-form-item>
       </el-form>
@@ -81,7 +98,7 @@
 <script>
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
-
+import { _uploadFileApi } from '../../api/upload/index'
 export default {
   props: {
     visibleSubmitWork: {
@@ -96,34 +113,44 @@ export default {
   },
   data() {
     return {
+      uploading: false,
       dialogImageUrl: '',
       dialogVisible: false,
       disabled: false,
       visible1: false,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
-      ruleForm: {
+      formItem: {
         name: "",
-        region: "",
-        time: "",
-        desc: "",
+        type: "",
+        url: ""
       },
+      ruleForm: {
+
+      }
     };
   },
   methods: {
+    handleDownload (file) {
+      console.log('filefilefile', file);
+    },
     handleRemove(file) {
       console.log(file);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handleDownload(file) {
-      console.log(file);
+      // this.dialogVisible = true;
     },
     submitForm(formName) {
+      if (!this.formItem.name) {
+        return this.$message.error('作业名称不能为空!')
+      }
+      if (!this.formItem.type) {
+        return this.$message.error('作业类型不能为空!')
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log('this.formItemthis.formItem', this.formItem)
           alert("submit!");
         } else {
           console.log("error submit!!");
@@ -134,30 +161,113 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    // 上传图片
+        cosUploadFile (file) {
+          console.log('this.$refs.upload', this.$refs.upload)
+          this.uploading = true
+          if (file.raw.type.indexOf('image') != -1) {
+              let width = 1080;
+              let height = 608;
+              let _URL = window.URL || window.webkitURL;
+              let image = new Image();
+              image.onload = () => {
+                  const isSize = (image.width >= 100 && image.height >= 80) && (image.width <= 800 && image.height <= 400);
+                  const isLt2M = file.size / 1024 / 1024 < 5
+                  if (!isLt2M) {
+                      this.$message.error('上传图片大小不能超过 5MB!')
+                  }
+                  if (!isSize) {
+                      this.$message.error("上传图片尺寸不符合,请上传100*80至800*400的图片!");
+                  }
+                  if (isLt2M && isSize) {
+                    console.log('file.raw', file.raw);
+                    const formData = new FormData();
+                    formData.append("file",file.raw)
+                    _uploadFileApi(formData).then(res => {
+                      console.log('resresres', res)
+                      this.uploading = false
+                      if (res.code == 0) {
+                        if (this.formItem.url) {
+                          this.formItem.url += ',' + res.data.url
+                        } else {
+                          this.formItem.url = res.data.url
+                        }
+                      } else {
+                        this.$refs.upload.uploadFiles.pop()
+                      }     
+                    })
+                  } else {
+                  }
+              };
+              image.src = _URL.createObjectURL(file.raw);
+
+
+
+          } else if (file.raw.type.indexOf('audio') != -1) {
+            console.log('file.raw', file.raw);
+            const formData = new FormData();
+            formData.append("file",file.raw)
+            _uploadFileApi(formData).then(res => {
+              this.uploading = false
+              if (res.code == 0) {
+                if (this.formItem.url) {
+                  this.formItem.url += ',' + res.data.url
+                } else {
+                  this.formItem.url = res.data.url
+                }
+              } else {
+                this.$refs.upload.uploadFiles.pop()
+              }
+
+            })
+
+          } else if (file.raw.type.indexOf('video') != -1) {
+            console.log('file.raw', file.raw);
+            const formData = new FormData();
+            formData.append("file",file.raw)
+            _uploadFileApi(formData).then(res => {
+              console.log('resresres', res)
+              this.uploading = false
+              if (res.code == 0) {
+                if (this.formItem.url) {
+                  this.formItem.url += ',' + res.data.url
+                } else {
+                  this.formItem.url = res.data.url
+                }
+              } else {
+                this.$refs.upload.uploadFiles.pop()
+              }
+            })
+          }
+
+        },
+    // 图片限制一个
+    exceedPicture (files, fileList) {
+      if (fileList && fileList.length > 1) {
+        this.disabled = true;
+        return this.$message.error('最多只能添加1个素材 !')
+      }
+    },
     open(data) {
       this.visible1 = true;
-      this.$nextTick(() => {
-        !this.isTeacher;
-      });
     },
     close() {
       this.visible1 = false;
       this.$emit('closeSubmitWork', this.visible1)
     },
-    initTeacher() {},
-    initStudent() {
-    },
   },
   created() {
   },
   mounted() {
-    this.isTeacher ? this.initTeacher() : this.initStudent();
   },
   beforeDestroy() {},
 };
 </script>
 
 <style lang="scss" scoped>
+.disabled .el-upload--picture-card {
+    display: none !important;
+}
 #quiz-submit-work {
   position: fixed;
   z-index: 10;
@@ -170,26 +280,6 @@ export default {
   border-radius: 4px;
   background: #fff;
   border: 1px solid #6e7583;
-  // &.student {
-  //   width: max-content;
-  //   height: 80%;
-
-  //   .close-bar {
-  //     position: absolute;
-  //     width: 100%;
-  //     top: 0;
-  //   }
-  //   .placeholder {
-  //     top: 30px;
-  //     bottom: 0;
-  //     position: absolute;
-  //     width: 100%;
-  //   }
-  // }
-  // &.teacher {
-  //   width: max-content;
-  // }
-
   .close-bar {
     background: #1c222e;
     height: 30px;

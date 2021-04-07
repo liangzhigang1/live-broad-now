@@ -2,13 +2,15 @@ module.exports = {
   publicPath: './',
   devServer: {
     proxy: {
-      '/?service=App.Common_Upload.Go': {
-        target: 'https://wkapi.shejizhizi.com/',
+      '/api': {
+        target: 'https://wkapi.shejizhizi.com',
+        ws: true,
         changeOrigin: true,
         pathRewrite: {
-          '^/web': '/web'
+          '^/api': ''
         }
       }
-    }
+    },
+    disableHostCheck: true
   }
 }
