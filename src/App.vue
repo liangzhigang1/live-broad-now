@@ -82,7 +82,7 @@ import swiper from './components/swiper'
 // swiper
 import WorkPanel from './components/WorkPanel'
 
-import { _classBindStudentBatchApi, _getUserListApi } from './api/user/userApi'
+import { _classBindStudentBatchApi, _getUserListApi, _sysUserAddBaiJiaApi, _classBindStudentApi  } from './api/user/userApi'
 
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
@@ -290,7 +290,7 @@ export default {
     showWork () {
       this.zuoye = !this.zuoye
     },
-    init() {
+    async init() {
       var _this = this
       // 默认demo教室-学生端
       var options = {
@@ -315,24 +315,20 @@ export default {
         });
       }
       console.log('options:', options);
-      if (options.user_role == 0) {
-        
-        let xx = `partner_id=83228320&room_id=21032159047031&timestamp=1615996148&user_ids=${options.user_number}&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
-        let sign = _this.$md5(xx)
-        let params = { partner_id: 83228320, room_id: 21032159047031, user_ids: options.user_number, timestamp: 1615996148, sign: sign}
-        _classBindStudentBatchApi(params).then((response) => {
-            console.log('response11111111111111111' , response);
-          })
-
-        let xx1 = `page=1&page_size=50&partner_id=83228320&role=0&timestamp=1615996149&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
-        let sign1 = _this.$md5(xx1)
-        let params1 = { partner_id: 83228320, page: 1, page_size: 50, role: 0, timestamp: 1615996149, sign: sign1}
-        _getUserListApi(params1).then((response) => {
-            console.log('response11111111111111111' , response);
-          })
-
-        
-      }
+      await _sysUserAddBaiJiaApi()
+      _classBindStudentApi({"room id": 21032159047031}).then((response) => {
+        console.log('response111111111111111111111' , response);
+      })
+        // let xx = `partner_id=83228320&room_id=21032159047031&timestamp=1615996148&user_ids=${options.user_number}&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+        // let sign = _this.$md5(xx)
+        // let params = { partner_id: 83228320, room_id: 21032159047031, user_ids: options.user_number, timestamp: 1615996148, sign: sign}
+        // _classBindStudentBatchApi(params).then((response) => {
+        //   })
+        // let xx1 = `page=1&page_size=50&partner_id=83228320&role=0&timestamp=1615996149&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+        // let sign1 = _this.$md5(xx1)
+        // let params1 = { partner_id: 83228320, page: 1, page_size: 50, role: 0, timestamp: 1615996149, sign: sign1}
+        // _getUserListApi(params1).then((response) => {
+        //   })                
 
 // url: "https://e83228320.at.baijiayun.com/web/room/enter?
 // room_id=21032159047031&

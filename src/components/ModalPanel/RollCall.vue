@@ -29,16 +29,16 @@ export default {
     var _this = this
     eventEmitter.on(
       eventEmitter.ROLL_CALL, // 老师发起了点名
-      (e, data) => {
+      async (e, data) => {
         // let xx = `page=1&page_size=50&partner_id=83228320&room_id=21032159047031&timestamp=1615996148&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
         // let sign = _this.$md5(xx)
         // let params = { partner_id: 83228320, room_id: 21032159047031, page: 1, page_size: 50, timestamp: 1615996148, sign: sign}
-        // _getClassStudentListApi(params).then((response) => {
-        //     console.log('response11111111111111111' , response);
-        //   })
+        let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: 21032159047031})
+        if (result.data.list.length > 0) {
 
-        // 随机抽几个人的算法
-        var classStudentList = []
+
+          // 随机抽几个人的算法
+        var classStudentList = result.data.list
         var posArray = []
         do {
           var n = Math.floor(Math.random() *  classStudentList.length);
@@ -48,12 +48,22 @@ export default {
             }
           }
           posArray.push(classStudentList[n]);
-        } while(posArray.length != 4);
+        } while(posArray.length != 1);
 
-
-
-
+        console.error('posArrayposArrayposArray', posArray)
         this.timeLeft = data.duration;
+        console.log('BJY.store.get("user.id")', BJY.store.get("user"));
+
+        if (BJY.store.get("user").number == posArray[0].id) {
+          setTimeout(() => {
+            console.error('32132131231233222222222222');
+            var player = BJY.Player.instances[BJY.store.get("user.id")];
+            BJY.userPublish.setDevice(player, !player.videoOn, !player.audioOn);
+          }, 1000);
+        }
+        
+
+
         this.$Dialog
           .show({
             title: "点名",
@@ -75,7 +85,8 @@ export default {
           this.timeLeft--;
         }, 1000);
 
-
+        } else {
+        }
       }
     );
   },
