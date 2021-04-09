@@ -4,6 +4,7 @@ import Qs from 'qs'
 // import config from '@/config'
 import { getToken } from './auth'
 import { MessageBox, Message } from 'element-ui'
+const auth = BJY.auth;
 
 
 // const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
@@ -21,7 +22,7 @@ const flyRequest = new FlyRequest({
 flyRequest.registerRequestInterceptor(request => {
   // 根据_mock参数，从环境变量中获取BASE_API或MOCK_BASE_API
   request.baseURL = request._mock ? process.env.MOCK_BASE_API : baseUrl
-  // request.headers['token'] = 'AA61EB2D229AAA9EC08290ED772FAC13X24'
+  request.headers['token'] = auth.isTeacher() ? 'AA61EB2D229AAA9EC08290ED772FAC13X24' : '67969A9E87AA489CBB199CC2B1B66C71X31'
   // const token = getToken()
   console.warn('####### API Request: ', request)
   // 可以显式返回request, 也可以不返回，没有返回值时拦截器中默认返回request
@@ -34,7 +35,6 @@ flyRequest.registerRequestInterceptor(request => {
 flyRequest.registerResponseInterceptor(
   response => {
     const res = response.data
-    console.log('3123131322222132323', res);
     // 如果自定义代码不是0，则判断为错误。
     if (res.code !== 0) {
       Message({
@@ -49,7 +49,8 @@ flyRequest.registerResponseInterceptor(
   },
   error => {
     // 请求失败调用
-    if (error && error.response && error.response.status) {
+    console.log('313132', error);
+    if (error && error.message) {
       // 请求错误提示
       Message({
         message: error.message,
@@ -58,7 +59,7 @@ flyRequest.registerResponseInterceptor(
         duration: 1000 * 1.5 * 3
       });
     }
-    return Promise.reject(error);
+    return error;
   }
 )
 

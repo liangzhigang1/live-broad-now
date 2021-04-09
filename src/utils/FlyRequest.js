@@ -27,7 +27,7 @@ class FlyRequest {
         headers: {},        // 请求头
         baseURL: '',        // 请求基地址
         parseJson: true,    // 是否自动将Content-Type为“application/json”的响应数据转化为JSON对象，默认为true
-        timeout: 1000 * 15  // 超时时间，默认15秒
+        timeout: 1000 * 30  // 超时时间，默认15秒
       },
       config
     )

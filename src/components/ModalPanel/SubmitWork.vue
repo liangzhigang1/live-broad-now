@@ -15,20 +15,20 @@
                label-width="100px"
                class="demo-ruleForm">
         <div class="zuoye-box">
-          <el-form-item label="作业名称" prop="name">
+          <el-form-item label="作业标题" prop="title">
             <el-input
-              v-model="formItem.name"
-              placeholder="请输入作业名称"
+              v-model="formItem.title"
+              placeholder="请输入作业标题"
             ></el-input>
           </el-form-item>
-          <el-form-item label="作业类型" prop="type">
-            <el-select v-model="formItem.type" placeholder="请选择作业类型">
-              <el-option label="随堂作业" value="0"></el-option>
-              <el-option label="课后作业" value="1"></el-option>
-              <el-option label="结课作业" value="2"></el-option>
+          <el-form-item label="作业类型" prop="work_type">
+            <el-select v-model="formItem.work_type" placeholder="请选择作业类型">
+              <el-option label="图片" value="1"></el-option>
+              <el-option label="视频" value="2"></el-option>
+              <el-option label="压缩文件" value="3"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="素材上传" prop="url">
+          <el-form-item label="素材上传" prop="file_url">
             <p class="sucai-p"><span>图片</span>(jpg,png，gif格式)限定5MB,</p>
             <p class="sucai-p">
               <span>视频</span>(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
@@ -37,48 +37,19 @@
               <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
             </p>
             <div style="margin-top: 5px">
-              <el-upload ref="upload"
-                          action=""
-                          :limit="1"
-                          accept="image/jpeg,image/png,image/gif,image/jpg,audio/mpeg,audio/mp3,video/mp4"
-                          list-type="picture-card"
-                          :auto-upload="false"
-                          :class="{disabled: disabled ? true : false}"
-                          :on-change="(file, fileList) => cosUploadFile(file, fileList)"
-
-                          :on-exceed="exceedPicture">               
+              <el-upload
+                id="uploadVideo"
+                ref="upload"
+                action="#"
+                :limit="1"
+                list-type="picture-card"
+                :class="{disabled: disabled ? true : false}"
+                accept="image/jpeg,image/png,image/gif,image/jpg,audio/mpeg,audio/mp3,video/mp4"
+                :on-change="(file, fileList) => cosUploadFile(file, fileList)"
+                :on-remove="handleRemove"
+                :auto-upload="false">
                 <i slot="default" class="el-icon-plus"></i>
-                <div slot="file" slot-scope="{file}">
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url" alt=""
-                  >
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleDownload(file)"
-                    >
-                      <i class="el-icon-download"></i>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file)"
-                    >
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </div>
-    
               </el-upload>
-              
               </div>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="dialogImageUrl" alt="">
@@ -99,6 +70,8 @@
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 import { _uploadFileApi } from '../../api/upload/index'
+import { _submitWorkApi } from '../../api/work/index'
+
 export default {
   props: {
     visibleSubmitWork: {
@@ -121,9 +94,10 @@ export default {
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       formItem: {
-        name: "",
-        type: "",
-        url: ""
+        room_id: "21032159047031",
+        title: "",
+        work_type: "",
+        file_url: ""
       },
       ruleForm: {
 
@@ -139,19 +113,34 @@ export default {
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
-      // this.dialogVisible = true;
     },
     submitForm(formName) {
-      if (!this.formItem.name) {
-        return this.$message.error('作业名称不能为空!')
+      if (!this.formItem.title) {
+        return this.$message.error('作业标题不能为空!')
       }
-      if (!this.formItem.type) {
+      if (!this.formItem.work_type) {
         return this.$message.error('作业类型不能为空!')
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('this.formItemthis.formItem', this.formItem)
-          alert("submit!");
+          _submitWorkApi(this.formItem).then(res => {
+              if (res.code === 0) {
+                  this.$message({
+                      message: '保存成功',
+                      type: 'success',
+                      duration: 1000 * 1.5
+                  });
+              }
+          }).finally(() => {
+            this.$refs.upload.clearFiles();
+            this.formItem = {
+              room_id: "21032159047031",
+              title: "",
+              work_type: "",
+              file_url: ""
+            }
+            this.close()
+          })
         } else {
           console.log("error submit!!");
           return false;
@@ -174,7 +163,7 @@ export default {
                   const isSize = (image.width >= 100 && image.height >= 80) && (image.width <= 800 && image.height <= 400);
                   const isLt2M = file.size / 1024 / 1024 < 5
                   if (!isLt2M) {
-                      this.$message.error('上传图片大小不能超过 5MB!')
+                      return this.$message.error('上传图片大小不能超过 5MB!')
                   }
                   if (!isSize) {
                       this.$message.error("上传图片尺寸不符合,请上传100*80至800*400的图片!");
@@ -187,10 +176,10 @@ export default {
                       console.log('resresres', res)
                       this.uploading = false
                       if (res.code == 0) {
-                        if (this.formItem.url) {
-                          this.formItem.url += ',' + res.data.url
+                        if (this.formItem.file_url) {
+                          this.formItem.file_url += ',' + res.data.url
                         } else {
-                          this.formItem.url = res.data.url
+                          this.formItem.file_url = res.data.url
                         }
                       } else {
                         this.$refs.upload.uploadFiles.pop()
@@ -204,16 +193,21 @@ export default {
 
 
           } else if (file.raw.type.indexOf('audio') != -1) {
+            const isLt2M = file.size / 1024 / 1024 < 5
+            if (!isLt2M) {
+              this.$refs.upload.uploadFiles.pop()
+              return this.$message.error('上传音频大小不能超过 5MB!')
+            }
             console.log('file.raw', file.raw);
             const formData = new FormData();
             formData.append("file",file.raw)
             _uploadFileApi(formData).then(res => {
               this.uploading = false
               if (res.code == 0) {
-                if (this.formItem.url) {
-                  this.formItem.url += ',' + res.data.url
+                if (this.formItem.file_url) {
+                  this.formItem.file_url += ',' + res.data.url
                 } else {
-                  this.formItem.url = res.data.url
+                  this.formItem.file_url = res.data.url
                 }
               } else {
                 this.$refs.upload.uploadFiles.pop()
@@ -222,6 +216,11 @@ export default {
             })
 
           } else if (file.raw.type.indexOf('video') != -1) {
+            const isLt2M = file.size / 1024 / 1024 < 10
+            if (!isLt2M) {
+              this.$refs.upload.uploadFiles.pop()
+              return this.$message.error('上传视频大小不能超过 10MB!')
+            }
             console.log('file.raw', file.raw);
             const formData = new FormData();
             formData.append("file",file.raw)
@@ -229,17 +228,32 @@ export default {
               console.log('resresres', res)
               this.uploading = false
               if (res.code == 0) {
-                if (this.formItem.url) {
-                  this.formItem.url += ',' + res.data.url
+                if (this.formItem.file_url) {
+                  this.formItem.file_url += ',' + res.data.url
                 } else {
-                  this.formItem.url = res.data.url
+                  this.formItem.file_url = res.data.url
                 }
               } else {
                 this.$refs.upload.uploadFiles.pop()
               }
             })
           }
+          setTimeout(() => {
+            var parent = document.querySelectorAll("#uploadVideo ul li");
+            for (let i = 0; i < parent.length; i++) {
+                if (parent[i].querySelector("img")) {
+                    var video = parent[i].querySelector("img")
+                    console.log('videovideo', video);
+                    var newVideo = document.createElement('img');
+                    newVideo.src = require('../../assets/img/zip.png');
+                    newVideo.class = "el-upload-list__item-thumbnail";
+                    newVideo.style = "width:100%;height:100%;";
+                    parent[i].appendChild(newVideo);
+                    parent[i].removeChild(video);
 
+                }
+            }
+          }, 100);
         },
     // 图片限制一个
     exceedPicture (files, fileList) {
