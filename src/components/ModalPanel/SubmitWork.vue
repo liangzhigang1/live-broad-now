@@ -132,13 +132,6 @@ export default {
                   });
               }
           }).finally(() => {
-            this.$refs.upload.clearFiles();
-            this.formItem = {
-              room_id: "21032159047031",
-              title: "",
-              work_type: "",
-              file_url: ""
-            }
             this.close()
           })
         } else {
@@ -266,6 +259,13 @@ export default {
       this.visible1 = true;
     },
     close() {
+      this.$refs.upload.clearFiles();
+      this.formItem = {
+        room_id: "21032159047031",
+        title: "",
+        work_type: "",
+        file_url: ""
+      }
       this.visible1 = false;
       this.$emit('closeSubmitWork', this.visible1)
     },
