@@ -70,7 +70,7 @@ export default {
             // replace: false,
               // 举手按钮被点击
               onApplyClick: () => {
-                if (!store.get("class.forbidAll")) {
+                if (store.get("class.forbidAll")) {
                   this.$Toast('举手被禁止');
                   return;
                 }
@@ -108,5 +108,7 @@ export default {
 
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
-
+.menu-speak-apply {
+  z-index: 100000;
+}
 </style>
