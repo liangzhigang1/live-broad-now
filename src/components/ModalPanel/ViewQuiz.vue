@@ -16,24 +16,21 @@
       >
         <div class="zuoye-box">
           <el-form-item label="作业名称" prop="name">
-            UI基础入门
+            {{ ruleForm.title }}
           </el-form-item>
-          <el-form-item label="作业类型" prop="region">
+          <!-- <el-form-item label="作业类型" prop="region">
             随堂作业
           </el-form-item>
           <el-form-item label="截止时间">
             2021-03-03    17：09：00
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="作业要求" prop="desc">
-            作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求
+            {{ ruleForm.work_require }}
           </el-form-item>
           <el-form-item label="作业素材" prop="desc">
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
-            <div style="float: left;width: 80px;height: 80px;background: #1D2129;margin-right: 3px;margin-bottom: 3px"></div>
+            <div class="work-list" v-for="(item, index) in this.fileList" :key="index" style="float: left;width: 80px;height: 80px;margin-right: 3px;margin-bottom: 3px">
+
+            </div>
           </el-form-item>
         </div>
         <el-form-item style="text-align: right; margin: 14px 0 -6px">
@@ -50,6 +47,7 @@
 <script>
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
+import {_queryPushWorkListApi} from '../../api/work'
 
 export default {
   props: {
@@ -60,19 +58,36 @@ export default {
   },
   watch: {
     visibleViewQuiz (val) {
-      this.visible1 = val
+      let temp = {room_id: 21032159047031, last_file_id: 0, page_size: 1}
+      _queryPushWorkListApi(temp).then(res => {
+        console.log('fffff', res)
+        if (res.data.length > 0) {
+          console.log('res.data.file_url', res.data.file_url);
+          let tempFlieList = res.data[0].file_url.split(',')
+          this.ruleForm = res.data[0]
+          tempFlieList.forEach((item, index) => {
+            this.fileList.push({name: 'item' + index, url: item})
+          })
+          console.log('this.fileList', this.fileList);
+          this.visible1 = val
+        } else {
+          return this.$message.error('未发布作业！')
+        }
+      })
     }
   },
   data() {
     return {
+      fileList: [],
       visible1: this.visibleViewQuiz,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       ruleForm: {
-        name: "",
-        region: "",
-        time: "",
-        desc: "",
+        work_require: "",
+        user_id: "",
+        title: "",
+        file_url: "",
+        id: ""
       },
     };
   },
@@ -80,7 +95,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          // alert("submit!");
         } else {
           console.log("error submit!!");
           return false;
@@ -91,10 +106,10 @@ export default {
       this.$refs[formName].resetFields();
     },
     open(data) {
-      this.visible1 = true;
-      this.$nextTick(() => {
-        !this.isTeacher;
-      });
+      
+      // this.$nextTick(() => {
+      //   !this.isTeacher;
+      // });
     },
     close() {
       this.visible1 = false;
@@ -248,5 +263,11 @@ export default {
     color: #ccc;
     padding-right: 10px;
   }
+}
+.work-list {
+  background-image: url('../../assets/img/zip.png');
+  // background-repeat:no-repeat;
+  background-position:center center;
+
 }
 </style>

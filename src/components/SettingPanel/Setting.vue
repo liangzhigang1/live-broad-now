@@ -194,7 +194,7 @@ export default {
   },
   methods: {
     changeSwitch () {
-
+        console.error('222222222222222222', this.value7);
     },
     changeValue5 () {
       eventEmitter.trigger(eventEmitter.SPEAKER_INDEX_CHANGE_TRIGGER, {
@@ -299,15 +299,12 @@ export default {
       }).on("SPEAKER_VOLUME_CHANGE", (e, data) => {
         console.log('444444', data);
         this.value6 = data
+      }).on(eventEmitter.CLASS_START, () => {
+        console.error('222222222222222222', this.value7);
+        if (this.value7) {
+          eventEmitter.trigger(eventEmitter.CLOUD_RECORD_START_TRIGGER);
+        }
       })
-    // eventEmitter.on(
-    //   // 监听自己摄像头和麦克风变化
-    //   eventEmitter.MEDIA_SWITCH_TRIGGER,
-    //   function (event, data) {
-    //     var player = BJY.Player.instances[store.get("user.id")];
-    //     player && BJY.userPublish.setDevice(player, data.videoOn, data.audioOn);
-    //   }
-    // );
     this.isTeacher ? this.initTeacher() : this.initStudent();
   },
   beforeDestroy() {},

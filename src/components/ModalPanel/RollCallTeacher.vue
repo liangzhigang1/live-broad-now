@@ -55,40 +55,7 @@ export default {
     };
   },
   created() {
-    eventEmitter
-      .on("toggle_roll_call", () => {
-        this.show();
-      })
-      .on(
-        // 点名结果
-        eventEmitter.ROLL_CALL_RESULT,
-        (e, data) => {
-          var result = data;
-          //  点名结果 
-          console.log(result);
-          this.status = ROLL_CALL_STATUS.after    
-          this.ackCount = result.ackList.length
-          this.nackCount = result.nackList.length
-        }
-      )
-      .on(
-        // 点名开始
-        eventEmitter.ROLL_CALL,
-        () => {
-            this.resultTimer = this.rollCallDuration
-            this.status = ROLL_CALL_STATUS.ing
-            this.resultInterval = null
-            this.resultInterval = setInterval(() => {
-                if (this.resultTimer > 0) {
-                    --this.resultTimer;
-                } else {
-                    // 时间到了需要老师端主动触发结束
-                    eventEmitter.trigger(eventEmitter.ROLL_CALL_FINISH);
-                    clearInterval(this.resultInterval)
-                }
-            }, 1000);
-        }
-      );
+    // 
   },
   methods: {
     show() {

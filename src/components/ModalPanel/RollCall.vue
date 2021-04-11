@@ -30,62 +30,57 @@ export default {
     eventEmitter.on(
       eventEmitter.ROLL_CALL, // 老师发起了点名
       async (e, data) => {
+        console.log('2222222', data);
+        let params = data.duration + ''
+        console.log('333333333', params[0])
         // let xx = `page=1&page_size=50&partner_id=83228320&room_id=21032159047031&timestamp=1615996148&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
         // let sign = _this.$md5(xx)
         // let params = { partner_id: 83228320, room_id: 21032159047031, page: 1, page_size: 50, timestamp: 1615996148, sign: sign}
         let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: 21032159047031})
-        if (result.data.list.length > 0) {
-
-
+        if (result.data.list.length >= params[0]) {
           // 随机抽几个人的算法
-        var classStudentList = result.data.list
-        var posArray = []
-        do {
-          var n = Math.floor(Math.random() *  classStudentList.length);
-          for(var i = 0; i < posArray.length; i++) {
-            if (classStudentList[n].id == posArray[i].id) { 
-              break;
+          var classStudentList = result.data.list
+          var posArray = []
+          do {
+            var n = Math.floor(Math.random() *  classStudentList.length);
+            for(var i = 0; i < posArray.length; i++) {
+              if (classStudentList[n].id == posArray[i].id) { 
+                break;
+              }
             }
+            posArray.push(classStudentList[n]);
+          } while(posArray.length != Number(params[0]));
+
+
+
+          this.timeLeft = data.duration;
+          console.log('BJY.store.get("user.id")', BJY.store.get("user"));
+          console.error('posArrayposArrayposArray', posArray)
+
+
+
+        posArray.forEach(student => {
+          if (BJY.store.get("user").number == student.id) {
+            this.$Dialog.show({
+              title: "点名",
+              content: `请在<span id="roll-call-time-left">${data.duration}</span>秒内响应`,
+              confirmText: "答到",
+            }).then(() => {
+              eventEmitter.trigger(eventEmitter.ROLL_CALL_RES);
+            }).catch((e) => {
+            });
+            this.applyTimer = setInterval(() => {
+              if (this.timeLeft === 0) {
+                clearInterval(this.applyTimer);
+                this.$Dialog.hide();
+              }
+              $("#roll-call-time-left").text(this.timeLeft);
+              this.timeLeft--;
+            }, 1000);
           }
-          posArray.push(classStudentList[n]);
-        } while(posArray.length != 1);
-
-        console.error('posArrayposArrayposArray', posArray)
-        this.timeLeft = data.duration;
-        console.log('BJY.store.get("user.id")', BJY.store.get("user"));
-
-        if (BJY.store.get("user").number == posArray[0].id) {
-          setTimeout(() => {
-            console.error('32132131231233222222222222');
-            var player = BJY.Player.instances[BJY.store.get("user.id")];
-            BJY.userPublish.setDevice(player, !player.videoOn, !player.audioOn);
-          }, 1000);
-        }
-        
-
-
-        this.$Dialog
-          .show({
-            title: "点名",
-            content: `请在<span id="roll-call-time-left">${data.duration}</span>秒内响应`,
-            confirmText: "答到",
-          })
-          .then(() => {
-            eventEmitter.trigger(eventEmitter.ROLL_CALL_RES);
-          })
-          .catch((e) => {
-          });
-
-        this.applyTimer = setInterval(() => {
-          if (this.timeLeft === 0) {
-            clearInterval(this.applyTimer);
-            this.$Dialog.hide();
-          }
-          $("#roll-call-time-left").text(this.timeLeft);
-          this.timeLeft--;
-        }, 1000);
-
+        })
         } else {
+          return this.$message.error('教室学员人数要大于随机点名人数！')
         }
       }
     );

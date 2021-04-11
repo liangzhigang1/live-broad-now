@@ -4,11 +4,14 @@
       {{ works && works.studentName ? works.studentName : '' }}
     </div>
     <div v-if="works && works.type == 'png'" style="height: 100%;width: 100%">
-      <img style="width: 100%;height: 100%" src="../../../src/assets/img/8.png" />
+      <img style="width: 100%;height: 100%" :src="works.src" />
+    </div>
+    <div v-if="works && works.type == 'jpg'" style="height: 100%;width: 100%">
+      <img style="width: 100%;height: 100%" :src="works.src" />
     </div>
 
     <div v-if="works && works.type == 'mp3'" style="height: 100%;width: 100%">
-      <img style="width: 100%;height: 100%" src="../../../src/assets/img/8.png" />
+      <img style="width: 100%;height: 100%" :src="works.src" />
       <AudioPlayer :audio-list="audioList"
                    :show-prev-button="false"
                    :show-next-button="false"

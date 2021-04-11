@@ -2,14 +2,15 @@
   <div style="position: relative;width: 100%" class="swiper-container1">
     <div style="position:relative" class="right-left-base-info-content">
             <swiper ref="mySwipe1r" :options="swiperOptions">
-              <swiper-slide v-for="(item, index) in workList" :key="index">
+              <swiper-slide v-for="(item, index) in workLists" :key="index">
                 <div @click="showWork(item)" style="height: 146px;width: 100%">
-                  <span v-if="item.type == 'ppt'">
-                    <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/8.png" />
-                  </span>
                   <span v-if="item.type == 'png'">
                     <!-- <span style="color: red;font-size: 25px">照片</span> -->
-                    <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/8.png" />
+                    <img style="width: 100%;height: 100%;object-fit: cover;" :src="item.src" />
+                  </span>
+                   <span v-if="item.type == 'jpg'">
+                    <!-- <span style="color: red;font-size: 25px">照片</span> -->
+                    <img style="width: 100%;height: 100%;object-fit: cover;" :src="item.src" />
                   </span>
                   <span v-if="item.type == 'mp3'">
                     <!-- <span style="color: red;font-size: 25px">mp3</span> -->
@@ -39,6 +40,20 @@ export default {
   components: {
     Swiper,
     SwiperSlide
+  },
+  props: {
+    workList: {
+      type: Array,
+    }
+  },
+  watch: {
+    workList: {
+      handler(newName, oldName) {
+        console.error('33333', newName);
+        this.workLists = newName
+      },
+      immediate: true
+    }
   },
   data() {
     return {
@@ -95,18 +110,7 @@ export default {
           }
         }
       },
-      workList: [
-        {studentName: '李四', type: 'png', src: require('../assets/img/8.png')},
-        {studentName: '王五', type: 'mp3', src: require('../assets/img/dfh.mp3')},
-        {studentName: '赵六', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-        {studentName: '赵六', type: 'mp3', src: require('../assets/img/dfh.mp3')},
-        {studentName: '赵六', type: 'png', src: require('../assets/img/8.png')},
-        {studentName: '赵六', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-        {studentName: '赵七', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-        {studentName: '赵八', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-        {studentName: '赵九', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-        {studentName: '赵十', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-      ]
+      workLists: this.workLists
     };
   },
   methods: {

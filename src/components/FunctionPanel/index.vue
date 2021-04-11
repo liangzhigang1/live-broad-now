@@ -79,11 +79,11 @@
         抽奖
       </div> -->
 
-      <div v-if="isHandUp && !isStudent" @click="toggleHandUp" class="btn-div">
+      <div v-if="isHandUp && !isStudent" @click="toggleHandUp(false)" class="btn-div">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe603;</span>
         允许举手
       </div>
-      <div v-if="!isHandUp && !isStudent" @click="toggleHandUp" class="btn-div">
+      <div v-if="!isHandUp && !isStudent" @click="toggleHandUp(true)" class="btn-div">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe6b4;</span>
         禁止举手
       </div>
@@ -107,10 +107,16 @@
         
         <div v-if="show" class="more-layer active">
           <div class="wrapper" >
-            <div @click="toggleRandomRollCall" class="item">
+
+            <div v-if="isRollCall" @click="toggleRandomRollCall" class="item">
               <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
               随机点名
             </div>
+            <div v-else @click="closeRandomRollCall1" class="item">
+              <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
+              结束点名
+            </div>
+
             <div @click="toggleIncentivePayment" class="item">
               <span  style="font-size: 16px;margin-right:6px"  class="iconfont">&#xe609;</span>
               发放激励
@@ -199,6 +205,9 @@ import ViewQuiz from "../ModalPanel/ViewQuiz";
 import HomeworkMater from "../ModalPanel/HomeworkMater";
 import SubmitWork from "../ModalPanel/SubmitWork";
 
+
+
+
 let store = BJY.store;
 let eventEmitter = BJY.eventEmitter;
 let auth = BJY.auth;
@@ -217,6 +226,7 @@ export default {
   },
   data() {
     return {
+      isRollCall: true,
       isWatermark: true,
       isHandUp: true,
       visibleSubmitWork: false,
@@ -259,8 +269,12 @@ export default {
     closeWatermark () {
       this.isWatermark = !this.isWatermark
     },
-    toggleHandUp () {
+    toggleHandUp (value) {
+      console.log('store.get("class.forbidAll")', store.get("class.forbidAll"))
       this.isHandUp = !this.isHandUp
+      eventEmitter.trigger(eventEmitter.SPEAK_APPLY_FORBID_ALL_CHANGE_TRIGGER, {
+        value: value,
+      });
     },
     closeIn (val) {
       this.visible = val
@@ -322,7 +336,22 @@ export default {
       this.visibleEvaluate = true
     },
     toggleRandomRollCall () {
+      if (!store.get("class.started")) {
+          // 针对教室状态给出相应的提示，你可以使用任何你喜欢的UI来处理他们，这里我使用的是自定义的全局tip，下同
+          this.$Toast(language.TIP_CLASS_NOT_START);
+          return;
+        }
+      this.isRollCall = false
       this.visibleRandomRollCall = true
+    },
+    closeRandomRollCall1 () {
+      // eventEmitter.trigger(eventEmitter.AUDIO_REPAIR_CHANGE_TRIGGER);
+      // eventEmitter.trigger(eventEmitter.ROLL_CALL);
+      // eventEmitter.trigger(eventEmitter.ROLL_CALL_RES);
+      // eventEmitter.trigger(eventEmitter.ROLL_CALL_RESULT);
+      // eventEmitter.trigger(eventEmitter.ROLL_CALL_TRIGGER);
+      // eventEmitter.trigger(eventEmitter.ROLL_CALL_RES);
+      this.isRollCall = true
     },
     toggleRollCall() {
       eventEmitter.trigger("toggle_roll_call");

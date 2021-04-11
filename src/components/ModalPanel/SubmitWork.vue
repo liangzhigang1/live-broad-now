@@ -21,11 +21,11 @@
               placeholder="请输入作业标题"
             ></el-input>
           </el-form-item>
-          <el-form-item label="作业类型" prop="work_type">
-            <el-select v-model="formItem.work_type" placeholder="请选择作业类型">
+          <el-form-item label="作业类型" prop="file_type">
+            <el-select v-model="formItem.file_type" placeholder="请选择作业类型">
               <el-option label="图片" value="1"></el-option>
               <el-option label="视频" value="2"></el-option>
-              <el-option label="压缩文件" value="3"></el-option>
+              <el-option label="音频" value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="素材上传" prop="file_url">
@@ -96,7 +96,7 @@ export default {
       formItem: {
         room_id: "21032159047031",
         title: "",
-        work_type: "",
+        file_type: "",
         file_url: ""
       },
       ruleForm: {
@@ -118,7 +118,7 @@ export default {
       if (!this.formItem.title) {
         return this.$message.error('作业标题不能为空!')
       }
-      if (!this.formItem.work_type) {
+      if (!this.formItem.file_type) {
         return this.$message.error('作业类型不能为空!')
       }
       this.$refs[formName].validate((valid) => {
@@ -263,7 +263,7 @@ export default {
       this.formItem = {
         room_id: "21032159047031",
         title: "",
-        work_type: "",
+        file_type: "",
         file_url: ""
       }
       this.visible1 = false;

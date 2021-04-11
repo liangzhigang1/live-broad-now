@@ -1,8 +1,8 @@
 <!-- 小测组件 -->
 <template>
-  <div v-show="visible1" id="quiz-view">
+  <div v-show="visible1" id="quiz-home-work-master">
     <div class="close-bar">
-      <span class="bar-title">查看发布</span>
+      <span class="bar-title">下载素材</span>
       <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
         ><i class="el-icon-close"></i
       ></span>
@@ -16,35 +16,37 @@
       >
         <div class="zuoye-box">
           <el-form-item label="作业名称" prop="name">
-            {{ ruleForm.title }}
+            UI基础入门
           </el-form-item>
-          <!-- <el-form-item label="作业类型" prop="region">
+          <el-form-item label="作业类型" prop="region">
             随堂作业
           </el-form-item>
           <el-form-item label="截止时间">
-            2021-03-03    17：09：00
-          </el-form-item> -->
+            2021-03-03 17:09:00
+          </el-form-item>
           <el-form-item label="作业要求" prop="desc">
-            {{ ruleForm.work_require }}
+            作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求作业要求
           </el-form-item>
           <el-form-item label="作业素材" prop="desc">
-            <div class="work-list" v-for="(item, index) in this.fileList" :key="index" style="float: left;width: 80px;height: 80px;margin-right: 3px;margin-bottom: 3px">
-
+            <div v-for="item in 4" :key="item" class="sucai-img">
+              <img :src="require('@/assets/img/sucai.jpg')" alt="" style="width:100%;height:100%;object-fit: cover;">
             </div>
           </el-form-item>
         </div>
         <el-form-item style="text-align: center; margin: 14px 0 -6px -74px">
           <el-button type="primary" @click="submitForm()">下载</el-button>
+          <!-- <el-button @click="close">取消</el-button> -->
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <script>
+// import '@/utils/jquery.wordexport.js'
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
-import {_queryPushWorkListApi} from '../../api/work'
 
 export default {
   props: {
@@ -55,68 +57,45 @@ export default {
   },
   watch: {
     visibleHomeworkMater (val) {
-      let temp = {room_id: 21032159047031, last_file_id: 0, page_size: 1}
-      _queryPushWorkListApi(temp).then(res => {
-        console.log('fffff', res)
-        if (res.data.length > 0) {
-          console.log('res.data.file_url', res.data.file_url);
-          let tempFlieList = res.data[0].file_url.split(',')
-          this.ruleForm = res.data[0]
-          tempFlieList.forEach((item, index) => {
-            this.fileList.push({name: 'item' + index, url: item})
-          })
-          console.log('this.fileList', this.fileList);
-          this.visible1 = val
-        } else {
-          return this.$message.error('未发布作业！')
-        }
-      })
+      this.visible1 = val
     }
   },
   data() {
     return {
-      fileList: [],
       visible1: this.visibleHomeworkMater,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       ruleForm: {
-        work_require: "",
-        user_id: "",
-        title: "",
-        file_url: "",
-        id: ""
+        name: "",
+        region: "",
+        time: "",
+        desc: "",
       },
     };
   },
   methods: {
     submitForm() {
-      for (let i = 0; i < this.fileList.length; i++) {
+      for (let i = 0; i < 4; i++) {
           const link = document.createElement('a');//我们用模拟q标签点击事件
-          const fname = this.fileList[i].name; //下载文件的名字
-          link.href = this.fileList[i].url;
+          const fname = 'sucai.jpg'; //下载文件的名字
+          link.href = require('../../assets/img/sucai.jpg');
           link.setAttribute('download', fname);
           document.body.appendChild(link);
           link.click();
-          //在本页打开窗口
-          // let $eleForm = $("<form method='get'></form>");
-          // $eleForm.attr("action",this.fileList[i].url);
-          // $(document.body).append($eleForm);
-          // //提交表单，实现下载
-          // $eleForm.submit();
       }    
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
     open(data) {
-      
-      // this.$nextTick(() => {
-      //   !this.isTeacher;
-      // });
+      this.visible1 = true;
+      this.$nextTick(() => {
+        !this.isTeacher;
+      });
     },
     close() {
       this.visible1 = false;
-      this.$emit('closeViewQuiz', this.visible1)
+      this.$emit('closeHomeworkMater', this.visible1)
     },
     initTeacher() {},
     initStudent() {
@@ -133,7 +112,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#quiz-view {
+#quiz-home-work-master {
   position: fixed;
   z-index: 10;
   top: 50%;
@@ -174,12 +153,23 @@ export default {
       padding: 4px 20px 10px;
       width: 100%;
       border-radius: 4px;
+      .sucai-img {
+        float: left;
+        width: 80px;
+        height: 80px;
+        background: #1D2129;
+        margin-right: 4px;
+        margin-bottom: 4px;
+        border-radius: 4px;
+        border: 1px solid #6E7583;
+        overflow: hidden;
+      }
     }
   }
 }
 </style>
 <style lang="scss">
-#quiz-view {
+#quiz-home-work-master {
   .el-form-item {
     margin-bottom: 0;
   }
@@ -204,7 +194,7 @@ export default {
     color: #fff !important;
   }
   .el-button {
-    width: 88px;
+    width: 114px;
     height: 38px;
   }
 }
@@ -266,11 +256,5 @@ export default {
     color: #ccc;
     padding-right: 10px;
   }
-}
-.work-list {
-  background-image: url('../../assets/img/zip.png');
-  // background-repeat:no-repeat;
-  background-position:center center;
-
 }
 </style>

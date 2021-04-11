@@ -6,7 +6,13 @@
       <div class="container">
         <div :style="{right: hudong ? '290px' : '0px', bottom: zuoye ? '254px' : '100px'}" class="class-panel">
             <!-- 老师播放器 -->
-          <TeacherPlayer v-show="!showStartBtn" />
+          <TeacherPlayer v-show="!showStartBtn && studentList && studentList.length == 0" />
+          <div style="height: 100%;width: 100%;display: flex" v-show="!showStartBtn && studentList && studentList.length > 0">
+            <div style="height: 205px;flex: 0 0 200px" v-for="student in studentList" :key="student.id">
+              <SelfPlayerTemp :student="student" :id="'id' + student.id" />
+              <!-- <SelfPlayers/> -->
+            </div>
+          </div>
         <div v-show="showStartBtn" class="start-btn" @click="handleClassStart">
           <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe675;</span>
           上课
@@ -15,11 +21,11 @@
 
         <div :style="{right: hudong ? '290px' : '0px', height: zuoye ? '194px' : '40px'}" class="zuoye">
           <div class="title">
-            作业展示：共66份
+            <span @click="workClick" style="cursor: pointer;">作业展示(刷新)</span>：共{{ workList.length }}份
             <span @click="showWork" style="margin-left: 5px" v-show="!zuoye" class="icon iconfont">&#xe8ed;</span>
             <span @click="showWork" style="margin-left: 5px;font-size: 17px !important" v-show="zuoye" class="icon iconfont">&#xe604;</span>
           </div>
-          <swiper v-show="zuoye" @swiperClick="swiperClick"></swiper>
+          <swiper v-show="zuoye" :workList="workList" @swiperClick="swiperClick"></swiper>
         </div>
         <div :style="{right: hudong ? '290px' : '0px'}" class="footer">
           <SettingPanel />
@@ -82,6 +88,13 @@ import swiper from './components/swiper'
 // swiper
 import WorkPanel from './components/WorkPanel'
 
+import SelfPlayer from './components/SelfPlayer'
+import SelfPlayerTemp from './components/SelfPlayerTemp'
+
+import { _queryWorkListApi } from '../src/api/work/index'
+
+
+
 import { _classBindStudentBatchApi, _getUserListApi, _sysUserAddBaiJiaApi, _classBindStudentApi  } from './api/user/userApi'
 
 const eventEmitter = BJY.eventEmitter;
@@ -102,11 +115,13 @@ export default {
     ModalPanel,
     DocList,
     swiper,
-    WorkPanel
+    WorkPanel,
+    SelfPlayer,
+    SelfPlayerTemp
   },
-  
   data() {
     return {
+      studentList: [],
       visible: false,
       zuoye: true,
       hudong: true,
@@ -116,7 +131,9 @@ export default {
       isTeacher: false,
       showStartBtn: false,
       work: null,
-      src: require('../src/assets/img/8.png')
+      sessionId: null,
+      src: require('../src/assets/img/8.png'),
+      workList: []
     };
   },
   mounted() {
@@ -169,11 +186,13 @@ export default {
     }
   },
   created() {
+    this.workClick()
     // 绑定事件
     let $body = $("body");
     store.watch(
       "class.started",
       (started) => {
+        console.log('22222222222222223333333333');
         this.showStartBtn = auth.isTeacher() && !started;
       },
       true
@@ -188,6 +207,26 @@ export default {
         });
         return false;
       })
+      .on(
+        // 点名结果
+        eventEmitter.ROLL_CALL_RESULT,
+        (e, data) => {
+          var result = data;
+          //  点名结果
+          console.log('eventEmittereventEmitter', eventEmitter);
+          this.studentList = result.ackList
+          this.sessionId = result.sessionId
+        }
+      ).on(
+        // 点名结果
+        eventEmitter.WEBRTC_TYPE_CHANGE,
+        (e, data) => {
+          console.error('2242342424324');
+          this.studentList = []
+        }
+      )
+
+      
       .on(eventEmitter.CLASSROOM_CONNECT_FAIL, () => {
         alert(language.ROOM_SERVER_CONNECT_FAIL);
       })
@@ -219,6 +258,7 @@ export default {
       .one(eventEmitter.VIEW_RENDER_TRIGGER, () => {
         // 注意，在VIEW_RENDER_TRIGGER事件触发后再去加载教室里面的组件
         store.set("class.xx", true);
+        BJY.store.set('studentList', [])
         this.loaded = true;
         this.isTeacher = auth.isTeacher();
         eventEmitter.trigger(eventEmitter.DOC_ALL_REQ);
@@ -253,6 +293,7 @@ export default {
       })
       .on(eventEmitter.CLASS_END, () => {
         // 下课后所有人自动关闭音视频
+        this.showStartBtn = true
         eventEmitter.trigger(eventEmitter.MEDIA_SWITCH_TRIGGER, {
           audioOn: false,
           videoOn: false,
@@ -284,6 +325,30 @@ export default {
     this.init();
   },
   methods: {
+    workClick () {
+        console.log('dadasdasdasdsadasd');
+
+      let temp = {room_id: 21032159047031, last_file_id: 0, page_size: 50}
+      _queryWorkListApi(temp).then(res => {
+        console.log('dadasdasdasdsadasd', res);
+        res.data.forEach((item, index) => {
+          this.workList.push({studentName: 'item' + index, type: item.file_url.split('.')[3], src: item.file_url})
+        })
+        
+         // [
+      //   // {studentName: '李四', type: 'png', src: require('../assets/img/8.png')},
+      //   // {studentName: '王五', type: 'mp3', src: require('../assets/img/dfh.mp3')},
+      //   // {studentName: '赵六', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
+      //   // {studentName: '赵六', type: 'mp3', src: require('../assets/img/dfh.mp3')},
+      //   // {studentName: '赵六', type: 'png', src: require('../assets/img/8.png')},
+      //   // {studentName: '赵六', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
+      //   // {studentName: '赵七', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
+      //   // {studentName: '赵八', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
+      //   // {studentName: '赵九', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
+      //   // {studentName: '赵十', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
+      // ]
+      })
+    },
     showHuDong () {
       this.hudong = !this.hudong
     },
@@ -437,6 +502,7 @@ export default {
       eventEmitter.trigger(eventEmitter.CLASS_START_TRIGGER);
     },
     swiperClick (params) {
+      console.log('44444444444', this.work);
       this.work = params
       this.visible = true
     }
@@ -723,6 +789,9 @@ export default {
   // }
   .bjy-body {
   background: #313847 !important;
+  color: #fff !important;
+}
+.bjy-name-label {
   color: #fff !important;
 }
 </style>

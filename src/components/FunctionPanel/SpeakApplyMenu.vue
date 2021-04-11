@@ -53,12 +53,17 @@ export default {
       .on(
         eventEmitter.SPEAK_APPLY_RESULT_ACCEPT,
         (e, data) => {
+          console.log('data', e);
+          console.log('user', store.get("user").audioOn = true);
           console.log('accept')
           this.$Toast(language.TIP_SPEAK_APPLY_ACCEPT)
+          var player = BJY.Player.instances[store.get("user.id")];
+        player && BJY.userPublish.setDevice(player, data.videoOn, data.audioOn);
           eventEmitter.trigger(eventEmitter.MEDIA_SWITCH_TRIGGER, {
             videoOn: true,
             audioOn: true
           })
+
         }
       )
 
