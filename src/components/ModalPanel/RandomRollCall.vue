@@ -19,8 +19,8 @@
                class="demo-ruleForm"
       >
         <div class="zuoye-box">
-          <el-form-item label="点名人数" prop="x">
-            <el-select  v-model="ruleForm.x">
+          <el-form-item label="点名人数" prop="number">
+            <el-select  v-model="ruleForm.number">
               <el-option label="1人" value="1"></el-option>
               <el-option label="2人" value="2"></el-option>
               <el-option label="3人" value="3"></el-option>
@@ -28,9 +28,9 @@
               <el-option label="5人" value="5"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="摄像头要求" prop="xx" style="margin-bottom:0">
-            <el-radio v-model="ruleForm.xx" label="1">是</el-radio>
-            <el-radio v-model="ruleForm.xx" label="2">否</el-radio>
+          <el-form-item label="摄像头要求" prop="yaoqiu" style="margin-bottom:0">
+            <el-radio v-model="ruleForm.yaoqiu" label="1">是</el-radio>
+            <el-radio v-model="ruleForm.yaoqiu" label="2">否</el-radio>
           </el-form-item>
         </div>
         <el-form-item style="text-align: right; margin: 14px 0 -6px">
@@ -44,7 +44,7 @@
     <div style="background-color: #313847" v-show="status === statusMap.ing" class="roll-call-ing">学生正在陆续答到中，{{ resultTimer }}秒后可查看点名结果，请稍后</div>
 
     <div style="background-color: #313847;padding: 14px 12px" v-show="status === statusMap.after" class="after-roll-call">
-      <p class="result">答到情况：答到{{ ackCount }}人，未答到{{ nackCount }}人</p>
+      <p class="result">点名情况：答到{{ ackCount }}人，未答到{{ nackCount }}人</p>
       <div class="btn" @click="reCall">再次点名</div>
     </div>
   </div>
@@ -54,6 +54,10 @@
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 import language from "../../language/main";
+const store = BJY.store;
+import { _getClassStudentListApi } from "../../api/user/userApi"
+
+
 const ROLL_CALL_STATUS = {
     before: 0,
     ing: 1,
@@ -87,7 +91,7 @@ export default {
       resultInterval: null,
       ackCount: 0, // 答到人数
       nackCount: 0, // 未答到人数
-
+      sessionId: '',
 
       radio: false,
       input: '',
@@ -98,16 +102,16 @@ export default {
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       ruleForm: {
-        x: "1",
-        xx: "1",
+        number: "1",
+        yaoqiu: "1",
       },
     };
   },
   methods: {
-    startRollCall() {
+    startRollCall(params) {
       eventEmitter.trigger(eventEmitter.ROLL_CALL_TRIGGER, {
         // 倒计时 秒
-        duration: this.rollCallDuration,
+        duration: Number(params),
       });
     },
     reCall() {
@@ -116,7 +120,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.startRollCall()
+          
+          this.startRollCall(this.ruleForm.number + this.ruleForm.yaoqiu)
         } else {
           console.log("error submit!!");
           return false;
@@ -163,19 +168,20 @@ export default {
         eventEmitter.ROLL_CALL_RESULT,
         (e, data) => {
           var result = data;
-        //  点名结果 
-          console.log(result);
+          //  点名结果 
           this.status = ROLL_CALL_STATUS.after
-
-          this.ackCount = result.ackList.length
-          this.nackCount = result.nackList.length
+          this.ackCount = result.ackList.length // 点名人数
+          this.nackCount = result.nackList.length // 未点名人数
+          this.sessionId = result.sessionId
+          console.log('222222233333444', BJY);
+          // BJY.userSpeak.onApplyAccept()
+          this.close()
         }
       )
       .on(
         // 点名开始
         eventEmitter.ROLL_CALL,
         () => {
-          console.log('11111111', 111111111111);
             this.resultTimer = this.rollCallDuration
             this.status = ROLL_CALL_STATUS.ing
             this.resultInterval = null
