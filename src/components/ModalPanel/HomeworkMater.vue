@@ -34,7 +34,7 @@
           </el-form-item>
         </div>
         <el-form-item style="text-align: center; margin: 14px 0 -6px -74px">
-          <el-button type="primary" @click="submitForm()">下载</el-button>
+          <el-button type="primary" @click="downloadImage()">下载</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -89,22 +89,92 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    downloadImage() {
       for (let i = 0; i < this.fileList.length; i++) {
-          const link = document.createElement('a');//我们用模拟q标签点击事件
-          const fname = this.fileList[i].name; //下载文件的名字
-          link.href = this.fileList[i].url;
-          link.setAttribute('download', fname);
-          document.body.appendChild(link);
-          link.click();
+        console.log('this.fileList', this.fileList[i]);
+        if (this.fileList[i].url.split('.')[3] == 'png' || this.fileList[i].url.split('.')[3] == 'jpg' ) {
+          // const link = document.createElement('a');//我们用模拟q标签点击事件
+        const fname = this.fileList[i].name; //下载文件的名字
+        // 生成一个 a 标签
+          const a = document.createElement("a");
+          a.download = fname;
+          a.alt = fname;
+          a.style.display = "none";
+          const image = new Image();
+          image.crossOrigin = "*";
+          image.src = this.fileList[i].url + "?v=" + Math.random();
+
+          image.onload = () => {
+              const base64 = getBase64Images(image);
+              a.href = base64;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+          };
+          function getBase64Images(image) {
+              const canvas = document.createElement("canvas");
+              canvas.width = image.width;
+              canvas.height = image.height;
+              const context = canvas.getContext("2d");
+              context.drawImage(image, 0, 0, image.width, image.height);
+              const url = canvas.toDataURL("image/png", 0);
+              return url;
+          };
+        } else {
+          //  var video = new File(this.fileList[i].url);  //选择的文件
+          //  console.log('videovideovideo', video);
+          //   var reader = new FileReader();  
+          //   var rs = reader.readAsDataURL(video);  
+          //   reader.onload = (e) =>{
+          //     var videoSrc= e.target.result; 
+          //     console.log(videoSrc)
+          //     //提交到后台部分略
+          //   }
+          // window.open(this.fileList[i].url);
+          // console.log('3333333333333333');
+          // const link = document.createElement('a');//我们用模拟q标签点击事件
+          // const fname = this.fileList[i].name; //下载文件的名字
+          // link.href = this.fileList[i].url;
+          // link.setAttribute('download', 'xxx.mp4');
+          // document.body.appendChild(link);
+          // link.click();
+
           //在本页打开窗口
-          // let $eleForm = $("<form method='get'></form>");
-          // $eleForm.attr("action",this.fileList[i].url);
-          // $(document.body).append($eleForm);
-          // //提交表单，实现下载
-          // $eleForm.submit();
-      }    
+    let $eleForm = $("<form method='get'></form>");
+    $eleForm.attr("action",this.fileList[i].url);
+    $(document.body).append($eleForm);
+    //提交表单，实现下载
+    $eleForm.submit();
+        }
+        
+
+      }        
     },
+    // downloadImage() {
+    //   try {
+    //      for (let i = 0; i < this.fileList.length; i++) {
+    //       // const link = document.createElement('a');//我们用模拟q标签点击事件
+    //       const fname = this.fileList[i].name; //下载文件的名字
+    //       // link.href = this.fileList[i].url;
+    //       // link.setAttribute('download', fname);
+    //       // document.body.appendChild(link);
+    //       // link.click();
+    //       this.convertUrlToBase64(this.fileList[i].url).then(function(base64) {
+    //         console.log('555555555');
+    //           // 图片转为base64
+    //           var blob = that.convertBase64UrlToBlob(base64); // 转为blob对象
+    //           // 下载
+    //           var a = document.createElement("a");
+    //           a.download = fname;
+    //           a.href = URL.createObjectURL(blob);
+    //           a.click();
+    //       });
+    //   }    
+    //   } catch (error) {
+    //     console.error('222', error);
+    //   }
+     
+    // },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },

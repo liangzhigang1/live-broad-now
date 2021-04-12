@@ -178,7 +178,9 @@ export default {
               let _URL = window.URL || window.webkitURL;
               let image = new Image();
               image.onload = () => {
-                  const isSize = (image.width >= 100 && image.height >= 80) && (image.width <= 800 && image.height <= 400);
+                  // const isSize = (image.width >= 100 && image.height >= 80) && (image.width <= 800 && image.height <= 400);
+                  const isSize = true
+                  
                   const isLt2M = file.size / 1024 / 1024 < 5
                   if (!isLt2M) {
                     this.$refs.upload.uploadFiles.pop()
