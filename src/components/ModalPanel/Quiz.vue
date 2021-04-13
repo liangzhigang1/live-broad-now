@@ -1,19 +1,27 @@
 <!-- 发布作业 -->
 <template>
   <div
+    v-loading="loading"
+    element-loading-text="素材上传中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
     v-show="visible"
     :class="isTeacher ? 'teacher' : 'teacher'"
     id="quiz-xxx"
   >
     <div class="close-bar">
       <span class="bar-title">发布作业</span>
-      <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"><i class="el-icon-close"></i></span>
+      <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
+        ><i class="el-icon-close"></i
+      ></span>
     </div>
     <div class="placeholder">
-      <el-form :model="formItem"
-               ref="ruleForm"
-               label-width="100px"
-               class="demo-ruleForm">
+      <el-form
+        :model="formItem"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
         <div class="zuoye-box">
           <el-form-item label="作业标题" prop="title">
             <el-input
@@ -22,7 +30,10 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="作业类型" prop="work_type">
-            <el-select v-model="formItem.work_type" placeholder="请选择作业类型">
+            <el-select
+              v-model="formItem.work_type"
+              placeholder="请选择作业类型"
+            >
               <el-option label="随堂作业" value="1"></el-option>
               <el-option label="课后作业" value="2"></el-option>
               <el-option label="结课作业" value="3"></el-option>
@@ -49,54 +60,80 @@
           <el-form-item label="素材上传" prop="file_url">
             <p class="sucai-p"><span>图片</span>(jpg,png，gif格式)限定5MB,</p>
             <p class="sucai-p">
-              <span>视频</span>(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
+              <span>视频</span
+              >(MPEG/MPG/DAT、AVI、MOV、WMV、RMVB、F4V、MKvMP4格式)限定100MB。
             </p>
             <p class="sucai-p">
-              <span>音频</span>(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC 格式)限定
+              <span>音频</span
+              >(WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI、WMA、RealAudio、OggVorbis、AMR、APE、FLAC、AAC
+              格式)限定
             </p>
             <div style="margin-top: 5px">
-
               <el-upload
                 id="uploadVideo"
                 ref="upload"
                 action="#"
                 :limit="9"
                 list-type="picture-card"
-                :class="{disabled: disabled ? true : false}"
+                :class="{ disabled: disabled ? true : false }"
                 accept="image/jpeg,image/png,image/gif,image/jpg,audio/mpeg,audio/mp3,video/mp4"
                 :on-change="(file, fileList) => cosUploadFile(file, fileList)"
                 :on-remove="handleRemove"
-                :auto-upload="false">
+                :on-preview="handlePictureCardPreviewVidoe"
+                :auto-upload="false"
+                :on-exceed="exceedVideo">
                 <i slot="default" class="el-icon-plus"></i>
               </el-upload>
-              </div>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
+            </div>
           </el-form-item>
         </div>
         <el-form-item style="text-align: right; margin: 14px 0 -6px">
-          <el-button v-if="!uploading" type="primary" @click="submitForm('ruleForm')">确认</el-button>
+          <el-button
+            v-if="!uploading"
+            type="primary"
+            @click="submitForm('ruleForm')"
+            >确认</el-button
+          >
           <el-button v-if="uploading" type="primary">上传中</el-button>
           <el-button @click="close">取消</el-button>
         </el-form-item>
       </el-form>
     </div>
+
+    <!-- 照片和视频模态框 -->
+    <el-dialog  :fullscreen="false" :modal="false" width="60%" title="图片" max-height="70%" :visible.sync="dialogVisible1">
+        <img width="100%" :src="dialogUrl" alt="">
+    </el-dialog> 
+    <el-dialog title="视频" :modal="false" :visible.sync="dialogVisible2" max-height="70%" style="margin:auto;">
+            <video width="100%" controls :src="dialogUrl" style="height: -webkit-fill-available;text-align:center;">
+                抱歉，您的浏览器不支持
+            </video>
+    </el-dialog>
+    <el-dialog title="音频" :modal="false" :visible.sync="dialogVisible3" max-height="70%" style="margin:auto;">
+      <audio controls autoplay loop :src="dialogUrl">
+        <p>Your browser does not support the <code>audio</code> element.</p>
+      </audio>
+    </el-dialog>
+    
   </div>
 </template>
 
 <script>
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
-import { _uploadFileApi } from '../../api/upload/index'
-import { _putWorkApi } from '../../api/work/index'
+import { _uploadFileApi } from "../../api/upload/index";
+import { _putWorkApi } from "../../api/work/index";
 
 export default {
   data() {
     return {
+      loading: false,
+      dialogUrl: '',
       uploading: false,
-      dialogImageUrl: '',
-      dialogVisible: false,
+      dialogImageUrl: "",
+      dialogVisible1: false,
+      dialogVisible2: false,
+      dialogVisible3: false,
       disabled: false,
       visible: false,
       isTeacher: auth.isTeacher(),
@@ -107,16 +144,29 @@ export default {
         work_type: "",
         end_time: "",
         work_require: "",
-        file_url: ""
+        file_url: "",
       },
-      ruleForm: {
-
-      }
+      ruleForm: {},
     };
   },
   methods: {
-    handleDownload (file) {
-      console.log('filefilefile', file);
+    handlePictureCardPreviewVidoe(file) {
+      this.dialogUrl = file.url
+      if (file.raw.type == 'video/mp4') {
+        this.dialogVisible2 = true
+      } else if (file.raw.type == 'audio/mp3' || file.raw.type == 'audio/mpeg') {
+        this.dialogVisible3 = true
+      } else {
+        this.dialogVisible1 = true
+      }
+    },
+    exceedVideo(files, fileList) {
+      if (fileList && fileList.length > 0) {
+        return this.$message.error("只能添加九个文件 !");
+      }
+    },
+    handleDownload(file) {
+      console.log("filefilefile", file);
     },
     handleRemove(file) {
       console.log(file);
@@ -127,38 +177,40 @@ export default {
     },
     submitForm(formName) {
       if (!this.formItem.title) {
-        return this.$message.error('作业标题不能为空!')
+        return this.$message.error("作业标题不能为空!");
       }
       if (!this.formItem.work_type) {
-        return this.$message.error('作业类型不能为空!')
+        return this.$message.error("作业类型不能为空!");
       }
       if (!this.formItem.end_time) {
-        return this.$message.error('截止时间不能为空!')
+        return this.$message.error("截止时间不能为空!");
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('this.formItemthis.formItem', this.formItem)
-          _putWorkApi(this.formItem).then(res => {
-            console.log('1111111111111', res);
+          console.log("this.formItemthis.formItem", this.formItem);
+          _putWorkApi(this.formItem)
+            .then((res) => {
+              console.log("1111111111111", res);
               if (res.code === 0) {
-                  this.$message({
-                      message: '保存成功',
-                      type: 'success',
-                      duration: 1000 * 1.5
-                  });
+                this.$message({
+                  message: "保存成功",
+                  type: "success",
+                  duration: 1000 * 1.5,
+                });
               }
-          }).finally(() => {
-            this.$refs.upload.clearFiles();
-            this.formItem = {
-              room_id: "21032159047031",
-              title: "",
-              work_type: "",
-              end_time: "",
-              work_require: "",
-              file_url: ""
-            }
-            this.close()
-          })
+            })
+            .finally(() => {
+              this.$refs.upload.clearFiles();
+              this.formItem = {
+                room_id: "21032159047031",
+                title: "",
+                work_type: "",
+                end_time: "",
+                work_require: "",
+                file_url: "",
+              };
+              this.close();
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -169,119 +221,136 @@ export default {
       this.$refs[formName].resetFields();
     },
     // 上传图片
-        cosUploadFile (file) {
-          console.log('this.$refs.upload', this.$refs.upload)
-          this.uploading = true
-          if (file.raw.type.indexOf('image') != -1) {
-              let width = 1080;
-              let height = 608;
-              let _URL = window.URL || window.webkitURL;
-              let image = new Image();
-              image.onload = () => {
-                  // const isSize = (image.width >= 100 && image.height >= 80) && (image.width <= 800 && image.height <= 400);
-                  const isSize = true
-                  
-                  const isLt2M = file.size / 1024 / 1024 < 5
-                  if (!isLt2M) {
-                    this.$refs.upload.uploadFiles.pop()
-                    return this.$message.error('上传图片大小不能超过 5MB!')
-                  }
-                  if (!isSize) {
-                      this.$message.error("上传图片尺寸不符合,请上传100*80至800*400的图片!");
-                  }
-                  if (isLt2M && isSize) {
-                    console.log('file.raw', file.raw);
-                    const formData = new FormData();
-                    formData.append("file",file.raw)
-                    _uploadFileApi(formData).then(res => {
-                      console.log('resresres', res)
-                      this.uploading = false
-                      if (res.code == 0) {
-                        if (this.formItem.file_url) {
-                          this.formItem.file_url += ',' + res.data.url
-                        } else {
-                          this.formItem.file_url = res.data.url
-                        }
-                      } else {
-                        this.$refs.upload.uploadFiles.pop()
-                      }     
-                    })
-                  } else {
-                  }
-              };
-              image.src = _URL.createObjectURL(file.raw);
-          } else if (file.raw.type.indexOf('audio') != -1) {
-            const isLt2M = file.size / 1024 / 1024 < 5
-            if (!isLt2M) {
-              this.$refs.upload.uploadFiles.pop()
-              return this.$message.error('上传音频大小不能超过 5MB!')
-            }
-            console.log('file.raw', file.raw);
-            const formData = new FormData();
-            formData.append("file",file.raw)
-            _uploadFileApi(formData).then(res => {
-              this.uploading = false
-              if (res.code == 0) {
-                if (this.formItem.file_url) {
-                  this.formItem.file_url += ',' + res.data.url
-                } else {
-                  this.formItem.file_url = res.data.url
-                }
-              } else {
-                this.$refs.upload.uploadFiles.pop()
-              }
+    cosUploadFile(file) {
+      console.log("this.$refs.upload", this.$refs.upload);
+      this.loading = true;
 
-            })
+      this.uploading = true;
+      if (file.raw.type.indexOf("image") != -1) {
+        let width = 1080;
+        let height = 608;
+        let _URL = window.URL || window.webkitURL;
+        let image = new Image();
+        image.onload = () => {
+          // const isSize = (image.width >= 100 && image.height >= 80) && (image.width <= 800 && image.height <= 400);
+          const isSize = true;
 
-          } else if (file.raw.type.indexOf('video') != -1) {
-            const isLt2M = file.size / 1024 / 1024 < 10
-            if (!isLt2M) {
-              this.$refs.upload.uploadFiles.pop()
-              return this.$message.error('上传视频大小不能超过 10MB!')
-            }
-            console.log('file.raw', file.raw);
-            const formData = new FormData();
-            formData.append("file",file.raw)
-            _uploadFileApi(formData).then(res => {
-              console.log('resresres', res)
-              this.uploading = false
-              if (res.code == 0) {
-                if (this.formItem.file_url) {
-                  this.formItem.file_url += ',' + res.data.url
-                } else {
-                  this.formItem.file_url = res.data.url
-                }
-              } else {
-                this.$refs.upload.uploadFiles.pop()
-              }
-            })
-
-
-
-
+          // const isLt2M = file.size / 1024 / 1024 < 5;
+          const isLt2M = true;
+          if (!isLt2M) {
+            // this.$refs.upload.uploadFiles.pop();
+            // return this.$message.error("上传图片大小不能超过 5MB!");
           }
-          setTimeout(() => {
-            var parent = document.querySelectorAll("#uploadVideo ul li");
-            for (let i = 0; i < parent.length; i++) {
-                if (parent[i].querySelector("img")) {
-                    var video = parent[i].querySelector("img")
-                    console.log('videovideo', video);
-                    var newVideo = document.createElement('img');
-                    newVideo.src = require('../../assets/img/zip.png');
-                    newVideo.class = "el-upload-list__item-thumbnail";
-                    newVideo.style = "width:100%;height:100%;";
-                    parent[i].appendChild(newVideo);
-                    parent[i].removeChild(video);
-
+          if (!isSize) {
+            this.$message.error(
+              "上传图片尺寸不符合,请上传100*80至800*400的图片!"
+            );
+          }
+          if (isLt2M && isSize) {
+            console.log("file.raw", file.raw);
+            const formData = new FormData();
+            formData.append("file", file.raw);
+            _uploadFileApi(formData).then((res) => {
+              console.log("resresres", res);
+              this.uploading = false;
+              if (res.code == 0) {
+                if (this.formItem.file_url) {
+                  this.formItem.file_url += "," + res.data.url;
+                } else {
+                  this.formItem.file_url = res.data.url;
                 }
+                this.loading = false;
+              } else {
+                this.$refs.upload.uploadFiles.pop();
+              }
+            });
+          } else {
+          }
+        };
+        image.src = _URL.createObjectURL(file.raw);
+      } else if (file.raw.type.indexOf("audio") != -1) {
+        const isLt2M = file.size / 1024 / 1024 < 5;
+        if (!isLt2M) {
+          // this.$refs.upload.uploadFiles.pop();
+          // return this.$message.error("上传音频大小不能超过 5MB!");
+        }
+        console.log("file.raw", file.raw);
+        const formData = new FormData();
+        formData.append("file", file.raw);
+        _uploadFileApi(formData).then((res) => {
+          this.uploading = false;
+          if (res.code == 0) {
+            if (this.formItem.file_url) {
+              this.formItem.file_url += "," + res.data.url;
+            } else {
+              this.formItem.file_url = res.data.url;
             }
-          }, 100);
-        },
+          } else {
+            this.$refs.upload.uploadFiles.pop();
+          }
+        });
+
+        setTimeout(() => {
+          var parent = document.querySelectorAll("#uploadVideo ul li");
+          // for (let i = 0; i < parent.length; i++) {
+          if (parent[parent.length - 1].querySelector("img")) {
+            var video = parent[parent.length - 1].querySelector("img");
+            console.log("videovideo", video);
+            var newVideo = document.createElement("img");
+            newVideo.src = require("../../assets/img/WechatIMG94.jpeg");
+            newVideo.class = "el-upload-list__item-thumbnail";
+            newVideo.style = "width:100%;height:100%;";
+            parent[parent.length - 1].appendChild(newVideo);
+            parent[parent.length - 1].removeChild(video);
+            this.loading = false;
+          }
+          // }
+        }, 1010);
+      } else if (file.raw.type.indexOf("video") != -1) {
+        this.loading = true;
+        const isLt2M = file.size / 1024 / 1024 < 10;
+        if (!isLt2M) {
+          // this.$refs.upload.uploadFiles.pop();
+          // return this.$message.error("上传视频大小不能超过 10MB!");
+        }
+        console.log("file.raw", file.raw);
+        const formData = new FormData();
+        formData.append("file", file.raw);
+        _uploadFileApi(formData).then((res) => {
+          console.log("resresres", res);
+          this.uploading = false;
+          if (res.code == 0) {
+            if (this.formItem.file_url) {
+              this.formItem.file_url += "," + res.data.url;
+            } else {
+              this.formItem.file_url = res.data.url;
+            }
+            setTimeout(() => {
+              var parent = document.querySelectorAll("#uploadVideo ul li");
+              // for (let i = 0; i < parent.length; i++) {
+              if (parent[parent.length - 1].querySelector("img")) {
+                var video = parent[parent.length - 1].querySelector("img");
+                var newVideo = document.createElement("video");
+                newVideo.src = video.src;
+                newVideo.class = "el-upload-list__item-thumbnail";
+                newVideo.style = "width:100%;height:100%;";
+                parent[parent.length - 1].appendChild(newVideo);
+                parent[parent.length - 1].removeChild(video);
+              }
+              // }
+              this.loading = false;
+            }, 200);
+          } else {
+            this.$refs.upload.uploadFiles.pop();
+          }
+        });
+      }
+    },
     // 图片限制一个
-    exceedPicture (files, fileList) {
+    exceedPicture(files, fileList) {
       if (fileList && fileList.length > 9) {
         this.disabled = true;
-        return this.$message.error('最多只能添加9个素材 !')
+        return this.$message.error("最多只能添加9个素材 !");
       }
     },
     open(data) {
@@ -292,21 +361,47 @@ export default {
     },
   },
   created() {
-    eventEmitter
-      .on("toggle_quiz_dialog", (e, data) => {
-        this.visible ? this.close() : this.open();
-      });
+    eventEmitter.on("toggle_quiz_dialog", (e, data) => {
+      this.visible ? this.close() : this.open();
+    });
   },
-  mounted() {
-  },
+  mounted() {},
   beforeDestroy() {},
 };
 </script>
 
-<style lang="scss" scoped>
-.disabled .el-upload--picture-card {
-    display: none !important;
+<style lang="scss">
+.el-dialog {
 }
+.disabled .el-upload--picture-card {
+  display: none !important;
+}
+.disabled .el-upload--picture-card {
+  display: none !important;
+}
+.disabled .el-upload-list__item {
+  background-image: none;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.el-upload-list--picture-card .el-upload-list__item-actions:hover span {
+  display: inline-block;
+}
+.el-upload-list--picture-card .el-upload-list__item-actions {
+  z-index: 1000 !important;
+}
+.el-progress-circle {
+  height: 147px !important;
+  width: 147px !important;
+}
+.el-upload--picture-card {
+  width: 300px;
+}
+#edui1_iframeholder {
+  height: 520px !important;
+}
+
 #quiz-xxx {
   position: absolute;
   z-index: 10;
