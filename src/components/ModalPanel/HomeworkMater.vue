@@ -243,14 +243,39 @@ export default {
           }
         } else {
           //在本页打开窗口
-          let $eleForm = $("<form method='get'></form>");
-          $eleForm.attr("action", this.fileList[i].url);
-          $(document.body).append($eleForm);
-          //提交表单，实现下载
-          $eleForm.submit();
+          // let $eleForm = $("<form method='get'></form>");
+          // $eleForm.attr("action", this.fileList[i].url);
+          // $(document.body).append($eleForm);
+          // //提交表单，实现下载
+          // $eleForm.submit();
+          this.downloadMp3(this.fileList[i].url)
+          // const link = document.createElement('a');//我们用模拟q标签点击事件
+          // const fname = 'sucai.jpg'; //下载文件的名字
+          // link.href = this.dataUrlToBold(this.fileList[i].url);
+          // link.setAttribute('download', fname);
+          // document.body.appendChild(link);
+          // link.click();
         }
       }
     },
+
+    downloadMp3(filePath) {
+	  fetch(filePath).then(res => res.blob()).then(blob => {
+	    const a = document.createElement('a');
+	    document.body.appendChild(a)
+	    a.style.display = 'none'
+	    // 使用获取到的blob对象创建的url
+	    const url = window.URL.createObjectURL(blob);
+	    a.href = url;
+	    // 指定下载的文件名
+	    a.download = filePath;
+	    a.click();
+	    document.body.removeChild(a)
+	    // 移除blob对象的url
+	    window.URL.revokeObjectURL(url);
+	  });
+	},
+      
     // },
     resetForm(formName) {
       this.$refs[formName].resetFields();
