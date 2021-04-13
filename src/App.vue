@@ -245,28 +245,6 @@ export default {
             // }
         }
     )
-    // .on(eventEmitter.ACYUAL_STUDENT_COUNT_REQ, function (event, data) { console.error('x'); })
-    // .on(eventEmitter.ACYUAL_STUDENT_COUNT_RES, function (event, data) { console.error('xx'); })
-    // .on(eventEmitter.ADMIN_AUTH_CLASS_START_END_CHANGE, function (event, data) { console.error('xxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_CLOUD_RECORD_CHANGE, function (event, data) { console.error('xxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_DOCUMENT_CONTROL_CHANGE, function (event, data) { console.error('xxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_DOCUMENT_UPLOAD_CHANGE, function (event, data) { console.error('xxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_FORBID_AND_KICK_CHANGE, function (event, data) { console.error('xxxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_NOTICE_CHANGE, function (event, data) { console.error('xxxxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_PAINTER_CHANGE, function (event, data) { console.error('xxxxxxxxxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_SPEAK_CHANGE, function (event, data) { console.error('ss'); })
-    // .on(eventEmitter.AI_BEAUTY, function (event, data) { console.error('ssss'); })
-    // .on(eventEmitter.AI_BEAUTY_ENABLE, function (event, data) { console.error('ssssss'); })
-    // .on(eventEmitter.AI_BEAUTY_ENABLE_TRIGGER, function (event, data) { console.error('ssssss'); })
-    // .on(eventEmitter.AI_BEAUTY_TRIGGER, function (event, data) { console.error('sssssssss'); })
-    // .on(eventEmitter.AI_HEAD_COUNT, function (event, data) { console.error('ddddd'); })
-    // .on(eventEmitter.AI_HEAD_COUNT_TRIGGER, function (event, data) { console.error('d'); })
-    // .on(eventEmitter.AI_SELECT, function (event, data) { console.error('ddd'); })
-    // .on(eventEmitter.AI_SELECT_TRIGGER, function (event, data) { console.error('ddddddddd'); })
-    .on(eventEmitter.ALL_BLOCKED_USERS_REMOVE, (event, data) => { this.workClick() })
-    // .on(eventEmitter.ALL_PLAYER_STREAM_CHANGE, function (event, data) { console.error('wwwww'); })
-    .on(eventEmitter.ALL_USERS_UNBLOCK, function (event, data) { console.error('eeee'); })
-
     .on(
         eventEmitter.SPEAK_APPLY_FORBID_ALL_CHANGE,
         function (event, data) {
@@ -348,11 +326,11 @@ export default {
   },
   methods: {
     workClick () {
-      this.workList = []
+        console.log('dadasdasdasdsadasd');
+
       let temp = {room_id: 21032159047031, last_file_id: 0, page_size: 50}
       _queryWorkListApi(temp).then(res => {
         console.log('dadasdasdasdsadasd', res);
-        this.workList = []
         res.data.forEach((item, index) => {
           this.workList.push({studentName: 'item' + index, type: item.file_url.split('.')[3], src: item.file_url})
         })

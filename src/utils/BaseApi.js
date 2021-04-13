@@ -22,7 +22,7 @@ const flyRequest = new FlyRequest({
 flyRequest.registerRequestInterceptor(request => {
   // 根据_mock参数，从环境变量中获取BASE_API或MOCK_BASE_API
   request.baseURL = request._mock ? process.env.MOCK_BASE_API : baseUrl
-  request.headers['token'] = auth.isTeacher() ? '0449B310BD9B45B6DACA579542B9A1E6X24' : '6EB38114D1003725EFAD385A4A9BBF5FX31'
+  request.headers['token'] = auth.isTeacher() ? '0449B310BD9B45B6DACA579542B9A1E6X24' : '84260136B806F01F821C28C302C655E0X31'
   // const token = getToken()
   console.warn('####### API Request: ', request)
   // 可以显式返回request, 也可以不返回，没有返回值时拦截器中默认返回request

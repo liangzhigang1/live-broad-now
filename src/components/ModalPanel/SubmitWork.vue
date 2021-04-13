@@ -35,7 +35,8 @@
               placeholder="请选择作业类型"
             >
               <el-option label="图片" value="1"></el-option>
-              <el-option label="音频/视频" value="2"></el-option>
+              <el-option label="视频" value="2"></el-option>
+              <el-option label="音频" value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="素材上传" prop="file_url">
@@ -85,7 +86,7 @@
     <el-dialog
       :fullscreen="false"
       :modal="false"
-      width="80%"
+      width="60%"
       title="图片"
       max-height="70%"
       :visible.sync="dialogVisible1"
@@ -94,7 +95,6 @@
     </el-dialog>
     <el-dialog
       title="视频"
-      width="80%"
       :modal="false"
       :visible.sync="dialogVisible2"
       max-height="70%"
@@ -111,7 +111,6 @@
     </el-dialog>
     <el-dialog
       title="音频"
-      width="80%"
       :modal="false"
       :visible.sync="dialogVisible3"
       max-height="70%"
@@ -193,30 +192,9 @@ export default {
       this.dialogImageUrl = file.url;
     },
     submitForm(formName) {
-      // eventEmitter.trigger(eventEmitter.ACYUAL_STUDENT_COUNT_REQ);
-      // eventEmitter.trigger(eventEmitter.ACYUAL_STUDENT_COUNT_RES);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_CLASS_START_END_CHANGE);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_CLOUD_RECORD_CHANGE);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_DOCUMENT_CONTROL_CHANGE);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_DOCUMENT_UPLOAD_CHANGE);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_FORBID_AND_KICK_CHANGE);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_NOTICE_CHANGE);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_PAINTER_CHANGE);
-      // eventEmitter.trigger(eventEmitter.ADMIN_AUTH_SPEAK_CHANGE);
-      // eventEmitter.trigger(eventEmitter.AI_BEAUTY);
-      // eventEmitter.trigger(eventEmitter.AI_BEAUTY_ENABLE);
-      // eventEmitter.trigger(eventEmitter.AI_BEAUTY_ENABLE_TRIGGER);
-      // eventEmitter.trigger(eventEmitter.AI_BEAUTY_TRIGGER);
-      // eventEmitter.trigger(eventEmitter.AI_HEAD_COUNT);
-      // eventEmitter.trigger(eventEmitter.AI_HEAD_COUNT_TRIGGER);
-      // eventEmitter.trigger(eventEmitter.AI_SELECT);
-      // eventEmitter.trigger(eventEmitter.AI_SELECT_TRIGGER);
-      
-      // eventEmitter.trigger(eventEmitter.ANSER_RESULT_SHOW);
       if (!this.formItem.title) {
         return this.$message.error("作业标题不能为空!");
       }
-
       if (!this.formItem.file_type) {
         return this.$message.error("作业类型不能为空!");
       }
@@ -225,11 +203,6 @@ export default {
           _submitWorkApi(this.formItem)
             .then((res) => {
               if (res.code === 0) {
-                // 处理这个问题
-                eventEmitter.trigger(eventEmitter.ALL_BLOCKED_USERS_REMOVE);
-                eventEmitter.trigger(eventEmitter.ALL_PLAYER_STREAM_CHANGE);
-                eventEmitter.trigger(eventEmitter.ALL_USERS_UNBLOCK);
-                eventEmitter.trigger(eventEmitter.ALL_USERS_UNBLOCK_TRIGGER);
                 this.$message({
                   message: "保存成功",
                   type: "success",
@@ -238,7 +211,6 @@ export default {
               }
             })
             .finally(() => {
-
               this.close();
             });
         } else {
