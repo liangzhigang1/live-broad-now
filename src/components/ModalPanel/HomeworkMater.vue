@@ -1,8 +1,11 @@
 <!-- 小测组件 -->
 <template>
-  <div v-show="visible1" id="quiz-view">
+  <div style="height: 500px;background: #313847" v-loading="loading"
+    element-loading-text="素材上传中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)" v-show="visible1" id="quiz-view">
     <div class="close-bar">
-      <span class="bar-title">查看发布</span>
+      <span class="bar-title">下载素材</span>
       <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
         ><i class="el-icon-close"></i
       ></span>
@@ -28,9 +31,25 @@
             {{ ruleForm.work_require }}
           </el-form-item>
           <el-form-item label="作业素材" prop="desc">
-            <div class="work-list" v-for="(item, index) in this.fileList" :key="index" style="float: left;width: 80px;height: 80px;margin-right: 3px;margin-bottom: 3px">
-
-            </div>
+            <el-upload
+              id="uploadVideo"
+              ref="videoUpload"
+              action="#"
+              :limit="1"
+              list-type="picture-card"
+              :file-list="fileList"
+              class="disabled1 model1"
+              accept="video/mp4,video/ogg,video/flv,video/avi,video/wmv,video/rmvb"
+              :on-change="
+                (file, fileList) => cosUploadFileVideo(file, fileList)
+              "
+              :on-preview="handlePictureCardPreviewVidoe"
+              :on-remove="handleVdieoRemove"
+              :auto-upload="false"
+              :on-exceed="exceedVideo"
+            >
+              <i slot="default" class="el-icon-plus"></i>
+            </el-upload>
           </el-form-item>
         </div>
         <el-form-item style="text-align: center; margin: 14px 0 -6px -74px">
@@ -38,43 +57,127 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 照片和视频模态框 -->
+    <el-dialog
+      :fullscreen="false"
+      :modal="false"
+      width="60%"
+      title="图片"
+      max-height="70%"
+      :visible.sync="dialogVisible1"
+    >
+      <img width="100%" :src="dialogUrl" alt="" />
+    </el-dialog>
+    <el-dialog
+      title="视频"
+      :modal="false"
+      :visible.sync="dialogVisible2"
+      max-height="70%"
+      style="margin:auto;"
+    >
+      <video
+        width="100%"
+        controls
+        :src="dialogUrl"
+        style="height: -webkit-fill-available;text-align:center;"
+      >
+        抱歉，您的浏览器不支持
+      </video>
+    </el-dialog>
+    <el-dialog
+      title="音频"
+      :modal="false"
+      :visible.sync="dialogVisible3"
+      max-height="70%"
+      style="margin:auto;"
+    >
+      <audio controls autoplay loop :src="dialogUrl">
+        <p>Your browser does not support the <code>audio</code> element.</p>
+      </audio>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
-import {_queryPushWorkListApi} from '../../api/work'
+import { _queryPushWorkListApi } from "../../api/work";
 
 export default {
   props: {
     visibleHomeworkMater: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   watch: {
-    visibleHomeworkMater (val) {
-      let temp = {room_id: 21032159047031, last_file_id: 0, page_size: 1}
-      _queryPushWorkListApi(temp).then(res => {
-        console.log('fffff', res)
+    visibleHomeworkMater(val) {
+      this.$refs['videoUpload'].clearFiles()
+      this.fileList = []
+      this.loading = true;
+      let temp = { room_id: 21032159047031, last_file_id: 0, page_size: 1 };
+      _queryPushWorkListApi(temp).then((res) => {
+        console.log("fffff", res);
         if (res.data.length > 0) {
-          console.log('res.data.file_url', res.data.file_url);
-          let tempFlieList = res.data[0].file_url.split(',')
-          this.ruleForm = res.data[0]
+          console.log("res.data.file_url", res.data.file_url);
+          let tempFlieList = res.data[0].file_url.split(",");
+          this.ruleForm = res.data[0];
           tempFlieList.forEach((item, index) => {
-            this.fileList.push({name: 'item' + index, url: item})
-          })
-          console.log('this.fileList', this.fileList);
-          this.visible1 = val
+            this.fileList.push({ name: "item" + index, url: item });
+          });
+          setTimeout(() => {
+            var parent = document.querySelectorAll("#uploadVideo ul li");
+            for (let i = 0; i < parent.length; i++) {
+              if (parent[i].innerHTML.indexOf('.mp4') != -1) {
+
+
+                if (parent[i].querySelector("img")) {
+                  var video = parent[i].querySelector("img");
+                  var newVideo = document.createElement("video");
+                  newVideo.src = video.src;
+                  newVideo.class = "el-upload-list__item-thumbnail";
+                  newVideo.style = "width:100%;height:100%;";
+                  parent[i].appendChild(newVideo);
+                  parent[i].removeChild(video);
+
+
+                }
+              } else if (parent[i].innerHTML.indexOf('.mp4') != -1) {
+
+
+                var parent = document.querySelectorAll("#uploadVideo ul li");
+                console.log("parentparentparent", parent);
+                if (parent[i].querySelector("img")) {
+                  var video = parent[i].querySelector("img");
+                  console.log("videovideo", video);
+                  var newVideo = document.createElement("img");
+                  newVideo.src = require("../../assets/img/WechatIMG94.jpeg");
+                  newVideo.class = "el-upload-list__item-thumbnail";
+                  newVideo.style = "width:100%;height:100%;";
+                  parent[i].appendChild(newVideo);
+                  parent[i].removeChild(video);
+                }
+              }
+            }
+                            this.loading = false;
+          }, 1000);
+          this.visible1 = val;
         } else {
-          return this.$message.error('未发布作业！')
+          return this.$message.error("未发布作业！");
         }
-      })
-    }
+      });
+    },
   },
   data() {
     return {
+      loading: false,
+      dialogUrl: "",
+      uploading: false,
+      dialogImageUrl: "",
+      dialogVisible1: false,
+      dialogVisible2: false,
+      dialogVisible3: false,
+
       fileList: [],
       visible1: this.visibleHomeworkMater,
       isTeacher: auth.isTeacher(),
@@ -84,18 +187,36 @@ export default {
         user_id: "",
         title: "",
         file_url: "",
-        id: ""
+        id: "",
       },
     };
   },
   methods: {
+    exceedVideo() {},
+    handleVdieoRemove() {},
+    handlePictureCardPreviewVidoe(file) {
+      console.log("filefile", file.url);
+      this.dialogUrl = file.url;
+      if (file.url.indexOf('.mp4') != -1) {
+        this.dialogVisible2 = true;
+      } else if (
+        ffile.url.indexOf('.mp3') != -1
+      ) {
+        this.dialogVisible3 = true;
+      } else {
+        this.dialogVisible1 = true;
+      }
+    },
+    cosUploadFileVideo() {},
     downloadImage() {
       for (let i = 0; i < this.fileList.length; i++) {
-        console.log('this.fileList', this.fileList[i]);
-        if (this.fileList[i].url.split('.')[3] == 'png' || this.fileList[i].url.split('.')[3] == 'jpg' ) {
+        if (
+          this.fileList[i].url.split(".")[3] == "png" ||
+          this.fileList[i].url.split(".")[3] == "jpg"
+        ) {
           // const link = document.createElement('a');//我们用模拟q标签点击事件
-        const fname = this.fileList[i].name; //下载文件的名字
-        // 生成一个 a 标签
+          const fname = this.fileList[i].name; //下载文件的名字
+          // 生成一个 a 标签
           const a = document.createElement("a");
           a.download = fname;
           a.alt = fname;
@@ -105,96 +226,47 @@ export default {
           image.src = this.fileList[i].url + "?v=" + Math.random();
 
           image.onload = () => {
-              const base64 = getBase64Images(image);
-              a.href = base64;
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
+            const base64 = getBase64Images(image);
+            a.href = base64;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
           };
           function getBase64Images(image) {
-              const canvas = document.createElement("canvas");
-              canvas.width = image.width;
-              canvas.height = image.height;
-              const context = canvas.getContext("2d");
-              context.drawImage(image, 0, 0, image.width, image.height);
-              const url = canvas.toDataURL("image/png", 0);
-              return url;
-          };
+            const canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            const context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0, image.width, image.height);
+            const url = canvas.toDataURL("image/png", 0);
+            return url;
+          }
         } else {
-          //  var video = new File(this.fileList[i].url);  //选择的文件
-          //  console.log('videovideovideo', video);
-          //   var reader = new FileReader();  
-          //   var rs = reader.readAsDataURL(video);  
-          //   reader.onload = (e) =>{
-          //     var videoSrc= e.target.result; 
-          //     console.log(videoSrc)
-          //     //提交到后台部分略
-          //   }
-          // window.open(this.fileList[i].url);
-          // console.log('3333333333333333');
-          // const link = document.createElement('a');//我们用模拟q标签点击事件
-          // const fname = this.fileList[i].name; //下载文件的名字
-          // link.href = this.fileList[i].url;
-          // link.setAttribute('download', 'xxx.mp4');
-          // document.body.appendChild(link);
-          // link.click();
-
           //在本页打开窗口
-    let $eleForm = $("<form method='get'></form>");
-    $eleForm.attr("action",this.fileList[i].url);
-    $(document.body).append($eleForm);
-    //提交表单，实现下载
-    $eleForm.submit();
+          let $eleForm = $("<form method='get'></form>");
+          $eleForm.attr("action", this.fileList[i].url);
+          $(document.body).append($eleForm);
+          //提交表单，实现下载
+          $eleForm.submit();
         }
-        
-
-      }        
+      }
     },
-    // downloadImage() {
-    //   try {
-    //      for (let i = 0; i < this.fileList.length; i++) {
-    //       // const link = document.createElement('a');//我们用模拟q标签点击事件
-    //       const fname = this.fileList[i].name; //下载文件的名字
-    //       // link.href = this.fileList[i].url;
-    //       // link.setAttribute('download', fname);
-    //       // document.body.appendChild(link);
-    //       // link.click();
-    //       this.convertUrlToBase64(this.fileList[i].url).then(function(base64) {
-    //         console.log('555555555');
-    //           // 图片转为base64
-    //           var blob = that.convertBase64UrlToBlob(base64); // 转为blob对象
-    //           // 下载
-    //           var a = document.createElement("a");
-    //           a.download = fname;
-    //           a.href = URL.createObjectURL(blob);
-    //           a.click();
-    //       });
-    //   }    
-    //   } catch (error) {
-    //     console.error('222', error);
-    //   }
-     
     // },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    open(data) {
-      
-      // this.$nextTick(() => {
-      //   !this.isTeacher;
-      // });
-    },
+    open(data) {},
     close() {
       this.visible1 = false;
-      this.$emit('closeViewQuiz', this.visible1)
+      this.fileList = []
+      this.$emit("closeHomeworkMater", this.visible1);
     },
     initTeacher() {},
     initStudent() {
       // BJY.quizStudent.init();
     },
   },
-  created() {
-  },
+  created() {},
   mounted() {
     this.isTeacher ? this.initTeacher() : this.initStudent();
   },
@@ -202,7 +274,30 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.model1 .el-upload-list__item-delete {
+  display: none !important;
+}
+.disabled1 .el-upload--picture-card {
+  display: none !important;
+}
+// 新加样式  2020.7.20
+.disabled1 .el-upload-list__item {
+  background-image: none;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.el-upload-list--picture-card .el-upload-list__item-actions:hover span {
+  display: inline-block;
+}
+.el-upload-list--picture-card .el-upload-list__item-actions {
+  z-index: 1000 !important;
+}
+.el-progress-circle {
+  height: 147px !important;
+  width: 147px !important;
+}
 #quiz-view {
   position: fixed;
   z-index: 10;
@@ -338,9 +433,8 @@ export default {
   }
 }
 .work-list {
-  background-image: url('../../assets/img/zip.png');
+  background-image: url("../../assets/img/zip.png");
   // background-repeat:no-repeat;
-  background-position:center center;
-
+  background-position: center center;
 }
 </style>

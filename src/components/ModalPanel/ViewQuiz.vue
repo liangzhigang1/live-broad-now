@@ -1,6 +1,6 @@
 <!-- 小测组件 -->
 <template>
-  <div v-show="visible1" id="quiz-view">
+  <div style="height: 500px;background: #313847" v-show="visible1" id="quiz-view">
     <div class="close-bar">
       <span class="bar-title">查看发布</span>
       <span v-show="isTeacher || !forceJoin" @click="close" class="bjy-close"
@@ -28,9 +28,25 @@
             {{ ruleForm.work_require }}
           </el-form-item>
           <el-form-item label="作业素材" prop="desc">
-            <div class="work-list" v-for="(item, index) in this.fileList" :key="index" style="float: left;width: 80px;height: 80px;margin-right: 3px;margin-bottom: 3px">
-
-            </div>
+            <el-upload
+              id="uploadVideo"
+              ref="videoUpload"
+              action="#"
+              :limit="1"
+              list-type="picture-card"
+              :file-list="fileList"
+              class="disabled1 model1"
+              accept="video/mp4,video/ogg,video/flv,video/avi,video/wmv,video/rmvb"
+              :on-change="
+                (file, fileList) => cosUploadFileVideo(file, fileList)
+              "
+              :on-preview="handlePictureCardPreviewVidoe"
+              :on-remove="handleVdieoRemove"
+              :auto-upload="false"
+              :on-exceed="exceedVideo"
+            >
+              <i slot="default" class="el-icon-plus"></i>
+            </el-upload>
           </el-form-item>
         </div>
         <el-form-item style="text-align: right; margin: 14px 0 -6px">
@@ -41,6 +57,44 @@
         </el-form-item>
       </el-form>
     </div>
+     <!-- 照片和视频模态框 -->
+    <el-dialog
+      :fullscreen="false"
+      :modal="false"
+      width="60%"
+      title="图片"
+      max-height="70%"
+      :visible.sync="dialogVisible1"
+    >
+      <img width="100%" :src="dialogUrl" alt="" />
+    </el-dialog>
+    <el-dialog
+      title="视频"
+      :modal="false"
+      :visible.sync="dialogVisible2"
+      max-height="70%"
+      style="margin:auto;"
+    >
+      <video
+        width="100%"
+        controls
+        :src="dialogUrl"
+        style="height: -webkit-fill-available;text-align:center;"
+      >
+        抱歉，您的浏览器不支持
+      </video>
+    </el-dialog>
+    <el-dialog
+      title="音频"
+      :modal="false"
+      :visible.sync="dialogVisible3"
+      max-height="70%"
+      style="margin:auto;"
+    >
+      <audio controls autoplay loop :src="dialogUrl">
+        <p>Your browser does not support the <code>audio</code> element.</p>
+      </audio>
+    </el-dialog>
   </div>
 </template>
 
@@ -58,6 +112,8 @@ export default {
   },
   watch: {
     visibleViewQuiz (val) {
+      this.$refs['videoUpload'].clearFiles()
+      this.fileList = []
       let temp = {room_id: 21032159047031, last_file_id: 0, page_size: 1}
       _queryPushWorkListApi(temp).then(res => {
         console.log('fffff', res)
@@ -68,6 +124,42 @@ export default {
           tempFlieList.forEach((item, index) => {
             this.fileList.push({name: 'item' + index, url: item})
           })
+          setTimeout(() => {
+            var parent = document.querySelectorAll("#uploadVideo ul li");
+            for (let i = 0; i < parent.length; i++) {
+              if (parent[i].innerHTML.indexOf('.mp4') != -1) {
+
+
+                if (parent[i].querySelector("img")) {
+                  var video = parent[i].querySelector("img");
+                  var newVideo = document.createElement("video");
+                  newVideo.src = video.src;
+                  newVideo.class = "el-upload-list__item-thumbnail";
+                  newVideo.style = "width:100%;height:100%;";
+                  parent[i].appendChild(newVideo);
+                  parent[i].removeChild(video);
+
+
+                }
+              } else if (parent[i].innerHTML.indexOf('.mp4') != -1) {
+
+
+                var parent = document.querySelectorAll("#uploadVideo ul li");
+                console.log("parentparentparent", parent);
+                if (parent[i].querySelector("img")) {
+                  var video = parent[i].querySelector("img");
+                  console.log("videovideo", video);
+                  var newVideo = document.createElement("img");
+                  newVideo.src = require("../../assets/img/WechatIMG94.jpeg");
+                  newVideo.class = "el-upload-list__item-thumbnail";
+                  newVideo.style = "width:100%;height:100%;";
+                  parent[i].appendChild(newVideo);
+                  parent[i].removeChild(video);
+                }
+              }
+            }
+                            this.loading = false;
+          }, 1000);
           console.log('this.fileList', this.fileList);
           this.visible1 = val
         } else {
@@ -78,6 +170,14 @@ export default {
   },
   data() {
     return {
+      loading: false,
+      dialogUrl: "",
+      uploading: false,
+      dialogImageUrl: "",
+      dialogVisible1: false,
+      dialogVisible2: false,
+      dialogVisible3: false,
+
       fileList: [],
       visible1: this.visibleViewQuiz,
       isTeacher: auth.isTeacher(),
@@ -92,6 +192,23 @@ export default {
     };
   },
   methods: {
+    exceedVideo() {},
+    handleVdieoRemove() {},
+    handlePictureCardPreviewVidoe(file) {
+      console.log("filefile", file.url);
+      this.dialogUrl = file.url;
+      if (file.url.indexOf('.mp4') != -1) {
+        this.dialogVisible2 = true;
+      } else if (
+        ffile.url.indexOf('.mp3') != -1
+      ) {
+        this.dialogVisible3 = true;
+      } else {
+        this.dialogVisible1 = true;
+      }
+    },
+    cosUploadFileVideo() {},
+
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -112,7 +229,16 @@ export default {
       // });
     },
     close() {
+      this.fileList = []
+      this.$refs['videoUpload'].clearFiles()
       this.visible1 = false;
+      this.ruleForm = {
+        work_require: "",
+        user_id: "",
+        title: "",
+        file_url: "",
+        id: ""
+      },
       this.$emit('closeViewQuiz', this.visible1)
     },
     initTeacher() {},
