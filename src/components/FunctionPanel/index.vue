@@ -149,11 +149,12 @@
 
 
       
-
+      <div style="margin-right: 20px" v-if="!isStudent && started" @click="toggleClassEnd" class="btn-div">
+        退出课堂
+      </div>
       <!-- 上下课 -->
       <div v-if="!isStudent" @click="toggleClassStart" class="btn-div">
         <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe609;</span>
-        
         {{ statusTip }}
       </div>
       
@@ -293,6 +294,9 @@ export default {
     },
     closeSubmitWork (val) {
       this.visibleSubmitWork = val
+    },
+    toggleClassEnd () {
+      eventEmitter.trigger(eventEmitter.CLASS_END_TRIGGER);
     },
     toggleClassStart() {
       if (store.get("class.started")) {
