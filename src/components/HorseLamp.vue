@@ -49,6 +49,6 @@ export default {
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
 .horselamp-fake {
-  display: none;
+  // display: none;
 }
 </style>
