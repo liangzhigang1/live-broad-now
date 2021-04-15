@@ -598,7 +598,7 @@ export default {
       }
 
       .bjy-popup {
-        display: none;
+        // display: none;
       }
     }
     .kejian {
@@ -776,13 +776,13 @@ export default {
     z-index: 9999 !important;
   }
   .bjy-link {
-    display: none !important;
+    // display: none !important;
   }
   .bjy-player-theme-default {
 
   }
   .bjy-watermark {
-    display: none;
+    // display: none;
   }
   // .bjy-avatar-wrap {
   //   -webkit-animation: twinkling 1s infinite ease-in-out
