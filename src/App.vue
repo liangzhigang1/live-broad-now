@@ -7,7 +7,8 @@
         <div :style="{right: hudong ? '290px' : '0px', bottom: zuoye ? '254px' : '100px'}" class="class-panel">
             <!-- 老师播放器 -->
           <TeacherPlayer v-show="!showStartBtn && studentList && studentList.length == 0" />
-          <div style="height: 100%;width: 100%;display: flex" v-show="!showStartBtn && studentList && studentList.length > 0">
+           <!-- v-show="!showStartBtn && studentList && studentList.length > 0" -->
+          <div style="height: 100%;width: 100%;display: flex">
             <div style="height: 205px;flex: 0 0 200px" v-for="student in studentList" :key="student.id">
               <SelfPlayerTemp :student="student" :id="'id' + student.id" />
               <!-- <SelfPlayers/> -->
