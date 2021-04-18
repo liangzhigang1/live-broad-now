@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import qs from 'qs'
+import qs from 'qs'
 // import { MessageBox, Message } from 'element-ui'
 
 
@@ -16,7 +16,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 在发送请求之前做的事情
-    // config.method === 'post' ? (config.data = qs.stringify({ ...config.data })) : (config.params = { ...config.params })
+    config.method === 'post' ? (config.data = qs.stringify({ ...config.data })) : (config.params = { ...config.params })
     return config
   },
   error => {

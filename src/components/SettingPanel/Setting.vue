@@ -79,7 +79,8 @@
           <div style="margin-top: 20px">
             <span>请点击麦克风测试，对着麦克风说话进行试听</span>
             <div style="float: left;margin-top: 5px;">
-              <el-button type="primary">麦克风测试</el-button> 
+              <!-- <el-button @click="readyOriginal" type="primary">麦克风测试</el-button>  -->
+              <!-- <MaiKeFeng /> -->
             </div>
             <div style="margin-top: 5px;margin-left: 150px">
               <span style="background: #ccc;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
@@ -145,7 +146,6 @@
       </div>
 
     </div>
-    
   </div>
 </template>
 
@@ -156,8 +156,12 @@ let store = BJY.store;
 // 获取创建播放器的 Player 对象
 var Player = BJY.Player;
 var VolumeSlider = BJY.VolumeSlider;
-
+import { HZRecorder} from '../../utils/HZRecorder';
+import MaiKeFeng from './MaiKeFeng'
 export default {
+  components: {
+    MaiKeFeng,
+  },
   data() {
     return {
       value7: false,
@@ -190,9 +194,20 @@ export default {
         time: "",
         desc: "",
       },
+      isVoice: false,
+      recorder: null,
     };
   },
   methods: {
+    readyOriginal () {
+     if (!this.isVoice) {
+      this.recorder && this.recorder.start();
+      this.isVoice = true
+     } else {
+      this.isVoice = false
+      this.recorder && this.recorder.stop();
+     }
+    },
     changeSwitch () {
         console.error('222222222222222222', this.value7);
     },
@@ -282,6 +297,31 @@ export default {
     
   },
   mounted() {
+    var _this = this
+    this.$nextTick(() => {
+      try {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+        window.URL = window.URL || window.webkitURL;
+        var audio_context = new AudioContext;
+        console.log('audio_contextaudio_contextaudio_context', audio_context);
+        console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+      } catch (e) {
+        alert('No web audio support in this browser!');
+      }
+      navigator.getUserMedia({audio: true}, function (stream) {
+        console.error('errorreadyOriginalreadyOriginalreadyOriginalreadyOriginalreadyOriginalreadyOriginal');
+        var recorder = new HZRecorder(stream)
+        _this.recorder = recorder
+        console.log('222xxxxx22', recorder);
+        console.log('初始化完成');
+        }, function(e) {
+        console.log('No live audio input: ' + e);
+      });
+      })
+
+
+
     eventEmitter.on("toggle_setting_dialog", (e, data) => {
         this.visible ? this.close() : this.open();
       }).on("MIC_VOLUME_CHANGE", (e, data) => {

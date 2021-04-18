@@ -27,12 +27,13 @@ export default {
         canSwitchMic: true,
         onComplete: function () {
           eventEmitter.trigger(eventEmitter.MEDIA_SWITCH_TRIGGER, {
-            videoOn: false,
-            audioOn: false,
+            videoOn: true,
+            audioOn: true,
           });
         },
       });
     },
+    
   },
   created() {},
   mounted() {

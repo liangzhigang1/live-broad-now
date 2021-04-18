@@ -4,7 +4,6 @@
 <template>
   <div class="modal-panel">
     <RollCall v-if="isStudent" />
-    <RollCallTeacher v-else />
     <AnswerMachine />
     <Quiz />
     <MediaPlayer />
@@ -15,7 +14,6 @@
 <script>
 import AnswerMachine from "./AnswerMachine";
 import RollCall from "./RollCall";
-import RollCallTeacher from "./RollCallTeacher";
 import Quiz from "./Quiz";
 import MediaPlayer from "./MediaPlayer";
 import Lottery from "./Lottery";
@@ -27,7 +25,6 @@ export default {
   components: {
     AnswerMachine,
     RollCall,
-    RollCallTeacher,
     Quiz,
     MediaPlayer,
     Lottery,

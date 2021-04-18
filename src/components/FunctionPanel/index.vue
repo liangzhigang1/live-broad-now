@@ -41,9 +41,9 @@
       </div>
 
 
-      <div style="position: relative" v-if="!isStudent" class="btn-div">
-        <div id="showZuoye">
-          <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe62d;</span>
+      <div style="position: relative"  v-if="!isStudent" class="btn-div showZuoye">
+        <div class="showZuoye">
+          <span style="font-size: 16px;margin-right:4px" class="iconfont showZuoye">&#xe62d;</span>
           发布作业
         </div>
         
@@ -99,10 +99,10 @@
       </div>
 
 
-      <div v-if="!isStudent" style="position: relative" class="btn-div">
-        <div id="show" >
-          <span style="font-size: 16px;margin-right:4px" class="iconfont">&#xe627;</span>
-        更多
+      <div v-if="!isStudent" style="position: relative" class="btn-div show111">
+        <div class="show111">
+          <span style="font-size: 16px;margin-right:4px" class="iconfont show111">&#xe627;</span>
+          <span class="show111">更多</span>
         </div>
         
         <div v-if="show" class="more-layer active">
@@ -349,12 +349,12 @@ export default {
       this.visibleRandomRollCall = true
     },
     closeRandomRollCall1 () {
-      // eventEmitter.trigger(eventEmitter.AUDIO_REPAIR_CHANGE_TRIGGER);
-      // eventEmitter.trigger(eventEmitter.ROLL_CALL);
-      // eventEmitter.trigger(eventEmitter.ROLL_CALL_RES);
-      // eventEmitter.trigger(eventEmitter.ROLL_CALL_RESULT);
-      // eventEmitter.trigger(eventEmitter.ROLL_CALL_TRIGGER);
-      // eventEmitter.trigger(eventEmitter.ROLL_CALL_RES);
+      // 处理这个问题
+      // eventEmitter.trigger(eventEmitter.AV_SWITCH_END);
+      eventEmitter.trigger(eventEmitter.ROLL_CALL_TRIGGER, {
+        // 倒计时 秒
+        duration: Number(30),
+      });
       this.isRollCall = true
     },
     toggleRollCall() {
@@ -388,10 +388,10 @@ export default {
   mounted() {
     var _this = this
     document.addEventListener('click', (e) => {
-      console.log('');
-      if (e.target.id == 'show') {
+      console.log('e.target.class', e.target.className);
+      if (e.target.className.indexOf('show111') != -1) {
         _this.show = !_this.show
-      } else if (e.target.id == 'showZuoye') {
+      } else if (e.target.className.indexOf('showZuoye') != -1) {
         _this.showZuoye = !_this.showZuoye
       } else {
         _this.show = false

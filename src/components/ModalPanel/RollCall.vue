@@ -30,35 +30,27 @@ export default {
     eventEmitter.on(
       eventEmitter.ROLL_CALL, // 老师发起了点名
       async (e, data) => {
-        console.log('2222222', data);
+        console.log('datadatadatadata', data);
+        if (data.duration == '30') {
+        } else  {
+           console.log('2222222', data);
         let params = data.duration + ''
         console.log('333333333', params[0])
-        // let xx = `page=1&page_size=50&partner_id=83228320&room_id=21032159047031&timestamp=1615996148&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
-        // let sign = _this.$md5(xx)
-        // let params = { partner_id: 83228320, room_id: 21032159047031, page: 1, page_size: 50, timestamp: 1615996148, sign: sign}
         let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: 21032159047031})
-        if (result.data.list.length >= params[0]) {
-          // 随机抽几个人的算法
-          var classStudentList = result.data.list
-          var posArray = []
-          do {
-            var n = Math.floor(Math.random() *  classStudentList.length);
-            for(var i = 0; i < posArray.length; i++) {
-              if (classStudentList[n].id == posArray[i].id) { 
-                break;
-              }
+        // 随机抽几个人的算法
+        var classStudentList = result.data.list
+        var posArray = []
+        do {
+          var n = Math.floor(Math.random() *  classStudentList.length);
+          for(var i = 0; i < posArray.length; i++) {
+            if (classStudentList[n].id == posArray[i].id) { 
+              break;
             }
-            posArray.push(classStudentList[n]);
-          } while(posArray.length != Number(params[0]));
-
-
-
-          this.timeLeft = data.duration;
-          console.log('BJY.store.get("user.id")', BJY.store.get("user"));
-          console.error('posArrayposArrayposArray', posArray)
-
-
-
+          }
+          posArray.push(classStudentList[n]);
+        } while(posArray.length != Number(params[0]));
+        //
+        this.timeLeft = data.duration;
         posArray.forEach(student => {
           if (BJY.store.get("user").number == student.id) {
             this.$Dialog.show({
@@ -79,9 +71,9 @@ export default {
             }, 1000);
           }
         })
-        } else {
-          return this.$message.error('教室学员人数要大于随机点名人数！')
         }
+       
+
       }
     );
   },

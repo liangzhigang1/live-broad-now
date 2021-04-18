@@ -7,8 +7,9 @@
     <div>
       <span @click="toggleSetting" style="cursor: pointer;padding-left: 10px;color: #919BA9;font-size: 20px;margin-left:6px;border-left: 1px solid #353C48" class="iconfont">&#xe60d;</span>
     </div>
-    <div>
-      <span style="cursor: pointer;padding-right: 10px;color: #919BA9;font-size: 20px;margin-left:10px;border-right: 1px solid #353C48" class="iconfont">&#xe627;</span>
+    <div style="margin-top: 8px">
+      <img style="cursor: pointer;padding-right: 10px;color: #919BA9;font-size: 20px;margin-left:10px;border-right: 1px solid #353C48" src="../../assets/img/xxx.png" alt="">
+      <!-- <span style="cursor: pointer;padding-right: 10px;color: #919BA9;font-size: 20px;margin-left:10px;border-right: 1px solid #353C48" class="iconfont">&#xe627;</span> -->
     </div>
   </div>
     <Setting />

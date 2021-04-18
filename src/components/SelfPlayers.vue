@@ -34,8 +34,19 @@ export default {
       if (store.get("user").id == this.student.id) {
         setTimeout(() => {
           BJY.userPublish.setDevice(this.player, true);
-           var player = BJY.Player.instances[this.student.id];
+          var player = BJY.Player.instances[this.student.id];
           player && BJY.userPublish.setDevice(player, true, true);
+
+          // 获取我的播放器
+          var player1 = BJY.Player.instances[this.student.id];
+          
+          // 设置摄像头设备
+          BJY.userPublish.setDevice(player1, !player1.videoOn);
+
+          console.log('player1player1', player1);
+          console.log('this.studentthis.student', this.student);
+       
+
         }, 1000)
       }
     },
@@ -47,11 +58,9 @@ export default {
       // 监听自己摄像头和麦克风变化
       eventEmitter.MEDIA_SWITCH_TRIGGER,
       function (event, data) {
-        console.log('222222222222222222222', event);
-        console.log('222222222222222222222', data);
-        // var player = BJY.Player.instances[this.student.id];
-        // console.log('playerplayerplayer', player);
-        // player && BJY.userPublish.setDevice(player, data.videoOn, data.audioOn);
+        console.log('xxxxxxxxxxxxx');
+        var player = BJY.Player.instances[store.get("user.id")];
+        player && BJY.userPublish.setDevice(player, data.videoOn, data.audioOn);
       }
     );
   },

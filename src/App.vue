@@ -218,15 +218,8 @@ export default {
           this.studentList = result.ackList
           this.sessionId = result.sessionId
         }
-      ).on(
-        // 点名结果
-        eventEmitter.WEBRTC_TYPE_CHANGE,
-        (e, data) => {
-          console.error('2242342424324');
-          this.studentList = []
-        }
       )
-
+      .on( eventEmitter.ROLL_CALL, (e, data) => { console.error('2242342424324'); this.studentList = [] })
       
       .on(eventEmitter.CLASSROOM_CONNECT_FAIL, () => {
         alert(language.ROOM_SERVER_CONNECT_FAIL);
@@ -237,45 +230,11 @@ export default {
       .on(
         eventEmitter.MESSAGE_SEND_FORBID_ALL_CHANGE,
         function (event, data) {
-            // console.log('xxxxxxxxxx', data);
-            // if (data.forbidAll) {
-            //     // 是否全体禁言
-            //     data.forbidAll = false
-            // } else {
-            //   data.forbidAll = true
-            // }
         }
     )
-    // .on(eventEmitter.ACYUAL_STUDENT_COUNT_REQ, function (event, data) { console.error('x'); })
-    // .on(eventEmitter.ACYUAL_STUDENT_COUNT_RES, function (event, data) { console.error('xx'); })
-    // .on(eventEmitter.ADMIN_AUTH_CLASS_START_END_CHANGE, function (event, data) { console.error('xxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_CLOUD_RECORD_CHANGE, function (event, data) { console.error('xxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_DOCUMENT_CONTROL_CHANGE, function (event, data) { console.error('xxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_DOCUMENT_UPLOAD_CHANGE, function (event, data) { console.error('xxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_FORBID_AND_KICK_CHANGE, function (event, data) { console.error('xxxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_NOTICE_CHANGE, function (event, data) { console.error('xxxxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_PAINTER_CHANGE, function (event, data) { console.error('xxxxxxxxxxxxxx'); })
-    // .on(eventEmitter.ADMIN_AUTH_SPEAK_CHANGE, function (event, data) { console.error('ss'); })
-    // .on(eventEmitter.AI_BEAUTY, function (event, data) { console.error('ssss'); })
-    // .on(eventEmitter.AI_BEAUTY_ENABLE, function (event, data) { console.error('ssssss'); })
-    // .on(eventEmitter.AI_BEAUTY_ENABLE_TRIGGER, function (event, data) { console.error('ssssss'); })
-    // .on(eventEmitter.AI_BEAUTY_TRIGGER, function (event, data) { console.error('sssssssss'); })
-    // .on(eventEmitter.AI_HEAD_COUNT, function (event, data) { console.error('ddddd'); })
-    // .on(eventEmitter.AI_HEAD_COUNT_TRIGGER, function (event, data) { console.error('d'); })
-    // .on(eventEmitter.AI_SELECT, function (event, data) { console.error('ddd'); })
-    // .on(eventEmitter.AI_SELECT_TRIGGER, function (event, data) { console.error('ddddddddd'); })
-    .on(eventEmitter.ALL_BLOCKED_USERS_REMOVE, (event, data) => { this.workClick() })
-    // .on(eventEmitter.ALL_PLAYER_STREAM_CHANGE, function (event, data) { console.error('wwwww'); })
-    .on(eventEmitter.ALL_USERS_UNBLOCK, function (event, data) { console.error('eeee'); })
-
-    .on(
-        eventEmitter.SPEAK_APPLY_FORBID_ALL_CHANGE,
-        function (event, data) {
-          console.log('data:', data);
-          console.log('event:', event);
-          store.set("class.forbidAll", data.forbidAll);
-        }
-    )
+    .on(eventEmitter.ALL_BLOCKED_USERS_REMOVE, (event, data) => { this.workClick();console.error('e呃呃呃呃呃呃eee'); })
+    .on(eventEmitter.ALL_USERS_UNBLOCK, function (event, data) { console.error('e呃呃呃呃呃呃eee'); })
+    .on( eventEmitter.SPEAK_APPLY_FORBID_ALL_CHANGE, function (event, data) { store.set("class.forbidAll", data.forbidAll); })
       // 监听初始化事件，初始化组件
       // 请将所有的组件创建逻辑写于此回调函数之中
       .one(eventEmitter.VIEW_RENDER_TRIGGER, () => {

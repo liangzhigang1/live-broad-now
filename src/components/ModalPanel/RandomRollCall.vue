@@ -43,10 +43,10 @@
     </div>
     <div style="background-color: #313847" v-show="status === statusMap.ing" class="roll-call-ing">学生正在陆续答到中，{{ resultTimer }}秒后可查看点名结果，请稍后</div>
 
-    <div style="background-color: #313847;padding: 14px 12px" v-show="status === statusMap.after" class="after-roll-call">
+    <!-- <div style="background-color: #313847;padding: 14px 12px" v-show="status === statusMap.after" class="after-roll-call">
       <p class="result">点名情况：答到{{ ackCount }}人，未答到{{ nackCount }}人</p>
       <div class="btn" @click="reCall">再次点名</div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -73,6 +73,7 @@ export default {
   },
   watch: {
     visibleRandomRollCall (val) {
+      this.status = ROLL_CALL_STATUS.before
       this.visible1 = val
     }
   },
@@ -84,14 +85,12 @@ export default {
       resultTimer: 10,
       nextTimer: 10,
       result: "",
-      rollCallDuration: 10,
+      rollCallDuration: 0,
       visible: false,
-      status: ROLL_CALL_STATUS.before,
       statusMap: ROLL_CALL_STATUS,
       resultInterval: null,
       ackCount: 0, // 答到人数
       nackCount: 0, // 未答到人数
-      sessionId: '',
 
       radio: false,
       input: '',
@@ -99,6 +98,7 @@ export default {
       visible1: this.visibleRandomRollCall,
       studentVisible: false,
       checked: false,
+      duration: null,
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       ruleForm: {
@@ -109,6 +109,12 @@ export default {
   },
   methods: {
     startRollCall(params) {
+      console.log('2222', params);
+      console.log('2222', params);
+      console.log('2222', params);
+      console.log('2222', params);
+      console.log('2222', params);
+      console.log('2222', params);
       eventEmitter.trigger(eventEmitter.ROLL_CALL_TRIGGER, {
         // 倒计时 秒
         duration: Number(params),
@@ -117,10 +123,18 @@ export default {
     reCall() {
         this.status = ROLL_CALL_STATUS.before
     },
-    submitForm(formName) {
+    async submitForm(formName) {
+      let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: 21032159047031})
+      if (result.data.list.length < Number(this.ruleForm.number)) {
+        return this.$message.error('教室学员人数要大于随机点名人数！')
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          
+      console.log('2222', );
+      console.log('2222', );
+      console.log('2222', );
+      console.log('2222', );
+
           this.startRollCall(this.ruleForm.number + this.ruleForm.yaoqiu)
         } else {
           console.log("error submit!!");
@@ -133,12 +147,15 @@ export default {
     },
     open(data) {
       this.visible1 = true;
+      this.status = ROLL_CALL_STATUS.before
+      console.log('open', this.status);
       this.$nextTick(() => {
         !this.isTeacher;
       });
     },
     close() {
       this.visible1 = false;
+      this.status = ROLL_CALL_STATUS.before
       this.$emit('closeRandomRollCall', this.visible1)
     },
     openStudent() {
@@ -168,39 +185,59 @@ export default {
         eventEmitter.ROLL_CALL_RESULT,
         (e, data) => {
           var result = data;
+          console.log('data', data);
+          console.log('eeeeeeeee', e);
           //  点名结果 
           this.status = ROLL_CALL_STATUS.after
           this.ackCount = result.ackList.length // 点名人数
           this.nackCount = result.nackList.length // 未点名人数
-          this.sessionId = result.sessionId
-          console.log('222222233333444', BJY);
-          // BJY.userSpeak.onApplyAccept()
+          if (this.duration == 30) {
+            this.$Toast('结束点名！');
+          }
+          console.log('zczxcz', this.duration);
+          console.log('this.ackCount', this.ackCount);
+          if (this.duration != '30' && this.ackCount == 0) {
+            this.$Toast('没有人上麦！');
+          }
           this.close()
         }
       )
       .on(
         // 点名开始
         eventEmitter.ROLL_CALL,
-        () => {
-            this.resultTimer = this.rollCallDuration
-            this.status = ROLL_CALL_STATUS.ing
-            this.resultInterval = null
-            this.resultInterval = setInterval(() => {
-                if (this.resultTimer > 0) {
-                    --this.resultTimer;
-                } else {
-                    // 时间到了需要老师端主动触发结束
-                    eventEmitter.trigger(eventEmitter.ROLL_CALL_FINISH);
-                    clearInterval(this.resultInterval)
-                }
-            }, 1000);
+        (e, data) => {
+          console.log('data.durationdata.durationdata.duration', data.duration);
+          this.duration = data.duration
+            if (data.duration == '30') {
+              console.error('222233333333');
+              eventEmitter.trigger(eventEmitter.ROLL_CALL_FINISH);
+            } else {
+              this.resultTimer = 11
+              this.status = ROLL_CALL_STATUS.ing
+              this.resultInterval = null
+              this.resultInterval = setInterval(() => {
+                  if (this.resultTimer > 0) {
+                      --this.resultTimer;
+                  } else {
+                      // 时间到了需要老师端主动触发结束
+                      eventEmitter.trigger(eventEmitter.ROLL_CALL_FINISH);
+                      clearInterval(this.resultInterval)
+                  }
+              }, 1000);
+            }
+            
         }
       );
+    this.status = ROLL_CALL_STATUS.before
+
   },
   mounted() {
+    this.status = ROLL_CALL_STATUS.before
     this.isTeacher ? this.initTeacher() : this.initStudent();
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+    this.status = ROLL_CALL_STATUS.before
+  },
 };
 </script>
 

@@ -49,7 +49,6 @@ export default {
   watch: {
     workList: {
       handler(newName, oldName) {
-        console.error('33333', newName);
         this.workLists = newName
       },
       immediate: true

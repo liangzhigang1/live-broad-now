@@ -43,7 +43,7 @@
         </div>
         <!-- 发言列表 -->
         <div class="action-list" :class="{ active: checkActive('action') }">
-          <ActiveList />
+          <!-- <ActiveList /> -->
         </div>
         <!-- 问答 -->
         <!-- <div class="question-answer fold">
@@ -57,14 +57,14 @@
 <script>
 import MessageList from "./MessageList";
 import UserList from "./UserList";
-import ActiveList from "./ActiveList";
+// import ActiveList from "./ActiveList";
 import QuestionAnswer from "./QuestionAnswer";
 
 export default {
   components: {
     MessageList,
     UserList,
-    ActiveList,
+    // ActiveList,
     QuestionAnswer,
   },
   data() {

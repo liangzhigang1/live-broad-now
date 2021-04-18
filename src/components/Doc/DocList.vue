@@ -14,6 +14,7 @@
 import DocManage from './DocManage'
 let store = BJY.store;
 import language from "../../language/main";
+import {  _deleteDocApi } from '../../api/doc/docApi'
 
 export default {
   components: {
@@ -36,12 +37,58 @@ export default {
     }
   },
   mounted() {
+    var _this = this
     var xx = BJY.Catalogue.create({
       element: $(".bjy-doc-list"),
       thumbnailWidth: 100,
       // hasWhiteboard: true,
     });
     store.set("class.catalogue", xx);
+
+    setTimeout(() => {
+      // var dom = document.createTextNode(`<span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>`);
+      var odivs = document.getElementsByClassName("bjy-file")
+      console.log(odivs)
+      for(let i = 0; i < odivs.length; i++) {
+        console.log('odivs[i]', odivs[i]);
+        // odivs[i].innerHTML = ''; 
+        // odivs[i].appendChild(dom);
+        var zif = "x";
+        var obj = document.createElement("p"); //添加哪类节点
+        obj.style.position = "absolute";
+        obj.style.right = "25px";
+        obj.style.top = "-18px";
+        obj.style.fontSize = "20px";
+        obj.style.cursor = "pointer";
+        obj.onclick = function(e) {
+          _this.$confirm('确定删除吗？', "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            let xx = `fid=${Number(e.target.parentNode.attributes[1].value)}&partner_id=83228320&room_id=21032159047031&timestamp=1615996149&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+            let sign = _this.$md5(xx)
+            let params = { partner_id: 83228320, room_id: 21032159047031, fid: e.target.parentNode.attributes[1].value, timestamp: 1615996149, sign: sign}
+            _deleteDocApi(params).then((response) => {
+              console.log('response' , response);
+            })
+          })
+        }
+        var objNode = document.createTextNode(zif); //创建文字节点
+        odivs[i].appendChild(obj);
+        obj.appendChild(objNode);
+
+      }
+    // document.getElementsByClassName("bjy-file ")[0].appendChild(dom);
+
+      // odivs = Array.prototype.slice.call(odivs);
+      // var odivs1=[].slice.call(odivs);
+      // console.log(odivs)
+      // console.log(odivs1)
+    }, 1000)
+    
+
+
   },
 };
 </script>
