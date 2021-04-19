@@ -1,34 +1,100 @@
 <template>
-  <div id="app">
+  <div>
     <video v-show="isShow" controls="controls"></video>
+    <el-progress v-if="isShowMai" :text-inside="true" :stroke-width="26" :percentage="percentage"></el-progress>
+    <audio></audio>
   </div>
 </template>
 
 <script>
   import Recorder from 'js-audio-recorder'
   const lamejs = require('lamejs')
-  const recorder = new Recorder({
-    sampleBits: 16,                 // 采样位数，支持 8 或 16，默认是16
-    sampleRate: 48000,              // 采样率，支持 11025、16000、22050、24000、44100、48000，根据浏览器默认值，我的chrome是48000
-    numChannels: 1,                 // 声道，支持 1 或 2， 默认是1
-    compiling: true,  // 是否边录边转换，默认是false(0.x版本中生效,1.x增加中)
-
-  })
-  // 绑定事件-打印的是当前录音数据
-  recorder.onprogress = function(params) {
-    console.log(params)
-    console.log('--------------START---------------')
-    console.log('录音时长(秒)', params.duration);
-    console.log('录音大小(字节)', params.fileSize);
-    console.log('录音音量百分比(%)', params.vol);
-    console.log('当前录音的总数据([DataView, DataView...])', params.data);
-    console.log('--------------END---------------')
-  }
   export default {
     name: 'home',
+    props: {
+      isShowMai: {
+        type: Boolean,
+        default: false
+      },
+    },
+    watch: {
+      isShowMai (val) {
+        console.log('2222222', val);
+        if (val) {
+          this.startRecorder()
+          const video = document.querySelector('video');
+          // if (navigator.mediaDevices) {
+          //     navigator.mediaDevices.getUserMedia ({audio: true, video: true})
+          //     .then(function(stream) {
+          //         video.srcObject = stream;
+          //         video.onloadedmetadata = function(e) {
+          //             video.play();
+          //             video.muted = true;
+          //         };
+          //         const audioCtx = new AudioContext();
+          //         const source = audioCtx.createMediaStreamSource(stream);
+          //         const biquadFilter = audioCtx.createBiquadFilter();
+
+          //         console.log('audioCtx', audioCtx);
+          //         console.log('source', source);
+          //         console.log('biquadFilter', biquadFilter);
+          //         // biquadFilter.type = "lowshelf";
+          //         // biquadFilter.frequency.value = 1000;
+          //         // biquadFilter.gain.value = 1;
+                  
+          //         source.connect(biquadFilter);
+          //         biquadFilter.connect(audioCtx.destination);
+          //     })
+          //     .catch(function(err) {
+          //         console.log('The following gUM error occured: ' + err);
+          //     });
+          // } else {
+          //     console.log('getUserMedia not supported on your browser!');
+          // }
+        } else {
+          this.stopRecorder()
+          // const audioCtx = new AudioContext();
+          // audioCtx.close()
+          // const video = document.querySelector('video');
+          // if (navigator.mediaDevices) {
+          //     navigator.mediaDevices.getUserMedia ({audio: false, video: false})
+          //     .then(function(stream) {
+          //         video.srcObject = stream;
+          //         video.onloadedmetadata = function(e) {
+          //             video.play();
+          //             video.muted = true;
+          //         };
+          //         const audioCtx = new AudioContext();
+          //         const source = audioCtx.createMediaStreamSource(stream);
+          //         const biquadFilter = audioCtx.createBiquadFilter();
+
+          //         console.log('audioCtx', audioCtx);
+          //         console.log('source', source);
+          //         console.log('biquadFilter', biquadFilter);
+          //         // biquadFilter.type = "lowshelf";
+          //         // biquadFilter.frequency.value = 1000;
+          //         // biquadFilter.gain.value = 1;
+                  
+          //         source.connect(biquadFilter);
+          //         biquadFilter.connect(audioCtx.destination);
+          //     })
+          //     .catch(function(err) {
+          //         console.log('The following gUM error occured: ' + err);
+          //     });
+          // } else {
+          //     const video = document.querySelector('video');
+          //     video.stop();
+          //     video.muted = false;
+          //     console.log('getUserMedia not supported on your browser!');
+          // }
+        }
+      }
+    },
     data () {
       return {
         isShow: false,
+        percentage: 0,
+        recorder: null,
       }
     },
     methods: {
@@ -37,57 +103,53 @@
        * */
       // 开始录音
       startRecorder () {
-        recorder.start().then(() => {
-
-        }, (error) => {
-          // 出错了
-          console.log(`${error.name} : ${error.message}`);
-        });
+        this.recorder.start()
       },
       // 继续录音
       resumeRecorder () {
-        recorder.resume()
+        this.recorder.resume()
       },
       // 暂停录音
       pauseRecorder () {
-        recorder.pause();
+        this.recorder.pause();
       },
       // 结束录音
       stopRecorder () {
-        recorder.stop()
+        this.recorder.stop()
       },
       // 录音播放
       playRecorder () {
-        recorder.play()
+        this.recorder.play()
       },
       // 暂停录音播放
       pausePlayRecorder () {
-        recorder.pausePlay()
+        this.recorder.pausePlay()
       },
       // 恢复录音播放
       resumePlayRecorder () {
-        recorder.resumePlay()
+        this.recorder.resumePlay()
       },
       // 停止录音播放
       stopPlayRecorder () {
-        recorder.stopPlay();
+        thisr.ecorder.stopPlay();
       },
       // 销毁录音
       destroyRecorder () {
-        recorder.destroy().then(function() {
-          recorder = null;
+        var _this = this
+        this.recorder.destroy().then(function() {
+          _this.recorder = null;
         });
       },
       /**
        *  获取录音文件
        * */
       getRecorder(){
-        let toltime = recorder.duration;//录音总时长
-        let fileSize = recorder.fileSize;//录音总大小
+        let toltime = this.recorder.duration;//录音总时长
+        let fileSize = this.recorder.fileSize;//录音总大小
         //录音结束，获取取录音数据
-        let PCMBlob = recorder.getPCMBlob();//获取 PCM 数据
-        let wav = recorder.getWAVBlob();//获取 WAV 数据
-        let channel = recorder.getChannelData();//获取左声道和右声道音频数据
+        let PCMBlob = this.recorder.getPCMBlob();//获取 PCM 数据
+        let wav = this.recorder.getWAVBlob();//获取 WAV 数据
+        let channel = this.recorder.getChannelData();//获取左声道和右声道音频数据
       },
       /**
        *  下载录音文件
@@ -95,12 +157,12 @@
       //下载pcm
       downPCM(){
         //这里传参进去的时文件名
-        recorder.downloadPCM('新文件');
+        this.recorder.downloadPCM('新文件');
       },
       //下载wav
       downWAV(){
         //这里传参进去的时文件名
-        recorder.downloadWAV('新文件');
+        this.recorder.downloadWAV('新文件');
       },
       /**
        *  获取麦克风权限
@@ -116,9 +178,9 @@
        * 文件格式转换 wav-map3
        * */
       getMp3Data(){
-        const mp3Blob = this.convertToMp3(recorder.getWAV());
+        const mp3Blob = this.convertToMp3(this.recorder.getWAV());
         console.log('mp3Blobmp3Blob', mp3Blob);
-        recorder.download(mp3Blob, 'recorder', 'mp3');
+        this.recorder.download(mp3Blob, 'recorder', 'mp3');
       },
       convertToMp3(wavDataView) {
         // 获取wav头信息
@@ -126,8 +188,8 @@
         const { channels, sampleRate } = wav;
         const mp3enc = new lamejs.Mp3Encoder(channels, sampleRate, 128);
         // 获取左右通道数据
-        console.log('dsadas', recorder);
-        const result = recorder.getChannelData()
+        console.log('dsadas', this.recorder);
+        const result = this.recorder.getChannelData()
         const buffer = [];
 
         const leftData = result.left && new Int16Array(result.left.buffer, 0, result.left.byteLength / 2);
@@ -159,41 +221,24 @@
       },
     },
     mounted () {
-      this.startRecorder()
-      const video = document.querySelector('video');
-        const myFrequencyArray = new Float32Array(5);
-        myFrequencyArray[0] = 1000;
-        myFrequencyArray[1] = 2000;
-        myFrequencyArray[2] = 3000;
-        myFrequencyArray[3] = 4000;
-        myFrequencyArray[4] = 5000;
-        if (navigator.mediaDevices) {
-            navigator.mediaDevices.getUserMedia ({audio: true, video: true})
-            .then(function(stream) {
-                console.log('streamstream', stream);
-                video.srcObject = stream;
-                video.onloadedmetadata = function(e) {
-                    video.play();
-                    video.muted = true;
-                };
-                const audioCtx = new AudioContext();
-                const source = audioCtx.createMediaStreamSource(stream);
-                const biquadFilter = audioCtx.createBiquadFilter();
-                console.log('audioCtx', audioCtx);
-                console.log('source', source);
-                console.log('biquadFilter', biquadFilter);
-                biquadFilter.type = "lowshelf";
-                biquadFilter.frequency.value = 1000;
-                biquadFilter.gain.value = 10;
-                source.connect(biquadFilter);
-                biquadFilter.connect(audioCtx.destination);
-            })
-            .catch(function(err) {
-                console.log('The following gUM error occured: ' + err);
-            });
-        } else {
-            console.log('getUserMedia not supported on your browser!');
-        }
+      var _this = this
+      this.recorder = new Recorder({
+        sampleBits: 16,                 // 采样位数，支持 8 或 16，默认是16
+        sampleRate: 48000,              // 采样率，支持 11025、16000、22050、24000、44100、48000，根据浏览器默认值，我的chrome是48000
+        numChannels: 1,                 // 声道，支持 1 或 2， 默认是1
+        compiling: true,  // 是否边录边转换，默认是false(0.x版本中生效,1.x增加中)
+      })
+      // 绑定事件-打印的是当前录音数据
+      this.recorder.onprogress = function(params) {
+        // console.log(params)
+        // console.log('--------------START---------------')
+        // console.log('录音时长(秒)', params.duration);
+        // console.log('录音大小(字节)', params.fileSize);
+        // console.log('录音音量百分比(%)', params.vol);
+        _this.percentage = parseInt(params.vol)
+        // console.log('当前录音的总数据([DataView, DataView...])', params.data);
+        // console.log('--------------END---------------')
+      }
     }
 
   }

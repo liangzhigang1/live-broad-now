@@ -78,18 +78,19 @@
           <!--  -->
           <div style="margin-top: 20px">
             <span>请点击麦克风测试，对着麦克风说话进行试听</span>
-            <div style="float: left;margin-top: 5px;">
-              <!-- <el-button @click="readyOriginal" type="primary">麦克风测试</el-button>  -->
-              <!-- <MaiKeFeng /> -->
+            <div>
+              <el-button style="margin-bottom: 10px" v-if="!isShowMai" @click="readyOriginal" type="primary">麦克风测试</el-button> 
+              <el-button style="margin-bottom: 10px" v-if="isShowMai" @click="readyOriginal" type="primary">停止测试</el-button> 
+              <MaiKeFeng :isShowMai="isShowMai" />
             </div>
-            <div style="margin-top: 5px;margin-left: 150px">
+            <!-- <div style="margin-top: 5px;margin-left: 150px">
               <span style="background: #ccc;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
               <span style="background: #ccc;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
               <span style="background: #2B3240;border: 1px solid #6E7583;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
               <span style="background: #2B3240;border: 1px solid #6E7583;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
               <span style="background: #2B3240;border: 1px solid #6E7583;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
               <span style="background: #2B3240;border: 1px solid #6E7583;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -156,7 +157,7 @@ let store = BJY.store;
 // 获取创建播放器的 Player 对象
 var Player = BJY.Player;
 var VolumeSlider = BJY.VolumeSlider;
-import { HZRecorder} from '../../utils/HZRecorder';
+// import { HZRecorder} from '../../utils/HZRecorder';
 import MaiKeFeng from './MaiKeFeng'
 export default {
   components: {
@@ -164,6 +165,7 @@ export default {
   },
   data() {
     return {
+      isShowMai: false,
       value7: false,
       value6: 20,
       value4: 50,
@@ -200,13 +202,7 @@ export default {
   },
   methods: {
     readyOriginal () {
-     if (!this.isVoice) {
-      this.recorder && this.recorder.start();
-      this.isVoice = true
-     } else {
-      this.isVoice = false
-      this.recorder && this.recorder.stop();
-     }
+      this.isShowMai = !this.isShowMai
     },
     changeSwitch () {
         console.error('222222222222222222', this.value7);
@@ -268,6 +264,7 @@ export default {
       });
     },
     close() {
+      this.isShowMai = false
       this.visible = false;
     },
     initTeacher() {},
@@ -298,27 +295,27 @@ export default {
   },
   mounted() {
     var _this = this
-    this.$nextTick(() => {
-      try {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-        window.URL = window.URL || window.webkitURL;
-        var audio_context = new AudioContext;
-        console.log('audio_contextaudio_contextaudio_context', audio_context);
-        console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
-      } catch (e) {
-        alert('No web audio support in this browser!');
-      }
-      navigator.getUserMedia({audio: true}, function (stream) {
-        console.error('errorreadyOriginalreadyOriginalreadyOriginalreadyOriginalreadyOriginalreadyOriginal');
-        var recorder = new HZRecorder(stream)
-        _this.recorder = recorder
-        console.log('222xxxxx22', recorder);
-        console.log('初始化完成');
-        }, function(e) {
-        console.log('No live audio input: ' + e);
-      });
-      })
+    // this.$nextTick(() => {
+    //   try {
+    //     window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    //     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+    //     window.URL = window.URL || window.webkitURL;
+    //     var audio_context = new AudioContext;
+    //     console.log('audio_contextaudio_contextaudio_context', audio_context);
+    //     console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+    //   } catch (e) {
+    //     alert('No web audio support in this browser!');
+    //   }
+    //   navigator.getUserMedia({audio: true}, function (stream) {
+    //     console.error('errorreadyOriginalreadyOriginalreadyOriginalreadyOriginalreadyOriginalreadyOriginal');
+    //     var recorder = new HZRecorder(stream)
+    //     _this.recorder = recorder
+    //     console.log('222xxxxx22', recorder);
+    //     console.log('初始化完成');
+    //     }, function(e) {
+    //     console.log('No live audio input: ' + e);
+    //   });
+    //   })
 
 
 
