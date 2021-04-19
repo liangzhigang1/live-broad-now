@@ -25,11 +25,7 @@ export default {
       isWebRTCMix && (store.get('webrtcMixUser').name = '老师');
       this.player && this.player.destroy();
       this.player = null;
-      const user = auth.isPresenter()
-        ? store.get("presenter")
-        : isWebRTCMix
-        ? store.get("webrtcMixUser")
-        : store.get("presenter") || store.get("teacher");
+      const user = auth.isPresenter() ? store.get("presenter") : isWebRTCMix ? store.get("webrtcMixUser") : store.get("presenter") || store.get("teacher");
       const options = {
         element: $("#live-teacher-player"),
         replace: false,
@@ -44,10 +40,10 @@ export default {
       !auth.isTeacher() && (options.isWebRTCMix = isWebRTCMix);
       this.player = BJY.DefaultThemePlayer.create(options);
       setTimeout(() => {
-        console.log('this.playerthis.playerthis.player', this.player.showCameraCover = true);
-        console.log('this.playerthis.playerthis.player', this.player.cameraCover = 'https://img.baijiayun.com/baijiacloud/124519933_5ysoobjh.png');
-        console.log('this.playerthis.playerthis.player', this.player.studentCameraCover = 'https://img.baijiayun.com/baijiacloud/124519933_5ysoobjh.png');
-        console.log('this.playerthis.playerthis.player', this.player);
+        // console.log('this.playerthis.playerthis.player', this.player.showCameraCover = true);
+        // console.log('this.playerthis.playerthis.player', this.player.cameraCover = 'https://img.baijiayun.com/baijiacloud/124519933_5ysoobjh.png');
+        // console.log('this.playerthis.playerthis.player', this.player.studentCameraCover = 'https://img.baijiayun.com/baijiacloud/124519933_5ysoobjh.png');
+        // console.log('this.playerthis.playerthis.player', this.player);
       }, 1000)
     },
 

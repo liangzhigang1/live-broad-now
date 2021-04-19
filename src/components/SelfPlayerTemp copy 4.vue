@@ -38,68 +38,68 @@ export default {
     // 创建自己的播放器
     createMyPlayer(isWebRTCMix) {
       var _this = this
-      // if (_this.student.id == store.get("user.id")) {
-        console.log('23232323232323232222222222222222222222222222222222222222222222');
-         if (isWebRTCMix === undefined) {
-          isWebRTCMix = auth.isWebRTC();
-        }
-        isWebRTCMix && (store.get('webrtcMixUser').name = 'xxxx');
-        _this.myPlayer && _this.myPlayer.destroy();
-        _this.myPlayer = null;
-        const options = {
-          element: $("#live-my-player"),
-          replace: false,
-          user: _this.student,
-          extension: BJY.getExtension(),
-          canSwitchCamera: _this.student.id == store.get("user.id") ? true : false,
-          canSwitchMic: _this.student.id == store.get("user.id") ? true : false,
-        };
-        !(_this.student.id == store.get("user.id")) && (options.isWebRTCMix = isWebRTCMix);
-        _this.myPlayer = BJY.DefaultThemePlayer.create(options);
-
-
-        //  _this.myPlayer = BJY.DefaultThemePlayer.create(
-        //    {
+      if (_this.student.id == store.get("user.id")) {
+        // console.log('23232323232323232222222222222222222222222222222222222222222222');
+        //  if (isWebRTCMix === undefined) {
+        //   isWebRTCMix = auth.isWebRTC();
+        // }
+        // isWebRTCMix && (store.get('webrtcMixUser').name = 'xxxx');
+        // _this.myPlayer && _this.myPlayer.destroy();
+        // _this.myPlayer = null;
+        // const options = {
         //   element: $("#live-my-player"),
         //   replace: false,
-        //   user: store.get("user"),
+        //   user: _this.student,
         //   extension: BJY.getExtension(),
-        //   canFold: true,
-        //   canSwitchCamera: true,
-        //   canSwitchMic: true,
-        //   onComplete: function () {
-        //     eventEmitter.trigger(eventEmitter.MEDIA_SWITCH_TRIGGER, {
-        //       videoOn: true,
-        //       audioOn: true,
-        //     });
-        //   },
-        // }  
-        // );
+        //   canSwitchCamera: _this.student.id == store.get("user.id") ? true : false,
+        //   canSwitchMic: _this.student.id == store.get("user.id") ? true : false,
+        // };
+        // !(_this.student.id == store.get("user.id")) && (options.isWebRTCMix = isWebRTCMix);
+        // _this.myPlayer = BJY.DefaultThemePlayer.create(options);
+
+
+         _this.myPlayer = BJY.DefaultThemePlayer.create(
+           {
+          element: $("#live-my-player"),
+          replace: false,
+          user: store.get("user"),
+          extension: BJY.getExtension(),
+          canFold: true,
+          canSwitchCamera: true,
+          canSwitchMic: true,
+          onComplete: function () {
+            eventEmitter.trigger(eventEmitter.MEDIA_SWITCH_TRIGGER, {
+              videoOn: true,
+              audioOn: true,
+            });
+          },
+        }  
+        );
         console.log('23232323232323232222222222222222222222222222222222222222222222', this.myPlayer);
 
         // 创建麦克风菜单按钮
-        // _this.micMenu = BJY.MicMenu.create({
-        //     element: $('#menu-mic'),
-        //     canSelectDevice: true,
-        //     canAdjustVolume: true,
-        //     maxVolume: 100,
-        //     onSwitcherClick: function () {
-        //         var player = _this.myPlayer.player;
-        //         BJY.userPublish.setDevice(player, null, !player.audioOn);
-        //     }
+        _this.micMenu = BJY.MicMenu.create({
+            element: $('#menu-mic'),
+            canSelectDevice: true,
+            canAdjustVolume: true,
+            maxVolume: 100,
+            onSwitcherClick: function () {
+                var player = _this.myPlayer.player;
+                BJY.userPublish.setDevice(player, null, !player.audioOn);
+            }
 
-        // });
-        // // 创建摄像头菜单按钮
-        // _this.cameraMenu = BJY.CameraMenu.create({
-        //     element: $('#menu-camera'),
-        //     canSelectDevice: true,
-        //     onSwitcherClick: function () {
-        //         var player = _this.myPlayer.player;
-        //         BJY.userPublish.setDevice(player, !player.videoOn);
-        //     }
-        // });
+        });
+        // 创建摄像头菜单按钮
+        _this.cameraMenu = BJY.CameraMenu.create({
+            element: $('#menu-camera'),
+            canSelectDevice: true,
+            onSwitcherClick: function () {
+                var player = _this.myPlayer.player;
+                BJY.userPublish.setDevice(player, !player.videoOn);
+            }
+        });
 
-      // }
+      }
      
     },
   },

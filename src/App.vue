@@ -217,6 +217,17 @@ export default {
           console.log('eventEmittereventEmitter', eventEmitter);
           this.studentList = result.ackList
           this.sessionId = result.sessionId
+          setTimeout(() => {
+            this.studentList.forEach(item => {
+              if (item.id == store.get("user.id")) {
+                console.log('openpenpenopenpenpenopenpenpen');
+                eventEmitter.trigger(eventEmitter.MEDIA_SWITCH_TRIGGER, {
+                  audioOn: true,
+                  videoOn: true,
+                });
+              }
+            })
+          }, 2000);
         }
       )
       .on( eventEmitter.ROLL_CALL, (e, data) => { console.error('2242342424324'); this.studentList = [] })
@@ -316,19 +327,6 @@ export default {
         res.data.forEach((item, index) => {
           this.workList.push({studentName: 'item' + index, type: item.file_url.split('.')[3], src: item.file_url})
         })
-        
-         // [
-      //   // {studentName: '李四', type: 'png', src: require('../assets/img/8.png')},
-      //   // {studentName: '王五', type: 'mp3', src: require('../assets/img/dfh.mp3')},
-      //   // {studentName: '赵六', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-      //   // {studentName: '赵六', type: 'mp3', src: require('../assets/img/dfh.mp3')},
-      //   // {studentName: '赵六', type: 'png', src: require('../assets/img/8.png')},
-      //   // {studentName: '赵六', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-      //   // {studentName: '赵七', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-      //   // {studentName: '赵八', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-      //   // {studentName: '赵九', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-      //   // {studentName: '赵十', type: 'mp4', src: require('../assets/img/exampleobject.mp4')},
-      // ]
       })
     },
     showHuDong () {
