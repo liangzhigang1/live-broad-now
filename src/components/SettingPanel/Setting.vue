@@ -81,7 +81,7 @@
             <div>
               <el-button style="margin-bottom: 10px" v-if="!isShowMai" @click="readyOriginal" type="primary">麦克风测试</el-button> 
               <el-button style="margin-bottom: 10px" v-if="isShowMai" @click="readyOriginal" type="primary">停止测试</el-button> 
-              <MaiKeFeng :isShowMai="isShowMai" />
+              <!-- <MaiKeFeng :isShowMai="isShowMai" /> -->
             </div>
             <!-- <div style="margin-top: 5px;margin-left: 150px">
               <span style="background: #ccc;padding: 5px 6px;border-radius: 2px;line-height: 31px;margin-right: 5px"></span>
@@ -158,10 +158,10 @@ let store = BJY.store;
 var Player = BJY.Player;
 var VolumeSlider = BJY.VolumeSlider;
 // import { HZRecorder} from '../../utils/HZRecorder';
-import MaiKeFeng from './MaiKeFeng'
+// import MaiKeFeng from './MaiKeFeng'
 export default {
   components: {
-    MaiKeFeng,
+    // MaiKeFeng,
   },
   data() {
     return {
