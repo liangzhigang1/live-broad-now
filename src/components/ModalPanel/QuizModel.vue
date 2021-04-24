@@ -90,6 +90,7 @@ const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 import { _uploadFileApi } from '../../api/upload/index'
 import { _putWorkApi } from '../../api/work/index'
+let store = BJY.store;
 
 export default {
   data() {
@@ -102,7 +103,7 @@ export default {
       isTeacher: auth.isTeacher(),
       forceJoin: false,
       formItem: {
-        room_id: "21032159047031",
+        room_id: store.get('class.id'),
         title: "",
         work_type: "",
         end_time: "",
@@ -150,7 +151,7 @@ export default {
           }).finally(() => {
             this.$refs.upload.clearFiles();
             this.formItem = {
-              room_id: "21032159047031",
+              room_id: store.get('class.id'),
               title: "",
               work_type: "",
               end_time: "",

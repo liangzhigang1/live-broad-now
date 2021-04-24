@@ -32,6 +32,8 @@
         提交作业
       </div>
 
+      
+
       <!-- 举手菜单 -->
       <div v-if="isStudent" class="btn-wrap btn-div">
         <!-- <span style="font-size: 16px;" class="iconfont">&#xe603;</span> -->
@@ -121,11 +123,11 @@
               <span  style="font-size: 16px;margin-right:6px"  class="iconfont">&#xe609;</span>
               发放激励
             </div>
-            <div v-if="isWatermark" @click="closeWatermark" class="item">
+            <div v-if="!isWatermark" @click="closeWatermark" class="item">
               <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
               打开水印
             </div>
-            <div v-if="!isWatermark" @click="closeWatermark" class="item">
+            <div v-if="isWatermark" @click="closeWatermark" class="item">
               <span style="font-size: 16px;margin-right:6px" class="iconfont">&#xe609;</span>
               关闭水印
             </div>
@@ -148,7 +150,10 @@
     <div class="right">
 
 
-      
+      <!-- 退出课堂 -->
+      <div @click="exitRoom" v-if="isStudent" class="btn-wrap btn-div">
+        退出课堂
+      </div>
       <div style="margin-right: 20px" v-if="!isStudent && started" @click="toggleClassEnd" class="btn-div">
         退出课堂
       </div>
@@ -205,6 +210,7 @@ import RandomRollCall from "../ModalPanel/RandomRollCall";
 import ViewQuiz from "../ModalPanel/ViewQuiz";
 import HomeworkMater from "../ModalPanel/HomeworkMater";
 import SubmitWork from "../ModalPanel/SubmitWork";
+import { _setWatermarkApi } from '../../api/doc/docApi'
 
 
 
@@ -267,8 +273,45 @@ export default {
     },
   },
   methods: {
+    exitRoom () {
+      this.goBack();
+    },
+    goBack() {
+      if ((navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)){ // IE
+          if(history.length > 0){
+              window.history.go( -1 );
+          }else{
+              window.opener=null;window.close();
+          }
+      }else{ //非IE浏览器
+          if (navigator.userAgent.indexOf('Firefox') >= 0 ||
+              navigator.userAgent.indexOf('Opera') >= 0 ||
+              navigator.userAgent.indexOf('Safari') >= 0 ||
+              navigator.userAgent.indexOf('Chrome') >= 0 ||
+              navigator.userAgent.indexOf('WebKit') >= 0){
+  
+              if(window.history.length > 1){
+                  window.history.go( -1 );
+              }else{
+                  window.opener=null;window.close();
+              }
+          }else{ //未知的浏览器
+              window.history.go( -1 );
+          }
+      }
+    },
     closeWatermark () {
+      console.log('xczczczczcz', BJY);
+      var _this = this
       this.isWatermark = !this.isWatermark
+      let xx = `partner_id=83228320&pos=${this.isWatermark ? 1 : 0}&product_type=1&timestamp=1615996143&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+      let sign = _this.$md5(xx)
+      let params = { partner_id: 83228320, pos: this.isWatermark ? 1 : 0, product_type: 1, timestamp: 1615996143, sign: sign}
+      _setWatermarkApi(params).then((response) => {
+        if (response.code == 0) {
+          this.$message.success('操作成功！')
+        }
+      })
     },
     toggleHandUp (value) {
       console.log('store.get("class.forbidAll")', store.get("class.forbidAll"))

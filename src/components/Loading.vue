@@ -11,7 +11,9 @@ export default {
   computed: {},
   watch: {},
   methods: {},
-  created() {},
+  created() {
+    
+  },
   mounted() {
     let loading = BJY.Loading.create({
       // 占位元素
@@ -55,6 +57,9 @@ export default {
 </script>
 
 <style lang="scss">
+.bjy-loading-panel .bjy-loading-content.bjy-web-loading-content .bjy-progress {
+  width: 100% !important;
+}
 //@import url(); 引入公共css类
 .bjy-loading-panel {
   background: url("../assets/img/content_img_beijing_nor.png") no-repeat;
@@ -63,33 +68,34 @@ export default {
 }
 .bjy-loading-logo {
   width: 100%;
-  height: 50%;
+  height: 70%;
   top: 35% !important;
   position: absolute;
 }
-// .bjy-logo{
-//   position: absolute !important;
-//   width: 700px !important;
-//   height: 200px !important;
-//   background: url("../assets/img/content_img_suipian_nor.png") no-repeat !important;
-//   background-size: 100% 100%;
-//   top: 50%;
-//   left: 50%;
-// }
-.bjy-progress{
-  // background: url("../assets/img/content_img_suipian_nor.png") no-repeat !important;
-  // background-size: 100% 100%;
-}
-.bjy-loading-panel {
-  
-}
-// .bjy-loading-content
 .bjy-loading-content{
-  // width: 600px;
-  // height: 700px;
-  // background: url("../assets/img/content_img_suipian_nor.png");
-  // background-size: 100% 100%;
-  // top:20% !important;
+  // width: 639px;
+  // height: 412px;
+  background: url("../assets/img/content_img_suipian_nor.png");
+  background-size: 100% 100%;
+  top: 37% !important;
   // left:50%;
+}
+
+.bjy-progress {
+  background-color: #d8d9d8;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  height: 6px !important;
+  text-align: left;
+  margin: 100px auto 0px auto !important;
+  position: relative;
+  width: 100% !important;
+}
+.bjy-progress-text {
+  color: red !important;
+  position: absolute;
+  top: 500px !important;
+  right: 0
 }
 </style>

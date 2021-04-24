@@ -102,6 +102,7 @@
 const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 import { _queryPushWorkListApi } from "../../api/work";
+let store = BJY.store;
 
 export default {
   props: {
@@ -115,7 +116,7 @@ export default {
       this.$refs['videoUpload'].clearFiles()
       this.fileList = []
       this.loading = true;
-      let temp = { room_id: 21032159047031, last_file_id: 0, page_size: 1 };
+      let temp = { room_id: store.get('class.id'), last_file_id: 0, page_size: 1 };
       _queryPushWorkListApi(temp).then((res) => {
         console.log("fffff", res);
         if (res.data.length > 0) {

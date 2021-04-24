@@ -124,7 +124,7 @@ export default {
         this.status = ROLL_CALL_STATUS.before
     },
     async submitForm(formName) {
-      let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: 21032159047031})
+      let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: store.get('class.id')})
       if (result.data.list.length < Number(this.ruleForm.number)) {
         return this.$message.error('教室学员人数要大于随机点名人数！')
       }

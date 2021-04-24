@@ -105,9 +105,9 @@ export default {
       onDocDeleteClick:  (data) => {
           // data.index  文档在列表中的索引
           // data.doc 文档对象
-          let xx = `fid=${data.doc.id}&partner_id=83228320&room_id=21032159047031&timestamp=1615996147&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+          let xx = `fid=${data.doc.id}&partner_id=83228320&room_id=${store.get('class.id')}&timestamp=1615996147&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
           let sign = _this.$md5(xx)
-          let params = { partner_id: 83228320, room_id: 21032159047031, fid: data.doc.id, timestamp: 1615996147, sign: sign}
+          let params = { partner_id: 83228320, room_id: store.get('class.id'), fid: data.doc.id, timestamp: 1615996147, sign: sign}
           _deleteDocApi(params).then((response) => {
             console.log('response' , response);
           })

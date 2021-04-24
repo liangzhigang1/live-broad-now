@@ -2,9 +2,9 @@ import FlyRequest from './FlyRequest'
 import Enums from './Enums'
 import Qs from 'qs'
 // import config from '@/config'
-import { getToken } from './auth'
 import { MessageBox, Message } from 'element-ui'
 const auth = BJY.auth;
+import { getToken } from '../utils/auth'
 
 
 // const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro
@@ -22,7 +22,10 @@ const flyRequest = new FlyRequest({
 flyRequest.registerRequestInterceptor(request => {
   // 根据_mock参数，从环境变量中获取BASE_API或MOCK_BASE_API
   request.baseURL = request._mock ? process.env.MOCK_BASE_API : baseUrl
-  request.headers['token'] = auth.isTeacher() ? '6E98A43263F4BCED6E624EEC0912128AX24' : 'A48D29FAB9EBED3A24D6BA73BB9D85B5X31'
+  // request.headers['token'] = auth.isTeacher() ? '6E98A43263F4BCED6E624EEC0912128AX24' : 'A48D29FAB9EBED3A24D6BA73BB9D85B5X31'
+  const token = getToken()
+  console.error('store.get("class.token")', token);
+  request.headers['token'] = token
   // const token = getToken()
   console.warn('####### API Request: ', request)
   // 可以显式返回request, 也可以不返回，没有返回值时拦截器中默认返回request

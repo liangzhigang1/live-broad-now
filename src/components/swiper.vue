@@ -14,11 +14,11 @@
                   </span>
                   <span v-if="item.type == 'mp3'">
                     <!-- <span style="color: red;font-size: 25px">mp3</span> -->
-                    <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/8.png" />
+                    <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/WechatIMG94.jpeg" />
                   </span>
                   <span v-if="item.type == 'mp4'">
                     <!-- <span style="color: red;font-size: 25px">mp4</span> -->
-                    <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/8.png" />
+                    <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/shiping.jpeg" />
                   </span>
                 </div>
               </swiper-slide>

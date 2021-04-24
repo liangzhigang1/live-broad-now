@@ -1,0 +1,290 @@
+@-webkit-keyframes bjy-loading-rotate {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0)
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
+}
+
+@-moz-keyframes bjy-loading-rotate {
+  0% {
+    -moz-transform: rotate(0);
+    transform: rotate(0)
+  }
+
+  100% {
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
+}
+
+@-o-keyframes bjy-loading-rotate {
+  0% {
+    -o-transform: rotate(0);
+    transform: rotate(0)
+  }
+
+  100% {
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
+}
+
+@keyframes bjy-loading-rotate {
+  0% {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0)
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
+}
+
+.bjy-loading-panel {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  line-height: 1.2;
+  position: relative
+}
+
+.bjy-loading-panel .bjy-loading-logo {
+  width: 100%;
+  height: 50%;
+  top: 20%;
+  position: absolute
+}
+
+.bjy-loading-panel .bjy-loading-content {
+  position: absolute;
+  top: 50%;
+  left: 50%
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-return {
+  background-color: #f0f1f2;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f0f1f2));
+  background-image: -webkit-linear-gradient(top, #fff, #f0f1f2);
+  background-image: -moz- oldlinear-gradient(top, #fff, #f0f1f2);
+  background-image: -o-linear-gradient(top, #fff, #f0f1f2);
+  background-image: linear-gradient(to bottom, #fff, #f0f1f2);
+  background-repeat: repeat-x;
+  border: 1px solid #dddee1;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  cursor: pointer;
+  color: #6d6d6d;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.4;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-transition-property: color, background-color, background-image, -webkit-box-shadow;
+  transition-property: color, background-color, background-image, -webkit-box-shadow;
+  -o-transition-property: color, background-color, background-image, box-shadow;
+  -moz-transition-property: color, background-color, background-image, box-shadow, -moz-box-shadow;
+  transition-property: color, background-color, background-image, box-shadow;
+  transition-property: color, background-color, background-image, box-shadow, -webkit-box-shadow, -moz-box-shadow;
+  -webkit-transition-duration: .2s;
+  -moz-transition-duration: .2s;
+  -o-transition-duration: .2s;
+  transition-duration: .2s;
+  padding: 6px 30px;
+  color: #fff;
+  background: #1795ff;
+  background: var(--brand-primary, #1795ff);
+  border-color: #1795ff;
+  border-color: var(--brand-primary, #1795ff);
+  margin: 10px 0
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-return:hover {
+  background-color: #fff;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f1f2), to(#fff));
+  background-image: -webkit-linear-gradient(top, #f0f1f2, #fff);
+  background-image: -moz- oldlinear-gradient(top, #f0f1f2, #fff);
+  background-image: -o-linear-gradient(top, #f0f1f2, #fff);
+  background-image: linear-gradient(to bottom, #f0f1f2, #fff)
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-return:active {
+  color: #a2a2a3;
+  -webkit-box-shadow: inset 0 1px 2px rgba(36, 42, 54, 0.2);
+  -moz-box-shadow: inset 0 1px 2px rgba(36, 42, 54, 0.2);
+  box-shadow: inset 0 1px 2px rgba(36, 42, 54, 0.2);
+  background-color: #efefef;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#fff));
+  background-image: -webkit-linear-gradient(top, #efefef, #fff);
+  background-image: -moz- oldlinear-gradient(top, #efefef, #fff);
+  background-image: -o-linear-gradient(top, #efefef, #fff);
+  background-image: linear-gradient(to bottom, #efefef, #fff);
+  border-color: #d6d6d6;
+  position: relative;
+  z-index: 1
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-return[disabled] {
+  background-color: #e4e4e4;
+  background-image: none;
+  color: #bbb;
+  cursor: not-allowed
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-return:hover {
+  color: #1795ff;
+  color: var(--brand-primary, #1795ff);
+  border-color: #1795ff;
+  border-color: var(--brand-primary, #1795ff)
+}
+
+.bjy-loading-panel .bjy-loading-content.bjy-web-loading-content {
+  margin-left: -225px;
+  width: 450px;
+  text-align: center
+}
+
+.bjy-loading-panel .bjy-loading-content.bjy-web-loading-content .bjy-progress {
+  width: 80%
+}
+
+.bjy-loading-panel .bjy-loading-content.bjy-m-loading-content {
+  margin-left: -140px;
+  width: 280px;
+  text-align: center
+}
+
+.bjy-loading-panel .bjy-loading-content.bjy-m-loading-content .bjy-progress {
+  width: 70%
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-loading-error {
+  color: #ff3f0d
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-progress {
+  background-color: #d8d9d8;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  height: 4px;
+  text-align: left;
+  margin: 10px auto;
+  position: relative
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-progress-bar {
+  background-color: #2d8cf0;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  height: 100%;
+  width: 0;
+  text-align: right;
+  position: relative
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-progress-text {
+  color: #2d8cf0;
+  position: absolute;
+  top: 10px;
+  right: 0
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-progress-desc,
+.bjy-loading-panel .bjy-loading-content .bjy-progress-desc-fail {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-top: 40px
+}
+
+.bjy-loading-panel .bjy-loading-content .bjy-progress-desc-fail a {
+  cursor: pointer;
+  color: #2d8cf0
+}
+
+.bjy-loading-panel[data-new-style="1"] .bjy-loading-content .bjy-progress-text {
+  color: #fff;
+  background-color: #2d8cf0;
+  padding: 3px 5px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  right: auto
+}
+
+.bjy-loading-panel[data-new-style="1"] .bjy-loading-content .bjy-progress-text:before,
+.bjy-loading-panel[data-new-style="1"] .bjy-loading-content .bjy-progress-text:after {
+  content: '';
+  position: absolute;
+  border: 6px solid transparent;
+  left: 50%;
+  margin-left: -5px;
+  top: -10px
+}
+
+.bjy-loading-panel[data-new-style="1"] .bjy-loading-content .bjy-progress-text:after {
+  border-bottom-color: #2d8cf0
+}
+
+.bjy-loading-panel[data-new-style="1"][data-overtime="1"] .bjy-loading-content .bjy-progress-bar {
+  background-color: #ff1f49
+}
+
+.bjy-loading-panel[data-new-style="1"][data-overtime="1"] .bjy-loading-content .bjy-progress-text {
+  background-color: #ff1f49
+}
+
+.bjy-loading-panel[data-new-style="1"][data-overtime="1"] .bjy-loading-content .bjy-progress-text:after {
+  border-bottom-color: #ff1f49
+}
+
+.bjy-support-tip {
+  width: 100%;
+  text-align: center;
+  z-index: 0;
+  position: absolute;
+  bottom: 15px
+}
+
+.bjy-support-tip .bjy-logo {
+  position: relative;
+  top: 2px;
+  margin-right: 3px;
+  width: 19px;
+  height: 13px;
+  display: inline-block;
+  background: url("../img/baijiayun-logo.png") no-repeat 50% 50%;
+  background-image: -webkit-image-set(url("../img/baijiayun-logo@2x.png") 2x)
+}
+
+.bjy-support-tip .bjy-support {
+  color: #cdcdce;
+  font-size: 12px
+}

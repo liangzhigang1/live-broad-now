@@ -20,4 +20,14 @@ export const _bindDocApi = (params = {}) => _post({url: '/openapi/doc/bindDoc', 
      data: params
    })
  }
+
+ export function _setWatermarkApi(params) {
+  return request({
+    url: '/openapi/live_setting/setWatermark',
+    method: 'post',
+    data: params
+  })
+}
+
+
 // https://${private_domain}.at.baijiayun.com/openapi/doc/bindDoc

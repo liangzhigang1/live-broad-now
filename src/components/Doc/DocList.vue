@@ -66,9 +66,9 @@ export default {
             cancelButtonText: "取消",
             type: "warning"
           }).then(() => {
-            let xx = `fid=${Number(e.target.parentNode.attributes[1].value)}&partner_id=83228320&room_id=21032159047031&timestamp=1615996149&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
+            let xx = `fid=${Number(e.target.parentNode.attributes[1].value)}&partner_id=83228320&room_id=${store.get('class.id')}&timestamp=1615996149&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
             let sign = _this.$md5(xx)
-            let params = { partner_id: 83228320, room_id: 21032159047031, fid: e.target.parentNode.attributes[1].value, timestamp: 1615996149, sign: sign}
+            let params = { partner_id: 83228320, room_id: store.get('class.id'), fid: e.target.parentNode.attributes[1].value, timestamp: 1615996149, sign: sign}
             _deleteDocApi(params).then((response) => {
               console.log('response' , response);
             })

@@ -9,6 +9,7 @@ import language from "../../language/main";
 import { _getClassStudentListApi } from "../../api/user/userApi"
 let auth = BJY.auth;
 let eventEmitter = BJY.eventEmitter;
+const store = BJY.store;
 
 export default {
   components: {},
@@ -36,7 +37,7 @@ export default {
            console.log('2222222', data);
         let params = data.duration + ''
         console.log('333333333', params[0])
-        let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: 21032159047031})
+        let result = await _getClassStudentListApi({page: 1, page_size: 50, room_id: store.get('class.id')})
         // 随机抽几个人的算法
         var classStudentList = result.data.list
         var posArray = []

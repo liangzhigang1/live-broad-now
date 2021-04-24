@@ -11,7 +11,7 @@
     </div>
 
     <div v-if="works && works.type == 'mp3'" style="height: 100%;width: 100%">
-      <img style="width: 100%;height: 100%" :src="works.src" />
+      <img style="width: 100%;height: 100%" src="../../../src/assets/img/8.png" />
       <AudioPlayer :audio-list="audioList"
                    :show-prev-button="false"
                    :show-next-button="false"

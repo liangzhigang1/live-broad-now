@@ -102,6 +102,7 @@ const eventEmitter = BJY.eventEmitter;
 const auth = BJY.auth;
 const store = BJY.store;
 const config = BJY.config;
+import { setToken } from "./utils/auth"
 
 export default {
   name: "app",
@@ -187,7 +188,6 @@ export default {
     }
   },
   created() {
-    this.workClick()
     // 绑定事件
     let $body = $("body");
     store.watch(
@@ -318,9 +318,11 @@ export default {
     this.init();
   },
   methods: {
-    workClick () {
+    workClick (room_id) {
       this.workList = []
-      let temp = {room_id: 21032159047031, last_file_id: 0, page_size: 50}
+      let xx = store.get('class.id') ? store.get('class.id') : room_id
+      console.log('22222333334444555666777', xx);
+      let temp = {room_id: xx, last_file_id: 0, page_size: 50}
       _queryWorkListApi(temp).then(res => {
         console.log('dadasdasdasdsadasd', res);
         this.workList = []
@@ -337,11 +339,12 @@ export default {
     },
     async init() {
       var _this = this
+
       // 默认demo教室-学生端
       var options = {
         prefixName: "e83228320",
         env: "production",
-        room_id: "21032159047031",
+        // room_id: "21032159047031",
         user_number: "31",
         user_avatar: "https%3A%2F%2Falioss.shejizhizi.com%2Fwkapi%2Fdefault.jpg",
         user_name: "mobile_64aff661cfd",
@@ -359,41 +362,27 @@ export default {
           sign: "0614cafba2bd4a2e45bb21b7b3c21539",
         });
       }
-      console.log('options:', options);
+
+
+      
+     
+
+
+      var url = location.href;
+      console.log('urlurl', url);
+      options = Object.assign(options, this.urlParser(url));
+
+      options.prefixName = "e83228320",
+      options.env = "production",
+      console.error('optionsoptionsoptionsoptions:', options);
+
+      setToken(options.token)
+
       await _sysUserAddBaiJiaApi()
-      _classBindStudentApi({"room id": 21032159047031}).then((response) => {
+      _classBindStudentApi({"room id": options.room_id}).then((response) => {
         console.log('response111111111111111111111' , response);
       })
-        // let xx = `partner_id=83228320&room_id=21032159047031&timestamp=1615996148&user_ids=${options.user_number}&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
-        // let sign = _this.$md5(xx)
-        // let params = { partner_id: 83228320, room_id: 21032159047031, user_ids: options.user_number, timestamp: 1615996148, sign: sign}
-        // _classBindStudentBatchApi(params).then((response) => {
-        //   })
-        // let xx1 = `page=1&page_size=50&partner_id=83228320&role=0&timestamp=1615996149&partner_key=dBn3oMMrE68/kijw20wg6JGHWGUcUkwh2Fi57N9r26v4R3QbWYQ66/IUchj/pyzlKM9l1WjgNEnLqCWFc2Lzvtp6xhlI`
-        // let sign1 = _this.$md5(xx1)
-        // let params1 = { partner_id: 83228320, page: 1, page_size: 50, role: 0, timestamp: 1615996149, sign: sign1}
-        // _getUserListApi(params1).then((response) => {
-        //   })                
-
-// url: "https://e83228320.at.baijiayun.com/web/room/enter?
-// room_id=21032159047031&
-// user_number=31&
-// user_role=0&
-// user_name=mobile_64aff661cfd&
-// user_avatar=https%3A%2F%2Falioss.shejizhizi.com%2Fwkapi%2Fdefault.jpg&
-// sign=51061dedc19171f33d3d67e91c6abc15"
-
-
-      // url: "https://e83228320.at.baijiayun.com/web/room/enter?
-      // room_id=21032159047031&
-      // user_number=24&
-      // user_role=1&
-      // user_name=mobile_b15a9cc5176&
-      // user_avatar=&
-      // sign=0614cafba2bd4a2e45bb21b7b3c21539"
-
-      // var url = location.href;
-      // options = Object.assign(options, this.urlParser(url));
+      _this.workClick(options.room_id)
       // console.log(options);
       var classOption = {
         // 必须为字符串
