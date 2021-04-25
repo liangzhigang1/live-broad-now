@@ -453,6 +453,11 @@ export default {
 </style>
 <style lang="scss">
 #quiz-submit-work {
+  .el-upload-list__item {
+    width: 100px !important;
+    height: 100px !important;
+    border: 0px !important;
+  }
   .el-form-item__label {
     color: #fff;
     width: max-content !important;
@@ -538,11 +543,7 @@ export default {
   font-size: 53px !important;
   margin-top: 22px !important;
 }
-.el-upload-list__item {
-  width: 100px !important;
-  height: 100px !important;
-  border: 0px !important;
-}
+
 .sucai-p {
   color: #999;
   line-height: 18px;

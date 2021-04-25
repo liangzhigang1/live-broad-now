@@ -77,25 +77,25 @@ export default {
   // height: 412px;
   background: url("../assets/img/content_img_suipian_nor.png");
   background-size: 100% 100%;
-  top: 37% !important;
+  // top: 37% !important;
   // left:50%;
 }
 
-.bjy-progress {
-  background-color: #d8d9d8;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  height: 6px !important;
-  text-align: left;
-  margin: 100px auto 0px auto !important;
-  position: relative;
-  width: 100% !important;
-}
-.bjy-progress-text {
-  color: red !important;
-  position: absolute;
-  top: 500px !important;
-  right: 0
-}
+// .bjy-progress {
+//   background-color: #d8d9d8;
+//   -webkit-border-radius: 2px;
+//   -moz-border-radius: 2px;
+//   border-radius: 2px;
+//   height: 6px !important;
+//   text-align: left;
+//   margin: 100px auto 0px auto !important;
+//   position: relative;
+//   width: 100% !important;
+// }
+// .bjy-progress-text {
+//   color: red !important;
+//   position: absolute;
+//   top: 500px !important;
+//   right: 0
+// }
 </style>

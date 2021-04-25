@@ -17,8 +17,17 @@
                     <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/WechatIMG94.jpeg" />
                   </span>
                   <span v-if="item.type == 'mp4'">
-                    <!-- <span style="color: red;font-size: 25px">mp4</span> -->
-                    <img style="width: 100%;height: 100%;object-fit: cover;" src="../assets/img/shiping.jpeg" />
+                    <el-upload 
+                               style="position:relative"
+                               action="#"
+                               ref="uploadVideo"
+                               :limit="1"
+                               :file-list="item.videoFiles"
+                               class="uploadVideo disabled1"
+                               accept="video/mp4,video/ogg,video/flv,video/avi,video/wmv,video/rmvb"
+                               list-type="picture-card">
+              <i slot="default" class="el-icon-plus"></i>
+            </el-upload>
                   </span>
                 </div>
               </swiper-slide>
@@ -49,13 +58,31 @@ export default {
   watch: {
     workList: {
       handler(newName, oldName) {
-        this.workLists = newName
+        this.workLists = newName.map(item => {
+          return { type: item.type, src: item.src, videoFiles: [{ url: item.src, name: "mediaUrl" }] }
+        })
+        setTimeout(() => {
+          var parent = document.querySelectorAll(".uploadVideo ul li");
+          console.error('parentparentparent', parent);
+          for (let i = 0; i < parent.length; i++) {
+            if (parent[i].querySelector("img")) {
+              var video = parent[i].querySelector("img");
+              var newVideo = document.createElement("video");
+              newVideo.src = video.src;
+              newVideo.class = "el-upload-list__item-thumbnail";
+              newVideo.style = "width:100%;height:100%;";
+              parent[i].appendChild(newVideo);
+              parent[i].removeChild(video);
+            }
+          }
+        }, 2000);
       },
       immediate: true
     }
   },
   data() {
     return {
+      videoFiles: [],
       swiperOptions: {
         pagination: {
           el: ".swiper-pagination",
@@ -109,10 +136,18 @@ export default {
           }
         }
       },
-      workLists: this.workLists
+      workLists: []
     };
   },
   methods: {
+    cosUploadFileVideo() {
+    },
+    handlePictureCardPreviewVidoe() {
+    },
+    handleVdieoRemove() {
+    },
+    exceedVideo() {
+    },
     showWork (item) {
       console.log('11111', item);
       this.$emit('swiperClick', item)
@@ -121,6 +156,41 @@ export default {
 };
 </script>
 <style lang="scss" >
+.swiper-container1 {
+
+  .el-upload-list__item {
+    width: 100% !important;
+    height: 146px !important;
+    border: 0px !important;
+  }
+  .el-upload-list__item-delete {
+    display: none !important;
+  }
+}
+
+
+.disabled1 .el-upload--picture-card {
+  display: none !important;
+}
+.disabled1 .el-upload-list__item {
+  background-image: none;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.el-upload-list--picture-card .el-upload-list__item-actions:hover span {
+  display: inline-block;
+}
+.el-upload-list--picture-card .el-upload-list__item-actions {
+  z-index: 1000 !important;
+}
+.el-progress-circle {
+  height: 147px !important;
+  width: 147px !important;
+}
+.el-upload--picture-card {
+  width: 300px;
+}
 .swiper-button-prev {
   padding: 73px 5px;
   top: 15% !important;

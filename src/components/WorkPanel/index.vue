@@ -19,11 +19,21 @@
     </div>
 
     <div v-if="works && works.type == 'mp4'" style="height: 100%;width: 100%">
-      <video-player class="video-player vjs-custom-skin" 
+      <!-- <video-player class="video-player vjs-custom-skin" 
                     ref="videoPlayer" 
                     :playsinline="true" 
                     :options="playerOptions">
-      </video-player>
+      </video-player> -->
+
+      <video
+        width="100%"
+        controls
+        :src="works.src"
+        style="height: -webkit-fill-available;text-align:center;"
+      >
+        抱歉，您的浏览器不支持
+      </video>
+
     </div>
   </el-dialog>
 </template>
