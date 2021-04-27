@@ -366,11 +366,11 @@ export default {
       var url = location.href;
       console.log('urlurl', url);
 
-      // if (location.href.includes("teacher=1")) {
-      //   url = "https://live.shejizhizi.com/?user_name=mobile_b15a9cc5176&user_number=24&user_role=1&user_avatar=https%3A%2F%2Fwkapi.shejizhizi.com%2Fstatic%2Favatar%2Fdefault.jpg&sign=0614cafba2bd4a2e45bb21b7b3c21539&room_id=21032159047031&token=619168C4F4BCAD57AB8D900195EF8E44X24"
-      // } else {
-      //   url = "https://live.shejizhizi.com/?user_name=mobile_64aff661cfd&user_number=31&user_role=0&user_avatar=https%3A%2F%2Falioss.shejizhizi.com%2Fwkapi%2Fdefault.jpg&sign=51061dedc19171f33d3d67e91c6abc15&room_id=21032159047031&token=8AF3E80C6DB503A559F173153DC74CC3X31"
-      // }
+      if (location.href.includes("teacher=1")) {
+        url = "https://live.shejizhizi.com/?user_name=mobile_b15a9cc5176&user_number=24&user_role=1&user_avatar=https%3A%2F%2Fwkapi.shejizhizi.com%2Fstatic%2Favatar%2Fdefault.jpg&sign=0614cafba2bd4a2e45bb21b7b3c21539&room_id=21032159047031&token=2A9F48299566405F2FD9E5B0CB46D9F1X24"
+      } else {
+        url = "https://live.shejizhizi.com/?user_name=mobile_64aff661cfd&user_number=31&user_role=0&user_avatar=https%3A%2F%2Falioss.shejizhizi.com%2Fwkapi%2Fdefault.jpg&sign=51061dedc19171f33d3d67e91c6abc15&room_id=21032159047031&token=0304799D6443232AAF1FA5A47381DC82X31"
+      }
 
 
       options = Object.assign(options, this.urlParser(url));

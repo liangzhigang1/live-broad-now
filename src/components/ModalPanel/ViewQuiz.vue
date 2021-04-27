@@ -294,6 +294,9 @@ export default {
     border-radius: 0 0 4px 4px;
     padding: 20px;
     .zuoye-box {
+      overflow: hidden;
+      overflow-y: auto;
+      height: 571px;
       border: 1px solid #5f6777;
       padding: 4px 20px 10px;
       width: 100%;

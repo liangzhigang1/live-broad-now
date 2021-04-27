@@ -287,6 +287,10 @@ export default {
     display: none !important;
 }
 #quiz-xxx {
+  .el-upload-list__item {
+    width: 100px !important;
+    height: 100px !important;;
+  }
   position: absolute;
   z-index: 10;
   top: 50%;
@@ -341,6 +345,8 @@ export default {
     border-radius: 0 0 4px 4px;
     padding: 20px;
     .zuoye-box {
+      height: 556px;
+      overflow: auto;
       border: 1px solid #5f6777;
       padding: 20px;
       width: 100%;
