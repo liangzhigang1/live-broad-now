@@ -123,6 +123,8 @@ export default {
   },
   data() {
     return {
+      goods_id: null, // 课程ID
+      video_id: null, // 章节ID
       studentList: [],
       visible: false,
       zuoye: true,
@@ -322,7 +324,7 @@ export default {
       this.workList = []
       let xx = store.get('class.id') ? store.get('class.id') : room_id
       console.log('22222333334444555666777', xx);
-      let temp = {room_id: xx, last_file_id: 0, page_size: 50}
+      let temp = {room_id: xx, goods_id: this.goods_id, video_id: this.video_id, last_file_id: 0, page_size: 50}
       _queryWorkListApi(temp).then(res => {
         console.log('dadasdasdasdsadasd', res);
         this.workList = []
@@ -366,11 +368,11 @@ export default {
       var url = location.href;
       console.log('urlurl', url);
 
-      if (location.href.includes("teacher=1")) {
-        url = "https://live.shejizhizi.com/?user_name=mobile_b15a9cc5176&user_number=24&user_role=1&user_avatar=https%3A%2F%2Fwkapi.shejizhizi.com%2Fstatic%2Favatar%2Fdefault.jpg&sign=0614cafba2bd4a2e45bb21b7b3c21539&room_id=21032159047031&token=2A9F48299566405F2FD9E5B0CB46D9F1X24"
-      } else {
-        url = "https://live.shejizhizi.com/?user_name=mobile_64aff661cfd&user_number=31&user_role=0&user_avatar=https%3A%2F%2Falioss.shejizhizi.com%2Fwkapi%2Fdefault.jpg&sign=51061dedc19171f33d3d67e91c6abc15&room_id=21032159047031&token=0304799D6443232AAF1FA5A47381DC82X31"
-      }
+      // if (location.href.includes("teacher=1")) {
+      //   url = "https://live.shejizhizi.com/?room_id=21050150317513&user_number=37&user_role=0&user_name=mobile_4d5a359a4a9&user_avatar=https%3A%2F%2Falioss.shejizhizi.com%2Fwkapi%2Fdefault.jpg&sign=fd94eacd28457fba12dad0845b1ad2e2&token=E1D51E5DAD45D74E41623A114BF9DFD7X37&goods_id=80&section_id=63&video_id=119"
+      // } else {
+      //   url = "https://live.shejizhizi.com/?room_id=21050150317513&user_number=37&user_role=0&user_name=mobile_4d5a359a4a9&user_avatar=https%3A%2F%2Falioss.shejizhizi.com%2Fwkapi%2Fdefault.jpg&sign=fd94eacd28457fba12dad0845b1ad2e2&token=E1D51E5DAD45D74E41623A114BF9DFD7X37&goods_id=80&section_id=63&video_id=119"
+      // }
 
 
       options = Object.assign(options, this.urlParser(url));
@@ -384,6 +386,8 @@ export default {
       _classBindStudentApi({"room id": options.room_id}).then((response) => {
         console.log('response111111111111111111111' , response);
       })
+      _this.goods_id = options.goods_id
+      _this.video_id = options.video_id
       _this.workClick(options.room_id)
       // console.log(options);
       var classOption = {
