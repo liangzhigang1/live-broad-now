@@ -154,7 +154,7 @@
       <div @click="exitRoom" v-if="isStudent" class="btn-wrap btn-div">
         退出课堂
       </div>
-      <div style="margin-right: 20px" v-if="!isStudent && started" @click="toggleClassEnd" class="btn-div">
+      <div style="margin-right: 20px" v-if="!isStudent && started" @click="exitRoom" class="btn-div">
         退出课堂
       </div>
       <!-- 上下课 -->

@@ -28,10 +28,12 @@
           </div>
           <swiper v-show="zuoye" :workList="workList" @swiperClick="swiperClick"></swiper>
         </div>
+
         <div :style="{right: hudong ? '290px' : '0px'}" class="footer">
           <SettingPanel />
           <FunctionPanel />
         </div>
+
 
       </div>
 
@@ -657,7 +659,7 @@ export default {
       align-items: center;
       font-size: 15px;
       color: #bdc6cf;
-      z-index: 1000;
+      z-index: 0;
       color: #fff;
       font-size: 14px;
     }
