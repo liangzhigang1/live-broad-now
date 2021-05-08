@@ -80,10 +80,10 @@ export default {
                   return;
                 }
                 if (store.get('class.started')) {
-                  if (userData.active().length >= 2) {
-                    this.$Toast('当前上台人数已满')
-                    return;
-                  }
+                  // if (userData.active().length >= 2) {
+                  //   this.$Toast('当前上台人数已满')
+                  //   return;
+                  // }
                   BJY.userSpeak.startApply(10 * 1000)
                 } else {
                   this.$Toast(language.TIP_CLASS_NOT_START)
