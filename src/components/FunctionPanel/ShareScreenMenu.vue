@@ -107,7 +107,9 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 //@import url(); 引入公共css类
-
+.bjy-screen-share {
+  padding: 7px 8px 6px 8px !important;
+}
 </style>
